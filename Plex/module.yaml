@@ -1,0 +1,9 @@
+
+enabled: true
+
+watch_files: []
+
+packages: [
+  'rank-torrent-name',
+  'parse-torrent-title'
+]
