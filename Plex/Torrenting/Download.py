@@ -1,9 +1,8 @@
-from __init__ import qbit, Scanner, Media, temp
 from philh_myftp_biz.classOBJ import log
-from philh_myftp_biz.time import sleep
 from philh_myftp_biz.pc import cls
-from philh_myftp_biz import thread
-from philh_myftp_biz.array import List
+from Instances import qbit, temp
+from Scanner import Scanner
+import Media
 
 # Clear the terminal
 cls()
@@ -17,29 +16,12 @@ for p in temp.children():
         p.delete()
 
 # List of downloads
-downloads: List[Media.Episode | Media.Movie] = List()
+downloads: list[Media.Movie, Media.Episode, Media.Season] = list(Scanner(1))
 
-def find_downloads(downloads:List):
-
-    for download in Scanner():
-
-        # Start the download
-        download.start()
-
-        # Append the download to the list
-        downloads += download
-
-#
-t = thread(
-    func = find_downloads,
-    downloads = downloads
-)
+print('Waiting for downloads ...')
 
 # Loop until no downloads are left
-while True:
-
-#    if (not t.is_alive()) and (len(downloads) == 0):
-#        break
+while len(downloads) > 0:
 
     # Iter through all downloads
     for x, download in enumerate(downloads):
