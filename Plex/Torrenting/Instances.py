@@ -1,6 +1,5 @@
 from philh_myftp_biz.web import api, Driver
 from philh_myftp_biz.modules import Module
-from philh_myftp_biz.pc import Path
 
 # Declare the 'Plex' module
 this = Module('E:/Plex')

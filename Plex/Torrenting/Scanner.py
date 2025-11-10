@@ -1,4 +1,3 @@
-from philh_myftp_biz.classOBJ import log
 from typing import Generator, Literal
 from Instances import this
 import Media
@@ -6,6 +5,12 @@ import Media
 def ReadName(
     name: Literal['Title (Year)']
 ) -> list[str, int]:
+    """
+    Get Title and Year from file/folder name
+
+    EXAMPLE:
+    ReadName('Test (2025)') -> 'Test', 2025
+    """
     
     # Get title from directory name
     Title = name.split(' (')[0]
@@ -16,11 +21,12 @@ def ReadName(
     return Title, Year
 
 def Scanner() -> Generator[Media.Movie | Media.Episode]:
+    """
+    Generate a list of Movie or Episode Downloads
+    """
 
     # The directory with all movie files
     MovieDir = this.dir.child('/Media/Movies/')
-
-    print('Scanning:', MovieDir)
     
     # Iter through all movie files
     for p in MovieDir.children():
@@ -34,13 +40,13 @@ def Scanner() -> Generator[Media.Movie | Media.Episode]:
             # Create a new movie object
             movie = Media.Movie(Title, Year, p)
 
-            if movie.magnet:
+            # If a magnet has been found
+            if movie.file:
+                
                 yield movie
 
     # Loop through all child directories of 'E:/Plex/Media/Shows' 
     for ShowDir in this.dir.child('/Media/Shows').children():
-
-        print('Scanning:', ShowDir)
 
         # Get the title and year from the filename
         Title, Year = ReadName(ShowDir.name())
@@ -51,10 +57,10 @@ def Scanner() -> Generator[Media.Movie | Media.Episode]:
         # Iter through all seasons in the show
         for season in show.Seasons():
 
+            # Iter through all episodes in the season
             for episode in season.episodes:
 
-                if episode.magnet:
+                # If a magnet has been found and the file does not exist
+                if episode.file and (not episode.exists()):
 
-                    if not episode.exists():
-
-                        yield episode
+                    yield episode

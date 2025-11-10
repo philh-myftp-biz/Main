@@ -1,45 +1,11 @@
 from philh_myftp_biz.array import priority, filter, max
 from Instances import this, tpb, qbit, driver, omdb
 from philh_myftp_biz.web import Magnet, api
-from philh_myftp_biz.pc import Path
-from philh_myftp_biz.classOBJ import log
-from difflib import SequenceMatcher
-from typing import Generator, Callable
 from philh_myftp_biz.db import MimeType
+from philh_myftp_biz.pc import Path
+from difflib import SequenceMatcher
+from typing import Callable
 import RTN, PTN
-
-def max_magnet(
-    media: 'Episode | Movie | Season',
-    magnets: list[Magnet]
-) -> None | Magnet:
-
-    # Remove magnets with less than 15 seeders
-    magnets = filter(
-        array = magnets,
-        func = lambda m: (m.seeders >= 15)
-    )
-
-    # Remove magnets that aren't 720p or 1080p
-    magnets = filter(
-        array = magnets,
-        func = lambda m: (m.quality in [720, 1080] )
-    )
-
-    # Remove magnets without a valid name
-    magnets = filter(
-        array = magnets,
-        func = lambda m: media.validName(m.title)
-    )
-
-    # Return the best remaining magnet
-    return max(
-        array = magnets,
-        func = lambda m: priority(
-            _1 = m.quality,
-            _2 = m.seeders,
-            reverse = True
-        ) 
-    )
 
 class _Template:
 
@@ -55,15 +21,22 @@ class _Template:
 
     file: api.qBitTorrent.File = None
     """
-    Magnet Instance
+    File Instance
     """
 
     queries: list[str]
-    """ """
+    """
+    List of queries to be used when searching thepiratebay.org 
+    """
 
     paths: Callable[[], list[Path, Path]]
     """
-    
+    Get the source and destination paths of the file
+    """
+
+    finish: Callable[[], None]
+    """
+    Object-Specific tasks to run after the download is complete
     """
 
     dir: Path
@@ -71,23 +44,9 @@ class _Template:
     Parent Folder
     """
 
-    def finish(self) -> None:
-        """
-        Object-Specific tasks to run after download is complete
-        """
-
-    def finished(self):
-
-        for f in self.files():
-            
-            if not f.finished():
-                return False
-            
-        return True
-
     def start(self):
         """
-        
+        Search thepiratebay.org and start the download
         """
 
         # Create new ThePirateBay search
@@ -97,30 +56,64 @@ class _Template:
             qbit = qbit
         )
 
-        #
-        self.magnet = max_magnet(
-            media = self,
-            magnets = list(search)
+        # Remove magnets with less than 15 seeders
+        magnets = filter(
+            array = list(search),
+            func = lambda m: (m.seeders >= 15)
         )
 
+        # Remove magnets that aren't 720p or 1080p
+        magnets = filter(
+            array = magnets,
+            func = lambda m: (m.quality in [720, 1080] )
+        )
+
+        # Remove magnets without a valid name
+        magnets = filter(
+            array = magnets,
+            func = lambda m: self.validName(m.title)
+        )
+
+        # Return the best remaining magnet
+        self.magnet = max(
+            array = magnets,
+            func = lambda m: priority(
+                _1 = m.quality,
+                _2 = m.seeders,
+                reverse = True
+            ) 
+        )
+
+        # If a magnet has been found
         if self.magnet:
+
+            # Download the magnet
             self.magnet.start()
 
     def exists(self) -> bool:
         """
-
+        Check if the destination file already exists
         """
 
+        # Iter through all items in the folder
         for p in self.dir.children():
 
-            if self.validName(p.name()):
+            # If the file has a valid name
+            if self.validFile(p):
 
                 return True
 
     def validFile(self, path:Path):
+        """
+        Check a file for the following conditions:
+            - File is a video
+            - Name is valid
+        """
 
+        # If the mimetype of the file is 'video'
         video = (MimeType.Path(path) == 'video')
 
+        # If the name of the file is valid
         name = self.validName(path.name())
 
         return (video and name)
@@ -137,7 +130,6 @@ class Movie(_Template):
         
         self.Title = title
         self.Year = year
-
         self.__todo = todo
 
         self.queries = [
@@ -146,15 +138,22 @@ class Movie(_Template):
 
         self.start()
 
+        # If a magnet was found
         if self.magnet:
             
+            # Iter through all files in the magnet
             for f in self.magnet.files():
                 
+                # If the file is valid
                 if self.validFile(f.path):
                     
+                    # Set the 'file' attr to the current file
                     self.file = f
                     
-                    break
+                else:
+
+                    # Prevent the file from downloading
+                    f.stop()
 
     def validName(self, name:str) -> bool:
         
@@ -170,15 +169,22 @@ class Movie(_Template):
             b = data.parsed_title
         ).ratio() > .6
         
-        #
         return (year and title)
 
-    def DST(self, src:Path):
-        return this.dir.child(f"/Movies/['{self.Title}', {self.Year}].{src.ext()}")
+    def paths(self):
+
+        # The source file
+        src = self.file.path
+
+        # The destination file path
+        dst = this.dir.child(f"/Movies/['{self.Title}', {self.Year}].{src.ext()}")
+
+        return src, dst
 
     def finish(self):
-        #
+        # If a todo/placeholder file was passed during initialization
         if self.__todo:
+
             # Delete the placeholder file
             self.__todo.delete()
 
@@ -200,12 +206,14 @@ class Show:
 
     def Seasons(self):
 
+        # Iter through all seasons from the omdb data
         for s in self.__seasons:
             
+            # Yield a Season Instance 
             yield Season(
-                show = self,
-                season = int(s),
-                episodes = self.__seasons[s]
+                show = self, # This Show
+                season = int(s), # Season number
+                episodes = self.__seasons[s] # Array of episode numbers as strings
             )
 
 class Season(_Template):
@@ -228,33 +236,46 @@ class Season(_Template):
             f'{self.show.title} s{season}',
         ]
 
+        # List of episodes
         self.episodes: list[Episode] = []
 
+        # Iter through stringified episode numbers
         for e in episodes:
+
+            # Append an Episode Instance to the list
             self.episodes += [Episode(
-                season = self,
-                episode = int(e)
+                season = self, # This Season
+                episode = int(e) # Episode number
             )]
   
         super().start()
 
+        # If a magnet was found
         if self.magnet:
 
+            # Iter through all files in the magnet
             for f in self.magnet.files():
 
+                # Iter through all episodes in this season
                 for e in self.episodes:
 
+                    # Check if the file is valid for the episode
                     if e.validFile(f.path):
 
+                        # Set attrs on the episode
                         e.magnet = self.magnet
                         e.file = f
 
+        # If a magnet was not found
         else:
 
+            # Iter through all files in the magnet
             for e in self.episodes:
 
+                # If the episode file does not already exist
                 if not e.exists():
 
+                    # Start downloading the episode
                     e.start()
 
     def validName(self, name:str) -> bool:
@@ -288,10 +309,8 @@ class Episode(_Template):
         season: 'Season',
         episode: int
     ):
-        
         self.season = season
         self.episode = episode
-
         self.show = season.show
         self.dir = season.dir
 
@@ -321,8 +340,10 @@ class Episode(_Template):
 
     def paths(self):
 
+        # The source file
         src = self.file.path
         
+        # The destination file path
         dst = self.dir.child(f'/Season {self.season} Episode {self}.{src.ext()}')
 
         return src, dst
@@ -333,5 +354,7 @@ class Episode(_Template):
     def __str__(self):
         return str(self.episode).zfill(2)
 
+    def finish(self):
+        pass
 
 Downloadable = list[Movie | Episode | Season]

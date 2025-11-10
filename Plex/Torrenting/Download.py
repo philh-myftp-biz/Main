@@ -1,59 +1,68 @@
 from philh_myftp_biz.classOBJ import log
-from philh_myftp_biz.time import sleep
-from philh_myftp_biz.pc import cls
+from philh_myftp_biz.pc import cls, ProgressBar
 from Instances import qbit, driver
 from Scanner import Scanner
-from tqdm import tqdm
 import Media
+
+max_downloads = 5
 
 cls()
 
-print('\nClearing Download Queue ...\n')
+#
+print('\nClearing Download Queue ...')
 qbit.clear()
+
+
+print('\nDiscovering Magnets ...')
+
+#
+pbar = ProgressBar(max_downloads)
 
 # List of downloads
 downloads: Media.Downloadable = []
 
+# Iter through downloads in scanner
 for download in Scanner():
 
-    if len(downloads) == 30:
-        break
-    
-    log(download, 'CYAN')
-
+    # Append the download to the list
     downloads += [download]
 
+    pbar.step()
+
+    # If enough downloads have already been started
+    if len(downloads) == max_downloads:
+        break
+
 #
+pbar.stop()
+
+# Close the webdriver
 driver.close()
 
-print(f'\nWaiting for downloads ...\n')
+print('\nDownloading Magnets ...')
 
-pbar = tqdm(
-    iterable = range(len(downloads)),
-    unit = 'download'
-)
+pbar = ProgressBar(len(downloads))
 
 # Loop until no downloads are left
 while len(downloads) > 0:
 
-    # Wait 1 second
-    sleep(2)
+    #
+    qbit.sort()
 
     # Iter through all downloads
     for x, d in enumerate(downloads):
-        
+
         # If the download is finished
         if d.file.finished():
-
-            log(d, 'GREEN')
             
-            #
+            # Get source and destination paths of file
             src, dst = d.paths()
 
             # Move the source file to the destination path
-            src.copy(dst)
+            src.copy(dst, False)
 
             # Remove the download from the list
             del downloads[x]
 
-            pbar.update(1)
+            #
+            pbar.step()
