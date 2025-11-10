@@ -5,9 +5,6 @@ from philh_myftp_biz.pc import Path
 # Declare the 'Plex' module
 this = Module('E:/Plex')
 
-# Declare the temporary directory for downloads
-temp = Path('E:/Users/philh/Torrenting/Downloads/')
-
 # Declare the 'Virtual Machines' module
 VM = Module('E:/Virtual Machines')
 
@@ -25,4 +22,4 @@ tpb = api.thePirateBay()
 omdb = api.omdb()
 
 # Create a new Webdriver
-driver = Driver(debug=True)
+driver = Driver()

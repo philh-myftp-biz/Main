@@ -1,67 +1,59 @@
 from philh_myftp_biz.classOBJ import log
+from philh_myftp_biz.time import sleep
 from philh_myftp_biz.pc import cls
-from Instances import qbit, temp
+from Instances import qbit, driver
 from Scanner import Scanner
+from tqdm import tqdm
 import Media
 
-# Clear the terminal
 cls()
 
-print('Clearing Download Queue ...')
+print('\nClearing Download Queue ...\n')
 qbit.clear()
 
-print('Clearing Temporary Files ...')
-for p in temp.children():
-    if (not p.inuse()) and p.exists():
-        p.delete()
-
 # List of downloads
-downloads: list[Media.Movie, Media.Episode, Media.Season] = list(Scanner(1))
+downloads: Media.Downloadable = []
 
-print('Waiting for downloads ...')
+for download in Scanner():
+
+    if len(downloads) == 30:
+        break
+    
+    log(download, 'CYAN')
+
+    downloads += [download]
+
+#
+driver.close()
+
+print(f'\nWaiting for downloads ...\n')
+
+pbar = tqdm(
+    iterable = range(len(downloads)),
+    unit = 'download'
+)
 
 # Loop until no downloads are left
 while len(downloads) > 0:
 
+    # Wait 1 second
+    sleep(2)
+
     # Iter through all downloads
-    for x, download in enumerate(downloads):
+    for x, d in enumerate(downloads):
         
         # If the download is finished
-        if download.finished():
+        if d.file.finished():
 
-            #
-            log(download, 'GREEN')
+            log(d, 'GREEN')
             
-            # Get the source and destination paths
-            for src, dst in download.paths():
+            #
+            src, dst = d.paths()
 
-                # Move the source file to the destination path
-                print()
-                print(src)
-                print(dst)
-
-                src.move(dst)
-
-            # Stop the download
-            download.stop()
+            # Move the source file to the destination path
+            src.copy(dst)
 
             # Remove the download from the list
             del downloads[x]
 
-        # If the download is errored
-        elif download.errored():
-            
-            # Restart the download
-            download.restart()
-
-        # If download is still downloading
-        elif download.downloading():
-
-            # Loop through all of the downloading files
-            for file in download.files():
-
-                # If the file does not have a valid name
-                if not download.validName(file.path.name()):
-                    
-                    # Stop the file from downloading
-                    file.stop()
+            pbar.update(1)

@@ -1,9 +1,11 @@
-from philh_myftp_biz.array import intify, priority, filter, max
+from philh_myftp_biz.array import priority, filter, max
 from Instances import this, tpb, qbit, driver, omdb
-from philh_myftp_biz.web import Magnet
+from philh_myftp_biz.web import Magnet, api
 from philh_myftp_biz.pc import Path
+from philh_myftp_biz.classOBJ import log
 from difflib import SequenceMatcher
-from typing import Generator
+from typing import Generator, Callable
+from philh_myftp_biz.db import MimeType
 import RTN, PTN
 
 def max_magnet(
@@ -39,64 +41,120 @@ def max_magnet(
         ) 
     )
 
-class Movie(Magnet):
+class _Template:
+
+    validName: Callable[[str], bool]
+    """
+    Check if a string has valid filename syntax
+    """
+
+    magnet: Magnet = None
+    """
+    Magnet Instance
+    """
+
+    file: api.qBitTorrent.File = None
+    """
+    Magnet Instance
+    """
+
+    queries: list[str]
+    """ """
+
+    paths: Callable[[], list[Path, Path]]
+    """
+    
+    """
+
+    dir: Path
+    """
+    Parent Folder
+    """
+
+    def finish(self) -> None:
+        """
+        Object-Specific tasks to run after download is complete
+        """
+
+    def finished(self):
+
+        for f in self.files():
+            
+            if not f.finished():
+                return False
+            
+        return True
+
+    def start(self):
+        """
+        
+        """
+
+        # Create new ThePirateBay search
+        search = tpb.search(
+            *self.queries,
+            driver = driver,
+            qbit = qbit
+        )
+
+        #
+        self.magnet = max_magnet(
+            media = self,
+            magnets = list(search)
+        )
+
+        if self.magnet:
+            self.magnet.start()
+
+    def exists(self) -> bool:
+        """
+
+        """
+
+        for p in self.dir.children():
+
+            if self.validName(p.name()):
+
+                return True
+
+    def validFile(self, path:Path):
+
+        video = (MimeType.Path(path) == 'video')
+
+        name = self.validName(path.name())
+
+        return (video and name)
+    
+class Movie(_Template):
+
+    dir = this.dir.child('/Media/Movies/')
 
     def __init__(self,
         title: str,
-        year: int
+        year: int,
+        todo: Path = None
     ):
         
         self.Title = title
         self.Year = year
-        
-        self.valid = True
 
-        # Iter through all existing movie files
-        for p in this.dir.child('/Media/Movies/').children():
+        self.__todo = todo
 
-            # Check if this file is of the current movie
-            if self.validName(p.name()):
+        self.queries = [
+            f'{title} {year}'
+        ]
 
-                if p.ext() == 'todo':
-                    self.__todo = p
+        self.start()
 
-                else:
+        if self.magnet:
+            
+            for f in self.magnet.files():
                 
-                    # Invalidate this instance
-                    self.valid = False
+                if self.validFile(f.path):
+                    
+                    self.file = f
                     
                     break
-        
-        if self.valid:
-
-            # Create new ThePirateBay search
-            search = tpb.search(
-
-                f'{title} {year}',
-
-                driver = driver,
-                qbit = qbit
-
-            )
-
-            magnet = max_magnet(self, list(search))
-
-            if magnet:
-
-                self.valid = True
-
-                super().__init__(
-                    title = magnet.title,
-                    seeders = magnet.seeders,
-                    leechers = magnet.leechers,
-                    url = magnet.url,
-                    size = magnet.size,
-                    qbit = qbit
-                )
-
-            else:
-
-                self.valid = False
 
     def validName(self, name:str) -> bool:
         
@@ -113,22 +171,16 @@ class Movie(Magnet):
         ).ratio() > .6
         
         #
-        return (year and title) 
+        return (year and title)
 
-    def paths(self) -> None | Generator[list[Path]]:
+    def DST(self, src:Path):
+        return this.dir.child(f"/Movies/['{self.Title}', {self.Year}].{src.ext()}")
 
-        for f in self.files():
-
-            if self.validName(f.path.name()):
-
-                src = Path('E:/Users/philh/Torrenting' + str(f.path)[2:])
-                dst = this.dir.child(f"/Movies/['{self.Title}', {self.Year}].{f.path.ext()}")
-
-                return src, dst
-
-    def Finish(self):
-        # Delete the placeholder file
-        self.__todo.delete()
+    def finish(self):
+        #
+        if self.__todo:
+            # Delete the placeholder file
+            self.__todo.delete()
 
 class Show:
 
@@ -139,27 +191,24 @@ class Show:
         
         self.title = title
         self.year = year
-        
-        # Fetch show details from the Open Movie Database
-        self.__data = omdb.show(
-            title = title,
-            year = year
-        )
 
-        self.path = this.dir.child(f"/Media/Shows/{title} ({year})")
+        self.dir = this.dir.child(f"/Media/Shows/{title} ({year})/")
         """../Media/Shows/{Title} ({Year})/"""
 
-    def Seasons(self) -> Generator['Season']:
-        # Loop through all seasons
-        for s in self.__data.Seasons:
+        # Fetch show details from the Open Movie Database
+        self.__seasons = omdb.show(title, year).Seasons
 
+    def Seasons(self):
+
+        for s in self.__seasons:
+            
             yield Season(
                 show = self,
                 season = int(s),
-                episodes = self.__data.Seasons[s]
+                episodes = self.__seasons[s]
             )
 
-class Season(Magnet):
+class Season(_Template):
 
     def __init__(self,
         show: 'Show',
@@ -169,65 +218,45 @@ class Season(Magnet):
         
         self.show = show
         self.season = season
-        self.__episodes: list[int] = intify(episodes)
 
-        self.path = show.path.child(f"/Season {self}")
+        self.dir = show.dir.child(f"/Season {self}/")
         """../Season {Season}/"""
 
-        return
-        # TODO
+        self.queries = [
+            f'{self.show.title} {self.show.year} Season {season}',
+            f'{self.show.title} Season {season}',
+            f'{self.show.title} s{season}',
+        ]
 
-        # =========================================
+        self.episodes: list[Episode] = []
 
-        self.__missing_episodes = self.__episodes.copy()
+        for e in episodes:
+            self.episodes += [Episode(
+                season = self,
+                episode = int(e)
+            )]
+  
+        super().start()
 
-        for p in self.path.children():
-            
-            data = PTN.parse(p.name())
-            
-            for x, e in enumerate(self.__missing_episodes):
-                if e == data['episode']:
-                    
-                    del self.__missing_episodes[x]
-                    
-                    break
+        if self.magnet:
 
-        self.valid = (len(self.__missing_episodes) > 0)
+            for f in self.magnet.files():
 
-        # =========================================
+                for e in self.episodes:
 
-        if self.valid:
+                    if e.validFile(f.path):
 
-            # Create new ThePirateBay search
-            search = tpb.search(
+                        e.magnet = self.magnet
+                        e.file = f
 
-                f'{self.show.title} {self.show.year} Season {season}'
-                f'{self.show.title} Season {season}',
-                f'{self.show.title} s{season}',
+        else:
 
-                driver = driver,
-                qbit = qbit
+            for e in self.episodes:
 
-            )
+                if not e.exists():
 
-            #
-            magnet = max_magnet(self, list(search))
-            
-            if magnet:
+                    e.start()
 
-                super().__init__(
-                    title = magnet.title,
-                    seeders = magnet.seeders,
-                    leechers = magnet.leechers,
-                    url = magnet.url,
-                    size = magnet.size,
-                    qbit = qbit
-                )
-
-            else:
-
-                self.valid = False
-    
     def validName(self, name:str) -> bool:
 
         # Parse the file name
@@ -240,107 +269,37 @@ class Season(Magnet):
             season = False
 
         # Check if the file title is more than 60% similar to the show title
-        if Path(name).ext():
-            
-            # Check if the file episode is the same
-            if 'episode' in data:
-                episode = (data['episode'] in self.__missing_episodes)
-            else:
-                episode = False
+        title = SequenceMatcher(None,
+            a = data['title'], 
+            b = self.show.title
+        ).ratio() > .6
 
-            return (season and episode)
-        
-        else:
-            title = SequenceMatcher(None,
-                a = data['title'], 
-                b = self.show.title
-            ).ratio() > .6
-
-            return (title and season)
-
-    def paths(self) -> None | Generator[list[Path]]:
-
-        for f in self.files():
-
-            if self.validName(f.path):
-
-                src = Path('E:/Users/philh/Torrenting' + str(f.path)[2:])
-                dst = self.path.child(f'/Season {self.season} Episode {self}.{f.path.ext()}')
-
-                yield src, dst
-
-    def Episodes(self) -> Generator['Episode']:
-        for e in self.__episodes:
-            yield Episode(
-                season = self,
-                episode = int(e)
-            )
+        return (title and season)
 
     def __int__(self):
         return self.season
 
     def __str__(self):
         return str(self.season).zfill(2)
-    
-    def Finish(self):
-        pass
 
-class Episode(Magnet):
+class Episode(_Template):
 
     def __init__(self,
         season: 'Season',
         episode: int
     ):
+        
         self.season = season
-        self.show = season.show
         self.episode = episode
 
-        self.valid = True
+        self.show = season.show
+        self.dir = season.dir
 
-        # Loop through all existing episode files
-        for p in season.path.children():
+        self.queries = [
+            f'{self.show.title} s{season}e{self}',
+            f'{self.show.title} {season}x{self}'
+        ]
 
-            # Check if the file is of this episode
-            if self.validName(p.name()):
-                
-                # Invalidate this instance
-                self.valid = False
-                
-                break
-
-        if self.valid:
-
-            # Create new ThePirateBay search
-            search = tpb.search(
-
-                f'{self.show.title} s{season}e{self}',
-#                    f'{self.show.title} {self.show.year} Season {season}'
-                f'{self.show.title} Season {season}',
-                f'{self.show.title} s{season}',
-
-                driver = driver,
-                qbit = qbit
-
-            )
-
-            #
-            magnet = max_magnet(self, list(search))
-            
-            if magnet:
-
-                super().__init__(
-                    title = magnet.title,
-                    seeders = magnet.seeders,
-                    leechers = magnet.leechers,
-                    url = magnet.url,
-                    size = magnet.size,
-                    qbit = qbit
-                )
-
-            else:
-
-                self.valid = False
-    
     def validName(self, name:str) -> bool:
 
         # Parse the file name
@@ -360,22 +319,19 @@ class Episode(Magnet):
 
         return (season and episode)
 
-    def paths(self) -> None | Generator[list[Path]]:
+    def paths(self):
 
-        for f in self.files():
+        src = self.file.path
+        
+        dst = self.dir.child(f'/Season {self.season} Episode {self}.{src.ext()}')
 
-            if self.validName(f.path):
+        return src, dst
 
-                src = Path('E:/Users/philh/Torrenting' + str(f.path)[2:])
-                dst = self.season.path.child(f'/Season {self.season} Episode {self}.{f.path.ext()}')
-
-                yield src, dst
-            
     def __int__(self):
         return self.episode
     
     def __str__(self):
         return str(self.episode).zfill(2)
 
-    def Finish(self):
-        pass
+
+Downloadable = list[Movie | Episode | Season]

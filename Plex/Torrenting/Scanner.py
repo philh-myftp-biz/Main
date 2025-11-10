@@ -3,33 +3,6 @@ from typing import Generator, Literal
 from Instances import this
 import Media
 
-def Scanner(
-    limit: int
-) -> list[Media.Episode | Media.Season | Media.Movie]:
-    
-    items = []
-
-    for gen in (Movies(), Shows()):
-
-        for item in gen:
-            
-            #
-            if item.valid:
-
-                log(item, 'CYAN')
-
-                item.start()
-
-                items += [item]
-
-            else:
-
-                log(item, 'RED')
-
-            #
-            if len(items) == limit:
-                return items
-
 def ReadName(
     name: Literal['Title (Year)']
 ) -> list[str, int]:
@@ -42,23 +15,34 @@ def ReadName(
 
     return Title, Year
 
-def Movies() -> Generator[Media.Movie]:
-    
-    for p in this.dir.child('/Media/Movies/').children():
+def Scanner() -> Generator[Media.Movie | Media.Episode]:
 
+    # The directory with all movie files
+    MovieDir = this.dir.child('/Media/Movies/')
+
+    print('Scanning:', MovieDir)
+    
+    # Iter through all movie files
+    for p in MovieDir.children():
+
+        # Check if the file ends with '.todo'
         if p.ext() == 'todo':
 
+            # Get the title and year from the filename
             Title, Year = ReadName(p.name())
 
-            yield Media.Movie(Title, Year)
+            # Create a new movie object
+            movie = Media.Movie(Title, Year, p)
 
-def Shows() -> Generator[Media.Episode | Media.Season]:
+            if movie.magnet:
+                yield movie
 
     # Loop through all child directories of 'E:/Plex/Media/Shows' 
     for ShowDir in this.dir.child('/Media/Shows').children():
 
         print('Scanning:', ShowDir)
 
+        # Get the title and year from the filename
         Title, Year = ReadName(ShowDir.name())
 
         # Get Show from title and year 
@@ -66,8 +50,11 @@ def Shows() -> Generator[Media.Episode | Media.Season]:
 
         # Iter through all seasons in the show
         for season in show.Seasons():
-            
-            # Iter through all episodes in the season
-            for episode in season.Episodes():
 
-                yield episode
+            for episode in season.episodes:
+
+                if episode.magnet:
+
+                    if not episode.exists():
+
+                        yield episode
