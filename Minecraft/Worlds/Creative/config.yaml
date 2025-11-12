@@ -1,0 +1,39 @@
+
+# Difficulty
+# [peaceful, easy, normal, hard]
+difficulty: easy
+
+# Cheats Enabled
+# boolean
+cheats: true
+
+# Gamemode
+# [adventure, survival, creative]
+gamemode: creative
+
+# Max Players
+# integer
+players: 20
+
+# Message of the Day
+# string
+message: Template
+
+# Player vs Player Enabled
+# boolean
+pvp: true
+
+# Server Port
+port:
+
+  # Java Port
+  # integer, null
+  java: 25565
+
+  # Bedrock/Geyser Port
+  # integer
+  bedrock: 19132
+
+# Operators
+# list of usernames
+operators: []
