@@ -1,0 +1,8 @@
+
+enabled: true
+
+watch_files: []
+
+packages: [
+  'langchain_ollama'
+]
