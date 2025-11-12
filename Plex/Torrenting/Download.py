@@ -1,10 +1,9 @@
-from philh_myftp_biz.classOBJ import log
 from philh_myftp_biz.pc import cls, ProgressBar
 from Instances import qbit, driver
 from Scanner import Scanner
 import Media
 
-max_downloads = 5
+max_downloads = 10
 
 cls()
 
