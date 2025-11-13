@@ -1,8 +1,8 @@
 from philh_myftp_biz.array import priority, filter, max
 from Instances import this, tpb, qbit, driver, omdb
 from philh_myftp_biz.web import Magnet, api
+from philh_myftp_biz.pc import Path, mkdir
 from philh_myftp_biz.db import MimeType
-from philh_myftp_biz.pc import Path
 from difflib import SequenceMatcher
 from typing import Callable
 import RTN, PTN
@@ -230,6 +230,9 @@ class Season(_Template):
         self.dir = show.dir.child(f"/Season {self}/")
         """../Season {Season}/"""
 
+        if not self.dir.exists():
+            mkdir(self.dir)
+
         self.queries = [
             f'{self.show.title} {self.show.year} Season {season}',
             f'{self.show.title} Season {season}',
@@ -248,23 +251,27 @@ class Season(_Template):
                 episode = int(e) # Episode number
             )]
   
-        super().start()
+        #
+        if not self.exists():
 
-        # If a magnet was found
-        if self.magnet:
+            #
+            super().start()
 
-            # Iter through all files in the magnet
-            for f in self.magnet.files():
+            # If a magnet was found
+            if self.magnet:
 
-                # Iter through all episodes in this season
-                for e in self.episodes:
+                # Iter through all files in the magnet
+                for f in self.magnet.files():
 
-                    # Check if the file is valid for the episode
-                    if e.validFile(f.path):
+                    # Iter through all episodes in this season
+                    for e in self.episodes:
 
-                        # Set attrs on the episode
-                        e.magnet = self.magnet
-                        e.file = f
+                        # Check if the file does not exist and is valid for the episode
+                        if (not e.exists()) and e.validFile(f.path):
+
+                            # Set attrs on the episode
+                            e.magnet = self.magnet
+                            e.file = f
 
         # If a magnet was not found
         else:
@@ -277,6 +284,12 @@ class Season(_Template):
 
                     # Start downloading the episode
                     e.start()
+
+    def exists(self):
+        for episode in self.episodes:
+            if not episode.exists():
+                return False
+        return True
 
     def validName(self, name:str) -> bool:
 
