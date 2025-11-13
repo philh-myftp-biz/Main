@@ -3,7 +3,7 @@ from Instances import qbit, driver
 from Scanner import Scanner
 import Media
 
-max_downloads = 10
+max_downloads = 50
 
 cls()
 
@@ -65,3 +65,7 @@ while len(downloads) > 0:
 
             #
             pbar.step()
+
+        if d.magnet.errored():
+            
+            d.magnet.start()
