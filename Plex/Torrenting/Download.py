@@ -1,11 +1,14 @@
 from philh_myftp_biz.pc import cls, ProgressBar
-from Instances import qbit, driver
+from Instances import qbit, driver, VM
 from Scanner import Scanner
 import Media
 
 max_downloads = 50
 
 cls()
+
+#
+VM.run('start', 'Torrenting')
 
 #
 print('\nClearing Download Queue ...')
@@ -69,3 +72,6 @@ while len(downloads) > 0:
         if d.magnet.errored():
             
             d.magnet.start()
+
+#
+VM.run('stop', 'Torrenting')
