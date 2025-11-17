@@ -1,2 +1,3 @@
 
-/.ollama/
+# Private SSH Key
+/.ollama/id_ed25519
