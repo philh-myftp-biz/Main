@@ -1,5 +1,5 @@
 from typing import Generator, Literal
-from Instances import this
+from __init__ import this
 import Media
 
 def ReadName(

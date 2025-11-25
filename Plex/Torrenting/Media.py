@@ -1,5 +1,5 @@
 from philh_myftp_biz.array import priority, filter, max
-from Instances import this, tpb, qbit, driver, omdb
+from __init__ import this, tpb, qbit, driver, omdb
 from philh_myftp_biz.web import Magnet, api
 from philh_myftp_biz.pc import Path, mkdir
 from philh_myftp_biz.db import MimeType
