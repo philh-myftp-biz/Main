@@ -267,11 +267,16 @@ class Season(_Template):
                     for e in self.episodes:
 
                         # Check if the file does not exist and is valid for the episode
-                        if (not e.exists()) and e.validFile(f.path):
+                        if e.validFile(f.path):
 
-                            # Set attrs on the episode
-                            e.magnet = self.magnet
-                            e.file = f
+                            if e.exists():
+                                #
+                                f.stop()
+
+                            else:
+                                # Set attrs on the episode
+                                e.magnet = self.magnet
+                                e.file = f
 
         # If a magnet was not found
         else:
