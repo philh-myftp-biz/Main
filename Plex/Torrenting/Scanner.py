@@ -40,7 +40,7 @@ def Scanner() -> Generator[Media.Movie | Media.Episode]:
             # Create a new movie object
             movie = Media.Movie(Title, Year, p)
 
-            # If a magnet has been found
+            # If a file is downloading
             if movie.file:
                 
                 yield movie
@@ -60,7 +60,7 @@ def Scanner() -> Generator[Media.Movie | Media.Episode]:
             # Iter through all episodes in the season
             for episode in season.episodes:
 
-                # If a magnet has been found and the file does not exist
-                if episode.file and (not episode.exists()):
+                # If a file is downloading
+                if episode.file:
 
                     yield episode
