@@ -4,8 +4,13 @@ from __init__ import qbit, driver, VM
 from Scanner import Scanner
 import Media
 
+#
 args = ParsedArgs()
-args.parse('limit', 50)
+args.Arg('limit', 50)
+args.Flag('debug')
+
+#
+driver.debug = args['debug']
 
 cls()
 
