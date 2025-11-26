@@ -1,8 +1,25 @@
 
+# Cache
 **/__pycache__/
 
-Media/
+# Plex Media
+/Media/
 
-Plex Media Server/
+#==============================================================
+# Add Databases
 
-wintv activation code.txt
+!/Plex Media Server
+/Plex Media Server/*
+
+!/Plex Media Server/Plug-in Support
+/Plex Media Server/Plug-in Support/*
+
+!/Plex Media Server/Plug-in Support/Databases/
+
+#==============================================================
+
+# WinTV10 Activation Code
+/wintv activation code.txt
+
+# HTTPS Certificate
+/cert.pfx

@@ -1,0 +1,1 @@
+"/Plex Media Server/Plug-in Support/Databases/**" filter=lfs diff=lfs merge=lfs -text
