@@ -1,3 +1,23 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:59e24dc0b84cbaaecf1ea098d52342b6a429d299ed33663d0e47452a0838153c
-size 367
+
+param(
+    [string] $Name
+)
+
+try {
+
+    $NetAdapter = (Get-VM `
+        -VMName $Name `
+        | Select-Object -ExpandProperty NetworkAdapters `
+    )
+
+    $IP = $NetAdapter.IPAddresses `
+        | Where-Object {$_ -notlike '*::*'} `
+        | Select-Object -First 1
+
+    $IP | ConvertTo-Json | Write-Output
+
+} catch {
+
+    $null | ConvertTo-Json | Write-Output
+
+}

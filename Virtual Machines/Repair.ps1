@@ -1,3 +1,50 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:eb4fb583031702bb3a283c42c64520647de1995473c031fb535d8e5014892c69
-size 914
+
+#
+Get-VM | ForEach-Object -Process {
+
+    #
+    Start-VM -VM $_
+
+}
+
+#
+$Credentials = (Get-Credential)
+
+Get-VM | ForEach-Object -Process {
+
+    #
+    while(-not $_.ExtensionData.Guest.guestOperationsReady) {
+        
+        Start-Sleep 5
+        $_.ExtensionData.UpdateViewData('Guest')
+    
+    }
+
+    Invoke-Command `
+        -VMName $_.Name `
+        -Credential $Credentials `
+        -ScriptBlock { #
+
+            #
+            Rename-Computer -NewName "VM-$($_.Name)";
+            
+            #
+            Set-DnsClientServerAddress `
+                -ServerAddresses ('192.168.1.2', '8.8.8.8') `
+                -InterfaceIndex (Get-NetIpConfiguration | Select-Object -First 1).InterfaceIndex
+        
+        }
+
+}
+
+
+
+
+#
+Invoke-Command `
+    -VMName $Name `
+    -Credential (Get-Credential) `
+    -ScriptBlock {
+        Rename-Computer -NewName "<NewComputerName>";
+        Restart-Computer -Force;
+    }
