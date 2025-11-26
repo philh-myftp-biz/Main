@@ -1,9 +1,11 @@
 from philh_myftp_biz.pc import cls, ProgressBar
+from philh_myftp_biz import ParsedArgs
 from __init__ import qbit, driver, VM
 from Scanner import Scanner
 import Media
 
-max_downloads = 50
+args = ParsedArgs()
+args.parse('limit', 50)
 
 cls()
 
@@ -18,7 +20,7 @@ qbit.clear()
 print('\nDiscovering Magnets ...')
 
 #
-pbar = ProgressBar(max_downloads)
+pbar = ProgressBar(args['limit'])
 
 # List of downloads
 downloads: Media.Downloadable = []
@@ -29,10 +31,11 @@ for download in Scanner():
     # Append the download to the list
     downloads += [download]
 
+    #
     pbar.step()
 
     # If enough downloads have already been started
-    if len(downloads) == max_downloads:
+    if len(downloads) == args['limit']:
         break
 
 #
