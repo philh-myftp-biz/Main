@@ -1,7 +1,7 @@
-from __init__ import this, tpb, qbit, driver, omdb, args
-from philh_myftp_biz.array import priority, filter, max
+from philh_myftp_biz.array import priority, max
 from philh_myftp_biz.web import Magnet, api
 from philh_myftp_biz.text import similarity
+from __init__ import this, tpb, omdb, args
 from philh_myftp_biz.pc import Path, mkdir
 from philh_myftp_biz.db import MimeType
 from typing import Callable
