@@ -37,15 +37,14 @@ def Scanner() -> Generator[Media.Movie | Media.Episode]:
             # Get the title and year from the filename
             Title, Year = ReadName(p.name())
 
-            # Create a new movie object
-            movie = Media.Movie(Title, Year, p)
+            if args['filter'] in Title.lower():
 
-            # If a file is downloading
-            if movie.file:
+                # Create a new movie object
+                movie = Media.Movie(Title, Year, p)
 
-                #
-                if args['filter'].lower() in movie.Title.lower():
-                
+                # If a file is downloading
+                if movie.file:
+                    
                     yield movie
 
     # Loop through all child directories of 'E:/Plex/Media/Shows' 
@@ -55,7 +54,7 @@ def Scanner() -> Generator[Media.Movie | Media.Episode]:
         Title, Year = ReadName(ShowDir.name())
 
         #
-        if args['filter'].lower() in Title.lower():
+        if args['filter'] in Title.lower():
 
             # Get Show from title and year 
             show = Media.Show(Title, Year)
