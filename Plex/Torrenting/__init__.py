@@ -1,11 +1,10 @@
 from philh_myftp_biz.web import api, Driver
 from philh_myftp_biz.modules import Module
 from philh_myftp_biz import ParsedArgs
-from sys import maxsize
 
 #
 args = ParsedArgs()
-args.Arg('limit', maxsize)
+args.Arg('limit', 100)
 args.Arg('filter', '')
 
 # Declare the 'Plex' module
