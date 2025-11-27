@@ -1,5 +1,5 @@
 from typing import Generator, Literal
-from __init__ import this
+from __init__ import this, args
 import Media
 
 def ReadName(
@@ -42,8 +42,11 @@ def Scanner() -> Generator[Media.Movie | Media.Episode]:
 
             # If a file is downloading
             if movie.file:
+
+                #
+                if args['filter'].lower() in movie.Title.lower():
                 
-                yield movie
+                    yield movie
 
     # Loop through all child directories of 'E:/Plex/Media/Shows' 
     for ShowDir in this.dir.child('/Media/Shows').children():
@@ -51,16 +54,19 @@ def Scanner() -> Generator[Media.Movie | Media.Episode]:
         # Get the title and year from the filename
         Title, Year = ReadName(ShowDir.name())
 
-        # Get Show from title and year 
-        show = Media.Show(Title, Year)
+        #
+        if args['filter'].lower() in Title.lower():
 
-        # Iter through all seasons in the show
-        for season in show.Seasons():
+            # Get Show from title and year 
+            show = Media.Show(Title, Year)
 
-            # Iter through all episodes in the season
-            for episode in season.episodes:
+            # Iter through all seasons in the show
+            for season in show.Seasons():
 
-                # If a file is downloading
-                if episode.file:
+                # Iter through all episodes in the season
+                for episode in season.episodes:
 
-                    yield episode
+                    # If a file is downloading
+                    if episode.file:
+
+                        yield episode
