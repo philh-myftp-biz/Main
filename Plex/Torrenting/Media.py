@@ -183,7 +183,7 @@ class Movie(_Template):
         src = self.file.path
 
         # The destination file path
-        dst = this.dir.child(f"/Movies/{self.Title} ({self.Year}).{src.ext()}")
+        dst = this.dir.child(f"/Media/Movies/{self.Title} ({self.Year}).{src.ext()}")
 
         return src, dst
 
