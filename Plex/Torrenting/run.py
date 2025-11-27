@@ -1,17 +1,11 @@
 from philh_myftp_biz.pc import cls, ProgressBar
+from __init__ import qbit, driver, VM, args
 from philh_myftp_biz.classOBJ import log
-from philh_myftp_biz import ParsedArgs
-from __init__ import qbit, driver, VM
+from philh_myftp_biz.time import sleep
 from Scanner import Scanner
 import Media
 
 #
-args = ParsedArgs()
-args.Arg('limit', 50)
-
-#
-driver.debug = args['verbose']
-
 cls()
 
 # Power on the Virtual Machine
@@ -39,6 +33,9 @@ for download in Scanner():
 
     if args['verbose']:
         log(download)
+
+    #
+    download.file.start(True)
 
     # Append the download to the list
     downloads += [download]
@@ -77,6 +74,13 @@ while len(downloads) > 0:
             # Get source and destination paths of file
             src, dst = d.paths()
 
+            #
+            if args['verbose']:
+                print()
+                print(f'Finished: {d.magnet.url[:15]}...')
+                print('src:', src)
+                print('dst:', dst)
+
             # Move the source file to the destination path
             src.copy(
                 dst = dst,
@@ -92,7 +96,7 @@ while len(downloads) > 0:
         if d.magnet.errored():
 
             if args['verbose']:
-                print(f'\nRetrying Magnet: {d.magnet.url[:15]}...')
+                print(f'\nRetrying: {d.magnet.url[:15]}...')
             
             d.magnet.start()
 
