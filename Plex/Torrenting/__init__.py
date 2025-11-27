@@ -33,6 +33,20 @@ args.Arg(
     handler = lambda x: [int(y) for y in x.split(',')]
 )
 
+args.Arg(
+    name = 'debug',
+    default = '',
+    desc = 'Comma-Separated list of Debug Information to show (driver,qbit,vm,scanner)',
+    handler = lambda x: x.split(',')
+)
+
+args.Arg(
+    name = 'type',
+    default = 'movie,show',
+    desc = 'Comma-Separated list of media types to download (movie,show)',
+    handler = lambda x: x.split(',')
+)
+
 #==============================================
 
 # Declare the 'Virtual Machines' module
@@ -41,7 +55,7 @@ VM = Module('E:/Virtual Machines')
 # Power on the Virtual Machine
 VM.run(
     'start', 'Torrenting',
-    hide = (not args['verbose'])
+    hide = ('vm' not in args['debug'])
 )
 
 # Declare the 'Plex' module
@@ -52,7 +66,7 @@ qbit = api.qBitTorrent(
     host = VM.run('IP', 'Torrenting', hide=True).output('json'),
     username = 'admin',
     password = 'Torrenting123!',
-    debug = args['verbose']
+    debug = ('qbit' in args['debug'])
 )
 
 # Connect to 'thepiratebay.org'
@@ -63,5 +77,5 @@ omdb = api.omdb()
 
 # Create a new Webdriver
 driver = Driver(
-    debug = args['verbose']
+    debug = ('driver' in args['debug'])
 )
