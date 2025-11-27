@@ -2,10 +2,24 @@ from philh_myftp_biz.web import api, Driver
 from philh_myftp_biz.modules import Module
 from philh_myftp_biz import ParsedArgs
 
-#
+#==============================================
 args = ParsedArgs()
-args.Arg('limit', 100)
-args.Arg('filter', '')
+
+args.Arg(
+    name = 'limit',
+    default = 100,
+    desc = 'Maximum # of torrents to download',
+    handler = int
+)
+
+args.Arg(
+    name = 'filter',
+    default = '',
+    desc = 'Only download items whose title contains this',
+    handler = lambda x: x.lower()
+)
+
+#==============================================
 
 # Declare the 'Virtual Machines' module
 VM = Module('E:/Virtual Machines')
