@@ -144,16 +144,11 @@ class Movie(_Template):
             # Iter through all files in the magnet
             for f in self.magnet.files():
                 
-                # If the file is valid
-                if self.validFile(f.path):
+                # Check if the file does not exist and is valid for the episode
+                if self.validFile(f.path) and (not f.path.exists()):
                     
                     # Set the 'file' attr to the current file
                     self.file = f
-                    
-                else:
-
-                    # Prevent the file from downloading
-                    f.stop()
 
     def validName(self, name:str) -> bool:
         
@@ -267,16 +262,11 @@ class Season(_Template):
                     for e in self.episodes:
 
                         # Check if the file does not exist and is valid for the episode
-                        if e.validFile(f.path):
+                        if e.validFile(f.path) and (not e.exists()):
 
-                            if e.exists():
-                                #
-                                f.stop()
-
-                            else:
-                                # Set attrs on the episode
-                                e.magnet = self.magnet
-                                e.file = f
+                            # Set attrs on the episode
+                            e.magnet = self.magnet
+                            e.file = f
 
         # If a magnet was not found
         else:
