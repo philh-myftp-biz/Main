@@ -1,6 +1,5 @@
 from philh_myftp_biz.pc import cls, ProgressBar
 from __init__ import qbit, driver, args, VM
-from philh_myftp_biz.classOBJ import log
 from Scanner import Scanner
 import Media
 
@@ -23,9 +22,6 @@ downloads: Media.Downloadable = []
 
 # Iter through downloads in scanner
 for download in Scanner():
-
-    if args['verbose']:
-        log(download)
 
     #
     download.file.start(True)
@@ -70,7 +66,6 @@ while len(downloads) > 0:
             #
             if args['verbose']:
                 print()
-                print(f'Finished: {d.magnet.url[:15]}...')
                 print('src:', src)
                 print('dst:', dst)
 
@@ -96,5 +91,5 @@ while len(downloads) > 0:
 # Power off the Virtual Machine
 VM.run(
     'save', 'Torrenting',
-    hide = (not args['verbose'])
+    hide = ('vm' not in args['debug'])
 )
