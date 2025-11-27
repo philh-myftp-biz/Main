@@ -21,64 +21,74 @@ def ReadName(
 
     return Title, Year
 
-def Scanner() -> Generator[Media.Movie | Media.Episode]:
+def Scanner() -> Generator[Media._Template]:
     """
     Generate a list of Movie or Episode Downloads
     """
-
-    # The directory with all movie files
-    MovieDir = this.dir.child('/Media/Movies/')
     
     # Iter through all movie files
-    for p in MovieDir.children():
+    for p in this.dir.child('/Media/Movies/').children():
 
-        # Check if the file ends with '.todo'
-        if p.ext() == 'todo':
+        if args['filter'] in p.name().lower():
 
-            # Get the title and year from the filename
-            Title, Year = ReadName(p.name())
-
-            if args['filter'] in Title.lower():
+            # Check if the file ends with '.todo'
+            if p.ext() == 'todo':
 
                 # Create a new movie object
-                movie = Media.Movie(Title, Year, p)
+                movie = Media.Movie(*ReadName(p.name()), p)
 
-                # If a file is downloading
-                if movie.file:
+                if not movie.exists():
 
-                    if args['verbose']:
-                        log(movie, 'GREEN')
-                    
-                    yield movie
+                    movie.start()
 
-                elif args['verbose']:
-                    log(movie, 'RED')
+                    # If a file is downloading
+                    if movie.file:
+
+                        if args['verbose']:
+                            log(movie, 'GREEN')
+                        
+                        yield movie
+
+                    else:
+
+                        if movie.magnet:
+                            movie.magnet.stop()
+                        
+                        if args['verbose']:
+                            log(movie, 'RED')
 
     # Loop through all child directories of 'E:/Plex/Media/Shows' 
     for ShowDir in this.dir.child('/Media/Shows').children():
 
-        # Get the title and year from the filename
-        Title, Year = ReadName(ShowDir.name())
-
         #
-        if args['filter'] in Title.lower():
+        if args['filter'] in ShowDir.name().lower():
 
-            # Get Show from title and year 
-            show = Media.Show(Title, Year)
+            # Get Show from the filename 
+            show = Media.Show(*ReadName(ShowDir.name()))
 
             # Iter through all seasons in the show
             for season in show.Seasons():
 
-                # Iter through all episodes in the season
-                for episode in season.episodes:
+                if not season.exists():
 
-                    # If a file is downloading
-                    if episode.file:
+                    #
+                    season.start()
 
-                        if args['verbose']:
-                            log(episode, 'GREEN')
+                    # Iter through all episodes in the season
+                    for episode in season.episodes:
 
-                        yield episode
+                        if not episode.exists():
 
-                    elif args['verbose']:
-                        log(episode, 'RED')
+                            #
+                            episode.start()
+
+                            # If a file is downloading
+                            if episode.file:
+
+                                if args['verbose']:
+                                    log(episode, 'GREEN')
+
+                                yield episode
+
+                            elif args['verbose']:
+                                log(episode, 'RED')
