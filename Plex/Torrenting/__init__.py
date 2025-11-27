@@ -7,11 +7,17 @@ args = ParsedArgs()
 args.Arg('limit', 100)
 args.Arg('filter', '')
 
-# Declare the 'Plex' module
-this = Module('E:/Plex')
-
 # Declare the 'Virtual Machines' module
 VM = Module('E:/Virtual Machines')
+
+# Power on the Virtual Machine
+VM.run(
+    'start', 'Torrenting',
+    hide = (not args['verbose'])
+)
+
+# Declare the 'Plex' module
+this = Module('E:/Plex')
 
 # Connect to the qbittorrent web interface on the 'Torrenting' Virtual Machine
 qbit = api.qBitTorrent(

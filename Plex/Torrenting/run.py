@@ -1,18 +1,11 @@
 from philh_myftp_biz.pc import cls, ProgressBar
-from __init__ import qbit, driver, VM, args
+from __init__ import qbit, driver, args, VM
 from philh_myftp_biz.classOBJ import log
-from philh_myftp_biz.time import sleep
 from Scanner import Scanner
 import Media
 
 #
 cls()
-
-# Power on the Virtual Machine
-VM.run(
-    'start', 'Torrenting',
-    hide = (not args['verbose'])
-)
 
 #
 if args['verbose']:
