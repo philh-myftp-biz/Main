@@ -1,5 +1,6 @@
 from typing import Generator, Literal
 from __init__ import this, args
+from philh_myftp_biz.classOBJ import log
 import Media
 
 def ReadName(
@@ -44,8 +45,14 @@ def Scanner() -> Generator[Media.Movie | Media.Episode]:
 
                 # If a file is downloading
                 if movie.file:
+
+                    if args['verbose']:
+                        log(movie, 'GREEN')
                     
                     yield movie
+
+                elif args['verbose']:
+                    log(movie, 'RED')
 
     # Loop through all child directories of 'E:/Plex/Media/Shows' 
     for ShowDir in this.dir.child('/Media/Shows').children():
@@ -68,4 +75,10 @@ def Scanner() -> Generator[Media.Movie | Media.Episode]:
                     # If a file is downloading
                     if episode.file:
 
+                        if args['verbose']:
+                            log(episode, 'GREEN')
+
                         yield episode
+
+                    elif args['verbose']:
+                        log(episode, 'RED')
