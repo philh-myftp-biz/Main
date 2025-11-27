@@ -18,7 +18,7 @@ if args['verbose']:
 pbar = ProgressBar(args['limit'])
 
 # List of downloads
-downloads: Media.Downloadable = []
+downloads: Media._Template = []
 
 # Iter through downloads in scanner
 for download in Scanner():
@@ -91,5 +91,5 @@ while len(downloads) > 0:
 # Power off the Virtual Machine
 VM.run(
     'save', 'Torrenting',
-    hide = ('vm' not in args['debug'])
+    hide = (not args['verbose'])
 )
