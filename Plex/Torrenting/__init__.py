@@ -7,7 +7,7 @@ args = ParsedArgs()
 
 args.Arg(
     name = 'limit',
-    default = 100,
+    default = '100',
     desc = 'Maximum # of torrents to download',
     handler = int
 )
@@ -17,6 +17,20 @@ args.Arg(
     default = '',
     desc = 'Only download items whose title contains this',
     handler = lambda x: x.lower()
+)
+
+args.Arg(
+    name = 'seeders',
+    default = '15',
+    desc = 'Minimum # of seeders per torrent',
+    handler = int
+)
+
+args.Arg(
+    name = 'quality',
+    default = '720,1080',
+    desc = 'Comma-Separated list of allowed qualities',
+    handler = lambda x: [int(y) for y in x.split(',')]
 )
 
 #==============================================
