@@ -1,5 +1,12 @@
 from philh_myftp_biz.web import api, Driver
 from philh_myftp_biz.modules import Module
+from philh_myftp_biz import ParsedArgs
+from sys import maxsize
+
+#
+args = ParsedArgs()
+args.Arg('limit', maxsize)
+args.Arg('filter', '')
 
 # Declare the 'Plex' module
 this = Module('E:/Plex')
@@ -11,7 +18,8 @@ VM = Module('E:/Virtual Machines')
 qbit = api.qBitTorrent(
     host = VM.run('IP', 'Torrenting', hide=True).output('json'),
     username = 'admin',
-    password = 'Torrenting123!'
+    password = 'Torrenting123!',
+    debug = args['verbose']
 )
 
 # Connect to 'thepiratebay.org'
@@ -21,4 +29,6 @@ tpb = api.thePirateBay()
 omdb = api.omdb()
 
 # Create a new Webdriver
-driver = Driver()
+driver = Driver(
+    debug = args['verbose']
+)
