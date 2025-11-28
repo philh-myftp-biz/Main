@@ -52,7 +52,10 @@ this = Module('E:/Plex')
 # Create a new Webdriver
 driver = Driver(
     headless = (not args['verbose']),
-    debug = args['verbose']
+    debug = args['verbose'],
+    extensions = [
+        'https://addons.mozilla.org/firefox/downloads/file/4619486/adguard_adblocker-5.2.113.0.xpi'
+    ]
 )
 
 # Connect to the qbittorrent web interface on the 'Torrenting' Virtual Machine
