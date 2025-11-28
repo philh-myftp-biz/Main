@@ -3,16 +3,13 @@ from __init__ import qbit, driver, args, VM
 from Scanner import Scanner
 import Media
 
-#
+# Clear the terminal window
 cls()
 
-#
-if args['verbose']:
-    print('\nClearing Download Queue ...')
+# Clear the download queue
 qbit.clear()
 
-if args['verbose']:
-    print('\nDiscovering Magnets ...')
+print('\nDiscovering Magnets ...')
 
 # Create a progress bar
 pbar = ProgressBar(args['limit'])
@@ -23,27 +20,26 @@ downloads: list[Media._Template] = []
 # Iter through downloads in scanner
 for download in Scanner():
 
-    #
+    # Start the download
     download.file.start(True)
 
     # Append the download to the list
     downloads += [download]
 
-    #
+    # Update the progress bar
     pbar.step()
 
     # If enough downloads have already been started
     if len(downloads) == args['limit']:
         break
 
-#
+# Stop the progress bar
 pbar.stop()
 
 # Close the webdriver
 driver.close()
 
-if args['verbose']:
-    print('\nDownloading Magnets ...')
+print('\nDownloading Magnets ...')
 
 # Create a progress bar
 pbar = ProgressBar(len(downloads))
@@ -51,7 +47,7 @@ pbar = ProgressBar(len(downloads))
 # Loop until no downloads are left
 while len(downloads) > 0:
 
-    #
+    # Sort the download queue
     qbit.sort()
 
     # Iter through all downloads
@@ -63,7 +59,7 @@ while len(downloads) > 0:
             # Get source and destination paths of file
             src, dst = d.paths()
 
-            #
+            # Debug: Print the src and destination
             if args['verbose']:
                 print()
                 print('src:', src)
@@ -75,21 +71,23 @@ while len(downloads) > 0:
                 show_progress = args['verbose']
             )
 
-            #
+            # Run any final commands for the download
             d.finish()
 
             # Remove the download from the list
             del downloads[x]
 
-            #
+            # Update the progress bar
             pbar.step()
 
-        if d.magnet.errored():
+        # If the magnet is errored
+        elif d.magnet.errored():
 
-            if args['verbose']:
-                print(f'\nRetrying: {d.magnet.url[:15]}...')
-            
+            # Start the download            
             d.magnet.start()
+
+# Clear the download queue
+qbit.clear()
 
 # Power off the Virtual Machine
 VM.run(
