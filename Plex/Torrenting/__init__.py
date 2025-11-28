@@ -51,7 +51,8 @@ this = Module('E:/Plex')
 # Create a new Webdriver
 driver = Driver(
     headless = (not args['verbose']),
-    debug = args['verbose']
+    debug = args['verbose'],
+    extensions = ['adblock']
 )
 
 # Connect to the qbittorrent web interface on the 'Torrenting' Virtual Machine
