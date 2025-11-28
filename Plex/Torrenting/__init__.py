@@ -70,4 +70,6 @@ tpb = api.thePirateBay(
 )
 
 # Connect to 'omdbapi.com'
-omdb = api.omdb()
+omdb = api.omdb(
+    debug = args['verbose']
+)
