@@ -4,10 +4,10 @@ from philh_myftp_biz.text import similarity
 from __init__ import this, tpb, omdb, args
 from philh_myftp_biz.pc import Path, mkdir
 from philh_myftp_biz.db import MimeType
-from typing import Callable
-import PTN
 from philh_myftp_biz.json import Dict
 from philh_myftp_biz.file import YAML
+from typing import Callable
+import PTN
 
 class _Template:
 
@@ -51,18 +51,25 @@ class _Template:
         Search thepiratebay.org and start the download
         """
 
+        # List of magnets
         magnets: list[Magnet] = []
 
+        # Iter through the search queries
         for query in self.queries:
 
+            # Iter through all magnets found with the query
             for m in tpb.search(query):
 
+                # If there are enough seeders
                 seeders = (m.seeders >= args['seeders'])
 
+                # If the quality is valid
                 quality = (m.quality in args['quality'])
 
+                # If the name is valid
                 validName = self.validName(m.title)
 
+                # Debug: Print magnet details
                 if args['verbose']:
                     print('Scanning:', {
                         'name': [validName, m.title],
@@ -70,16 +77,18 @@ class _Template:
                         'quality': [quality, m.quality]
                     })
 
+                # If all three conditions are true
                 if seeders and quality and validName:
 
+                    # Append the magnet to the list
                     magnets += [m]
 
         # Return the best remaining magnet
         self.magnet = max(
             array = magnets,
             func = lambda m: priority(
-                _1 = m.quality,
-                _2 = m.seeders,
+                _1 = m.quality, # 1st. Quality
+                _2 = m.seeders, # 2nd. Seeders
                 reverse = True
             ) 
         )
@@ -87,6 +96,7 @@ class _Template:
         # If a magnet has been found
         if self.magnet:
 
+            # Debug: Print magnet details
             if args['verbose']:
                 print('Found:', {
                     'name': self.magnet.title,
@@ -97,8 +107,10 @@ class _Template:
             # Download the magnet
             self.magnet.start()
 
+        # If a magnet has not been found and debug
         elif args['verbose']:
 
+            # Debug: Print magnet details
             print('Found:', None)
 
     def exists(self) -> bool:
@@ -143,8 +155,13 @@ class Movie(_Template):
     ):
         
         self.Title = title
+        """Movie Title"""
+
         self.Year = year
+        """Release Year"""
+        
         self.__todo = todo
+        """Placeholder File"""
 
         self.queries = [
             f'{title} {year}'
@@ -152,6 +169,7 @@ class Movie(_Template):
        
     def start(self):
 
+        # Start the download
         super().start()
 
         # If a magnet was found
@@ -166,7 +184,7 @@ class Movie(_Template):
                     # Set the 'file' attr to the current file
                     self.file = f
 
-                    #
+                    # Start downloading the file
                     f.start(True)
                     
                     break
@@ -195,6 +213,10 @@ class Movie(_Template):
         return src, dst
 
     def finish(self):
+
+        # Stop the magnet
+        self.magnet.stop()
+
         # If a todo/placeholder file was passed during initialization
         if self.__todo:
 
@@ -209,7 +231,10 @@ class Show:
     ):
 
         self.title = title
+        """Show Title"""
+
         self.year = year
+        """Release Year"""
 
         self.dir = this.dir.child(f"/Media/Shows/{title} ({year})/")
         """../Media/Shows/{Title} ({Year})/"""
@@ -223,6 +248,7 @@ class Show:
 
         # Fetch show details from the Open Movie Database
         self.__seasons = omdb.show(title, year).Seasons
+        """raw list of seasons"""
 
     def Seasons(self):
 
@@ -251,13 +277,15 @@ class Season(_Template):
     ):
         
         self.show = show
-        self.__int = season
+        """This Show"""
 
-        self._started: bool = False
+        self._season = season
+        """season #"""
 
         self.dir = show.dir.child(f"/Season {self:02d}/")
         """../Season {Season}/"""
 
+        # Create the folder if it doesn't exist
         if not self.dir.exists():
             mkdir(self.dir)
 
@@ -268,8 +296,12 @@ class Season(_Template):
         ]
 
         self.episodes: list[Episode] = []
+        """List of Episodes"""
 
+        # Iter through all raw episodes
         for e in episodes:
+
+            # Append an episode object to the list
             self.episodes += [Episode(
                 season = self, # This Season
                 episode = int(e) # Episode number
@@ -277,17 +309,28 @@ class Season(_Template):
 
     def start(self):
 
+        # Start the download
         super().start()
 
+        # If a magnet has been found
         if self.magnet:
 
+            # Iter through all downloading files
             for f in self.magnet.files():
+
+                # Pause the file download
                 f.stop()
 
     def exists(self):
+        
+        # Iter through all episodes this season
         for episode in self.episodes:
+
+            # If the episode does not exist
             if not episode.exists():
+                
                 return False
+            
         return True
 
     def validName(self, name:str) -> bool:
@@ -304,10 +347,10 @@ class Season(_Template):
         return (title and season)
 
     def __int__(self):
-        return self.__int
+        return self._season
     
     def __format__(self, format_spec):
-        return f'{self.__int:{format_spec}}'
+        return f'{self._season:{format_spec}}'
     
     def __str__(self):
         from philh_myftp_biz.classOBJ import location
@@ -322,8 +365,14 @@ class Episode(_Template):
     ):
 
         self.season = season
-        self.__int = episode
+        """This Season"""
+
         self.show = season.show
+        """This Show"""
+
+        self._episode = episode
+        """Episode #"""
+        
         self.dir = season.dir
 
         self.queries = [
@@ -333,16 +382,25 @@ class Episode(_Template):
 
     def start(self):
 
+        # If this season is downloading as one magnet
         if self.season.magnet:
 
+            # Iter through all files in the season download
             for file in self.season.magnet.files():
 
+                # If the file is valid
                 if self.validFile(file.path):
 
+                    # Start downloading the file
                     file.start()
 
+                    # Set this objects 'file' attr to the file
                     self.file = file
+
+                    # Set this objects 'magnet' attr to the season magnet
                     self.magnet = self.season.magnet
+
+                    break
 
         if self.file is None:
             super().start()
@@ -355,9 +413,13 @@ class Episode(_Template):
         # Check if the file season is the same
         season = (data['season'] == int(self.season))
 
+        # If the name has multiple episode #s
         if isinstance(data['episode'], list):
+            # If the 1st num is the same
             episode = (int(self) == data['episode'][0])
+        
         else:
+            # If the episode num is the same
             episode = (int(self) == data['episode'])
 
         return (season and episode)
@@ -373,10 +435,12 @@ class Episode(_Template):
         return src, dst
 
     def __int__(self):
-        return self.__int
+        return self._episode
     
     def __format__(self, format_spec):
-        return f'{self.__int:{format_spec}}'
+        return f'{self._episode:{format_spec}}'
 
     def finish(self):
-        pass
+
+        # Stop downloading the file
+        self.file.stop()
