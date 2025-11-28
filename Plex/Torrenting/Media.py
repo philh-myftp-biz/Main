@@ -6,6 +6,7 @@ from philh_myftp_biz.pc import Path, mkdir
 from philh_myftp_biz.db import MimeType
 from typing import Callable
 import PTN
+from philh_myftp_biz.json import Dict
 
 class _Template:
 
@@ -53,9 +54,7 @@ class _Template:
 
         for query in self.queries:
 
-            search = tpb.search(query)
-
-            for m in search:
+            for m in tpb.search(query):
 
                 seeders = (m.seeders >= args['seeders'])
 
@@ -63,10 +62,16 @@ class _Template:
 
                 validName = self.validName(m.title)
 
+                if args['verbose']:
+                    print('Scanning:', {
+                        'name': [validName, m.title],
+                        'seeders': [seeders, m.seeders],
+                        'quality': [quality, m.quality]
+                    })
+
                 if seeders and quality and validName:
 
                     magnets += [m]
-
 
         # Return the best remaining magnet
         self.magnet = max(
@@ -81,8 +86,19 @@ class _Template:
         # If a magnet has been found
         if self.magnet:
 
+            if args['verbose']:
+                print('Found:', {
+                    'name': self.magnet.title,
+                    'seeders': self.magnet.seeders,
+                    'quality': self.magnet.quality
+                })
+
             # Download the magnet
             self.magnet.start()
+
+        elif args['verbose']:
+
+            print('Found:', None)
 
     def exists(self) -> bool:
         """
@@ -110,13 +126,10 @@ class _Template:
         # If the mimetype of the file is 'video'
         video = (MimeType.Path(path) == 'video')
 
-        #
-        notTODO = (path.ext() != 'todo')
-
         # If the name of the file is valid
         name = self.validName(path.name())
 
-        return (video and name and notTODO)
+        return (video and name)
     
 class Movie(_Template):
 
@@ -160,20 +173,13 @@ class Movie(_Template):
     def validName(self, name:str) -> bool:
         
         # Parse the file name
-        data = PTN.parse(name)
+        data: Dict[str] = Dict(PTN.parse(name))
 
         # Check if the year is the same
-        if 'year' in data:
-            year = (data['year'] == self.Year)
-        else:
-            year = False
+        year = (data['year'] == self.Year)
 
-        # Check if the file title is more than 60% similar
-        if 'title' in data:
-            title = similarity(
-                a = self.Title, 
-                b = data['title']
-            ) > .6
+        # Check if the title is more than 60% similar
+        title = (similarity(self.Title, data['title']) > .6)
         
         return (year and title)
 
@@ -222,6 +228,12 @@ class Show:
                 episodes = self.__seasons[s] # Array of episode numbers as strings
             )
 
+    def __str__(self):
+        from philh_myftp_biz.classOBJ import location
+        from philh_myftp_biz.text import abbreviate
+
+        return f'<Show "{abbreviate(15, self.title)}" @{location(self)}>'
+
 class Season(_Template):
 
     def __init__(self,
@@ -231,7 +243,7 @@ class Season(_Template):
     ):
         
         self.show = show
-        self.season = season
+        self.__int = season
 
         self._started: bool = False
 
@@ -273,27 +285,26 @@ class Season(_Template):
     def validName(self, name:str) -> bool:
 
         # Parse the file name
-        data = PTN.parse(name)
+        data: Dict[str] = Dict(PTN.parse(name))
 
         # Check if the file season is the same
-        if 'season' in data:
-            season = (data['season'] == int(self.season))
-        else:
-            season = False
+        season = (data['season'] == int(self))
 
-        # Check if the file title is more than 60% similar to the show title
-        title = similarity(
-            a = data['title'], 
-            b = self.show.title
-        ) > .6
+        # Check if the title is more than 60% similar to the show title
+        title = (similarity(data['title'], self.show.title) > .6)
 
         return (title and season)
 
     def __int__(self):
-        return self.season
+        return self.__int
     
     def __format__(self, format_spec):
-        return f'{self.season:{format_spec}}'
+        return f'{self.__int:{format_spec}}'
+    
+    def __str__(self):
+        from philh_myftp_biz.classOBJ import location
+
+        return f'<Season "{self}" @{location(self)}>'
 
 class Episode(_Template):
 
@@ -301,8 +312,9 @@ class Episode(_Template):
         season: 'Season',
         episode: int
     ):
+
         self.season = season
-        self.episode = episode
+        self.__int = episode
         self.show = season.show
         self.dir = season.dir
 
@@ -330,19 +342,15 @@ class Episode(_Template):
     def validName(self, name:str) -> bool:
 
         # Parse the file name
-        data = PTN.parse(name)
+        data: Dict[str] = Dict(PTN.parse(name))
 
         # Check if the file season is the same
-        if 'season' in data:
-            season = (data['season'] == int(self.season))
+        season = (data['season'] == int(self.season))
+
+        if isinstance(data['episode'], list):
+            episode = (int(self) == data['episode'][0])
         else:
-            season = False
-        
-        # Check if the file episode is the same
-        if 'episode' in data:
-            episode = (data['episode'] == int(self))
-        else:
-            episode = False
+            episode = (int(self) == data['episode'])
 
         return (season and episode)
 
@@ -357,10 +365,10 @@ class Episode(_Template):
         return src, dst
 
     def __int__(self):
-        return self.episode
+        return self.__int
     
     def __format__(self, format_spec):
-        return f'{self.episode:{format_spec}}'
+        return f'{self.__int:{format_spec}}'
 
     def finish(self):
         pass
