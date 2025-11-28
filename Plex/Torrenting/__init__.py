@@ -1,9 +1,10 @@
+from philh_myftp_biz.text import auto_convert
 from philh_myftp_biz.web import api, Driver
 from philh_myftp_biz.modules import Module
 from philh_myftp_biz import ParsedArgs
-from philh_myftp_biz.text import auto_convert
 
 #==============================================
+# Parse commandline arguements
 args = ParsedArgs()
 
 args.Arg(
@@ -51,8 +52,7 @@ this = Module('E:/Plex')
 # Create a new Webdriver
 driver = Driver(
     headless = (not args['verbose']),
-    debug = args['verbose'],
-    extensions = ['adblock']
+    debug = args['verbose']
 )
 
 # Connect to the qbittorrent web interface on the 'Torrenting' Virtual Machine
