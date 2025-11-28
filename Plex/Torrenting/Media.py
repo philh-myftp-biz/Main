@@ -7,6 +7,7 @@ from philh_myftp_biz.db import MimeType
 from typing import Callable
 import PTN
 from philh_myftp_biz.json import Dict
+from philh_myftp_biz.file import YAML
 
 class _Template:
 
@@ -123,13 +124,13 @@ class _Template:
             - Name is valid
         """
 
-        # If the mimetype of the file is 'video'
-        video = (MimeType.Path(path) == 'video')
+        # If the mimetype of the file is 'video' or 'ignore'
+        type = (MimeType.Path(path) in ['video', 'ignore'])
 
         # If the name of the file is valid
         name = self.validName(path.name())
 
-        return (video and name)
+        return (type and name)
     
 class Movie(_Template):
 
@@ -206,12 +207,19 @@ class Show:
         title: str,
         year: int             
     ):
-        
+
         self.title = title
         self.year = year
 
         self.dir = this.dir.child(f"/Media/Shows/{title} ({year})/")
         """../Media/Shows/{Title} ({Year})/"""
+
+        self.config = Dict(YAML(self.dir.child('config.yaml')))
+        """Show Configuration"""
+
+        # Set the default 'quality' config value
+        if self.config['quality'] is None:
+            self.config['quality'] = [720, 1080]
 
         # Fetch show details from the Open Movie Database
         self.__seasons = omdb.show(title, year).Seasons
