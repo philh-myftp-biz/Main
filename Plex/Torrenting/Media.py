@@ -391,9 +391,6 @@ class Episode(_Template):
                 # If the file is valid
                 if self.validFile(file.path):
 
-                    # Start downloading the file
-                    file.start()
-
                     # Set this objects 'file' attr to the file
                     self.file = file
 
@@ -403,7 +400,29 @@ class Episode(_Template):
                     break
 
         if self.file is None:
+
+            # Start downloading the episode
             super().start()
+
+            # If a magnet has been found
+            if self.magnet:
+
+                # Iter through all files in the magnet
+                for file in self.magnet.files():
+
+                    # If the file is valid
+                    if self.validFile(file.path):
+
+                        # Set this objects 'file' attr to the file
+                        self.file = file
+
+                        break
+
+        #
+        if self.file:
+
+            #
+            self.file.start()
 
     def validName(self, name:str) -> bool:
 
