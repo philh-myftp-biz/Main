@@ -1,6 +1,6 @@
+from philh_myftp_biz.classOBJ import log
 from typing import Generator, Literal
 from __init__ import this, args
-from philh_myftp_biz.classOBJ import log
 import Media
 
 def ReadName(
@@ -52,6 +52,7 @@ def Scanner() -> Generator[Media._Template]:
                     else:
 
                         if movie.magnet:
+
                             movie.magnet.stop()
                         
                         if args['verbose']:
