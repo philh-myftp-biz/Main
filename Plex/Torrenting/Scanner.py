@@ -25,7 +25,7 @@ def Scanner() -> Generator[Media._Template]:
     """
     Generate a list of Movie or Episode Downloads
     """
-    
+
     # Iter through all movie files
     for p in this.dir.child('/Media/Movies/').children():
 
@@ -70,6 +70,7 @@ def Scanner() -> Generator[Media._Template]:
             # Iter through all seasons in the show
             for season in show.Seasons():
 
+                #
                 if not season.exists():
 
                     #
@@ -78,6 +79,7 @@ def Scanner() -> Generator[Media._Template]:
                     # Iter through all episodes in the season
                     for episode in season.episodes:
 
+                        #
                         if not episode.exists():
 
                             #
