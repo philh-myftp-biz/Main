@@ -18,7 +18,7 @@ if args['verbose']:
 pbar = ProgressBar(args['limit'])
 
 # List of downloads
-downloads: Media._Template = []
+downloads: list[Media._Template] = []
 
 # Iter through downloads in scanner
 for download in Scanner():
@@ -74,6 +74,9 @@ while len(downloads) > 0:
                 dst = dst,
                 show_progress = args['verbose']
             )
+
+            #
+            d.finish()
 
             # Remove the download from the list
             del downloads[x]
