@@ -28,13 +28,6 @@ args.Arg(
     handler = int
 )
 
-args.Arg(
-    name = 'quality',
-    default = '720,1080',
-    desc = 'Comma-Separated list of allowed qualities',
-    handler = lambda x: [auto_convert(y) for y in x.split(',')]
-)
-
 #==============================================
 
 # Declare the 'Virtual Machines' module
