@@ -5,7 +5,6 @@ from __init__ import this, tpb, omdb, args
 from philh_myftp_biz.pc import Path, mkdir
 from philh_myftp_biz.db import MimeType
 from philh_myftp_biz.json import Dict
-from philh_myftp_biz.file import YAML
 from typing import Callable
 import PTN
 
@@ -63,9 +62,6 @@ class _Template:
                 # If there are enough seeders
                 seeders = (m.seeders >= args['seeders'])
 
-                # If the quality is valid
-                quality = (m.quality in args['quality'])
-
                 # If the name is valid
                 validName = self.validName(m.title)
 
@@ -73,12 +69,11 @@ class _Template:
                 if args['verbose']:
                     print('Scanning:', {
                         'name': [validName, m.title],
-                        'seeders': [seeders, m.seeders],
-                        'quality': [quality, m.quality]
+                        'seeders': [seeders, m.seeders]
                     })
 
-                # If all three conditions are true
-                if seeders and quality and validName:
+                # If both conditions are true
+                if seeders and validName:
 
                     # Append the magnet to the list
                     magnets += [m]
@@ -166,7 +161,7 @@ class Movie(_Template):
         self.queries = [
             f'{title} {year}'
         ]
-       
+
     def start(self):
 
         # Start the download
@@ -238,13 +233,6 @@ class Show:
 
         self.dir = this.dir.child(f"/Media/Shows/{title} ({year})/")
         """../Media/Shows/{Title} ({Year})/"""
-
-        self.config = Dict(YAML(self.dir.child('config.yaml')))
-        """Show Configuration"""
-
-        # Set the default 'quality' config value
-        if self.config['quality'] is None:
-            self.config['quality'] = [720, 1080]
 
         # Fetch show details from the Open Movie Database
         self.__seasons = omdb.show(title, year).Seasons
