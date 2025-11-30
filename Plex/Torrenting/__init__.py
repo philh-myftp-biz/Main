@@ -67,16 +67,23 @@ driver = Driver(
 )
 
 #==============================================
+# qBitTorrent
+
+host = None
+
+while host is None:
+    host = VM.run('IP', 'Torrenting', hide=True).output('json')
 
 # Connect to the qbittorrent web interface on the 'Torrenting' Virtual Machine
 qbit = api.qBitTorrent(
-    host = VM.run('IP', 'Torrenting', hide=True).output('json'),
+    host = host,
     username = 'admin',
     password = 'Torrenting123!',
     debug = args['verbose']
 )
 
 #==============================================
+# thePirateBay
 
 # Connect to 'thepiratebay.org'
 tpb = api.thePirateBay(
@@ -85,6 +92,7 @@ tpb = api.thePirateBay(
 )
 
 #==============================================
+# omdb
 
 # Connect to 'omdbapi.com'
 omdb = api.omdb(
