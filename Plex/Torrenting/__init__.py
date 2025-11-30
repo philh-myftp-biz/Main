@@ -58,7 +58,7 @@ VM.run(
 
 # Create a new Webdriver
 driver = Driver(
-    #headless = (not args['verbose']),
+    headless = (not args['verbose']),
     debug = args['verbose'],
     extensions = [
         'https://addons.mozilla.org/firefox/downloads/file/4619486/adguard_adblocker-5.2.113.0.xpi' # AdBlocker
