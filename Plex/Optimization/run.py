@@ -1,10 +1,5 @@
+from __init__ import this, QueueItem, encode, args
 from philh_myftp_biz.db import MimeType
-from philh_myftp_biz import ParsedArgs
-from __init__ import this, QueueItem
-from ffmpeg_wrapper import encode
-
-args = ParsedArgs()
-args.Arg('limit', 5)
 
 #
 queue: list[QueueItem] = []
@@ -35,20 +30,7 @@ for i in queue:
     try:
 
         #
-        encode([
-
-            '-i', str(i.src), # Input Path
-            
-            '-map', f'0:v:0', # Video Stream
-            '-c:v', 'h264_nvenc', # Video Codec
-
-            '-map', f'0:a:m:language:eng', # Audio Stream
-            '-c:a', 'copy', # Audio Codec
-
-            str(i.dst), # Output Path
-            '-y', # Overwrite Existing File
-
-        ])
+        encode(i)
 
         #
         i.src.delete()
