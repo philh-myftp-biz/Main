@@ -1,6 +1,5 @@
-from philh_myftp_biz.text import auto_convert
+from philh_myftp_biz.modules import Module, ModuleLockedError
 from philh_myftp_biz.web import api, Driver
-from philh_myftp_biz.modules import Module
 from philh_myftp_biz import ParsedArgs
 
 #==============================================
@@ -29,6 +28,22 @@ args.Arg(
 )
 
 #==============================================
+# Plex Module
+
+# Declare the 'Plex' module
+this = Module('E:/Plex')
+
+# If the Plex module is locked
+if this.lock.locked():
+    # Raise Error
+    raise ModuleLockedError(this)
+
+else:
+    # Lock the Plex module
+    this.lock.lock()
+
+#==============================================
+# VM module
 
 # Declare the 'Virtual Machines' module
 VM = Module('E:/Virtual Machines')
@@ -39,17 +54,19 @@ VM.run(
     hide = (not args['verbose'])
 )
 
-# Declare the 'Plex' module
-this = Module('E:/Plex')
+#==============================================
 
 # Create a new Webdriver
 driver = Driver(
-    headless = (not args['verbose']),
+    #headless = (not args['verbose']),
     debug = args['verbose'],
     extensions = [
-        'https://addons.mozilla.org/firefox/downloads/file/4619486/adguard_adblocker-5.2.113.0.xpi'
-    ]
+        'https://addons.mozilla.org/firefox/downloads/file/4619486/adguard_adblocker-5.2.113.0.xpi' # AdBlocker
+    ],
+    fast_load = True
 )
+
+#==============================================
 
 # Connect to the qbittorrent web interface on the 'Torrenting' Virtual Machine
 qbit = api.qBitTorrent(
@@ -59,13 +76,19 @@ qbit = api.qBitTorrent(
     debug = args['verbose']
 )
 
+#==============================================
+
 # Connect to 'thepiratebay.org'
 tpb = api.thePirateBay(
     driver = driver,
     qbit = qbit
 )
 
+#==============================================
+
 # Connect to 'omdbapi.com'
 omdb = api.omdb(
     debug = args['verbose']
 )
+
+#==============================================

@@ -1,4 +1,4 @@
-from __init__ import qbit, driver, args, VM
+from __init__ import qbit, driver, args, VM, this
 from philh_myftp_biz.pc import ProgressBar
 from Scanner import Scanner
 import Media
@@ -91,3 +91,6 @@ VM.run(
     'save', 'Torrenting',
     hide = (not args['verbose'])
 )
+
+# Unlock the Plex module
+this.lock.unlock()
