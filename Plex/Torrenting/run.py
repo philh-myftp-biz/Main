@@ -1,10 +1,7 @@
-from philh_myftp_biz.pc import cls, ProgressBar
 from __init__ import qbit, driver, args, VM
+from philh_myftp_biz.pc import ProgressBar
 from Scanner import Scanner
 import Media
-
-# Clear the terminal window
-cls()
 
 # Clear the download queue
 qbit.clear()
