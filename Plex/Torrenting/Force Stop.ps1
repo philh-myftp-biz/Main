@@ -14,3 +14,6 @@ Get-Process | ForEach-Object -Process {
     }
 
 }
+
+# Remove Lock File
+Remove-Item 'E:\Plex\__lock__.ig' -Force -Verbose
