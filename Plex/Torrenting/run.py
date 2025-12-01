@@ -3,9 +3,6 @@ from philh_myftp_biz.pc import ProgressBar
 from Scanner import Scanner
 import Media
 
-# Clear the download queue
-qbit.clear()
-
 print('\nDiscovering Magnets ...')
 
 # Create a progress bar
