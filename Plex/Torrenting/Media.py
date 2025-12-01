@@ -1,4 +1,4 @@
-from philh_myftp_biz.array import priority, max
+from philh_myftp_biz.array import List, priority
 from philh_myftp_biz.web import Magnet, api
 from philh_myftp_biz.text import similarity
 from __init__ import this, tpb, omdb, args
@@ -51,7 +51,7 @@ class _Template:
         """
 
         # List of magnets
-        magnets: list[Magnet] = []
+        magnets: List[Magnet] = List()
 
         # Iter through the search queries
         for query in self.queries:
@@ -76,12 +76,11 @@ class _Template:
                 if seeders and validName:
 
                     # Append the magnet to the list
-                    magnets += [m]
+                    magnets += m
 
         # Return the best remaining magnet
-        self.magnet = max(
-            array = magnets,
-            func = lambda m: priority(
+        self.magnet = magnets.max(
+            lambda m: priority(
                 _1 = m.quality, # 1st. Quality
                 _2 = m.seeders, # 2nd. Seeders
                 reverse = True
