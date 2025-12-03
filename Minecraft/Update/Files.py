@@ -1,5 +1,5 @@
-from __init__ import File
 from philh_myftp_biz.web import Driver
+from __init__ import File
 
 # Create new webdriver
 driver = Driver()
