@@ -2,9 +2,9 @@ from __init__ import args, Worlds, Edition
 from philh_myftp_biz import run
 
 #
-for server in Worlds():
+for w in Worlds():
 
-    edit = Edition(server)
+    edit = Edition(w)
 
     # If server is Java Edition
     if edit == 'java':
@@ -22,5 +22,5 @@ for server in Worlds():
     #
     run(
         args,
-        dir = server.path
+        dir = w
     )
