@@ -1,8 +1,8 @@
-from __init__ import args, Servers, Edition
+from __init__ import args, Worlds, Edition
 from philh_myftp_biz import run
 
 #
-for server in Servers():
+for server in Worlds():
 
     edit = Edition(server)
 
