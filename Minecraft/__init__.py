@@ -1,49 +1,55 @@
-from philh_myftp_biz.file import temp, YAML
 from philh_myftp_biz.modules import Module
-from philh_myftp_biz.web import download
-from philh_myftp_biz.text import hex
+from philh_myftp_biz import ParsedArgs
+from typing import Generator, Literal
 from philh_myftp_biz.pc import Path
-from typing import Literal
 
+# Minecraft Module
 this = Module('E:/Minecraft')
 
-class Server:
+# Dir with all worlds
+Worlds = this.dir.child('/Worlds/')
 
-    edition: Literal['java', 'bedrock']
+# Parsed COmmand Line Arguements
+args = ParsedArgs()
 
-    def __init__(self,
-        path: Path
-    ):
-        self.path = path
+# Parse Age: name
+args.Arg(
+    'name',
+    'Select Server by name'
+)
 
-        self.config = YAML(path.child('config.yaml')).read()
+def Edition(server:Path) -> None | Literal['java', 'bedrock']:
+    """
+    Assume the edition (java/bedrock) of a server by it's path
+    """
 
-        for p in path.children():
+    # Wait until args are declared
+    for p in server.children():
+
+        # If server is Java Edition
+        if p.ext() == 'jar':
+            return 'java'
             
-            if p.ext() == 'jar':
-                self.edition = 'java'
-                break
+        # If server is Bedrock Edition
+        elif p.ext() == 'exe':
+            return 'bedrock'
+
+def Worlds() -> Generator[Path]:
+
+    # If a name is given
+    if args['name']:
+    
+        # Yield the world folder with the given name
+        yield Worlds.child(args['name'])
+
+    #
+    else:
+
+        #
+        for s in Worlds.children():
             
-            elif p.ext() == 'exe':
-                self.edition = 'bedrock'
-                break
-
-class File:
-
-    def __init__(self,
-        name: str,
-        url: str
-    ):
-        
-        self.name = name
-
-        self.path = temp(
-            name = hex.encode(name),
-            ext = self.name[self.name.rfind('.'):]
-        )
-
-        download(
-            url = url,
-            path = self.path
-        )
-
+            #
+            if s.isdir():
+    
+                #
+                yield s

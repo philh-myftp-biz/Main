@@ -1,31 +1,26 @@
-from philh_myftp_biz import Args, run
-from __init__ import Server, this
+from __init__ import args, Servers, Edition
+from philh_myftp_biz import run
 
-args = Args()
+#
+for server in Servers():
 
-servers: list[Server] = []
+    edit = Edition(server)
 
-if len(args) == 1:
-    
-    servers += [Server(
-        path = this.dir.child(f'/Worlds/{args[0]}')
-    )]
+    # If server is Java Edition
+    if edit == 'java':
+        args = [
+            'java', 
+            '-Xmx2G',
+            '-jar', 'fabric-server-launch.jar',
+            'nogui'
+        ]
+        
+    # If server is Bedrock Edition
+    elif edit == 'bedrock':
+        args = []
 
-else:
-
-    for p in this.dir.child('/Worlds/'):
-        servers += [Server(p)]
-
-for server in servers:
-
-    if server.edition == 'java':
-
-        run(
-            args = [
-                'java', 
-                '-Xmx2G',
-                '-jar', 'fabric-server-launch.jar',
-                'nogui'
-            ],
-            dir = server.path
-        )
+    #
+    run(
+        args,
+        dir = server.path
+    )
