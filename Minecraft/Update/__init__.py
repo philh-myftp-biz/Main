@@ -5,9 +5,15 @@ from philh_myftp_biz.text import hex
 from philh_myftp_biz.pc import Path
 from typing import Literal
 
+# Minecraft Module
 this = Module('E:/Minecraft')
 
-class Server:
+class World:
+    """
+    Minecraft World
+
+    "E:/Minecraft/Worlds/{}/"
+    """
 
     edition: Literal['java', 'bedrock']
 
