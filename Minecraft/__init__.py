@@ -6,9 +6,6 @@ from philh_myftp_biz.pc import Path
 # Minecraft Module
 this = Module('E:/Minecraft')
 
-# Dir with all worlds
-Worlds = this.dir.child('/Worlds/')
-
 # Parsed COmmand Line Arguements
 args = ParsedArgs()
 
@@ -36,17 +33,19 @@ def Edition(server:Path) -> None | Literal['java', 'bedrock']:
 
 def Worlds() -> Generator[Path]:
 
+    Dir = this.dir.child('/Worlds/')
+
     # If a name is given
     if args['name']:
     
         # Yield the world folder with the given name
-        yield Worlds.child(args['name'])
+        yield Dir.child(args['name'])
 
     #
     else:
 
         #
-        for s in Worlds.children():
+        for s in Dir.children():
             
             #
             if s.isdir():
