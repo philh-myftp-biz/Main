@@ -2,3 +2,5 @@
 # Cache
 **/__pycache__/
 
+# Session Lock
+**/session.lock
