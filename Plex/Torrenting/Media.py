@@ -63,17 +63,21 @@ class _Template:
                 seeders = (m.seeders >= args['seeders'])
 
                 # If the name is valid
-                validName = self.validName(m.title)
+                name = self.validName(m.title)
+
+                # If the quality is at most 1080p
+                quality = m.quality <= 1080
 
                 # Debug: Print magnet details
                 if args['verbose']:
                     print('Scanning:', {
-                        'name': [validName, m.title],
-                        'seeders': [seeders, m.seeders]
+                        'name': [name, m.title],
+                        'seeders': [seeders, m.seeders],
+                        'quality': [quality, m.quality]
                     })
 
-                # If both conditions are true
-                if seeders and validName:
+                # If all three conditions are true
+                if seeders and name and quality:
 
                     # Append the magnet to the list
                     magnets += m
