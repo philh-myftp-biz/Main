@@ -59,8 +59,8 @@ class _Template:
             # Iter through all magnets found with the query
             for m in tpb.search(query):
 
-                # If there are enough seeders
-                seeders = (m.seeders >= args['seeders'])
+                # If there are at least 5 seeders
+                seeders = (m.seeders >= 5)
 
                 # If the name is valid
                 name = self.validName(m.title)

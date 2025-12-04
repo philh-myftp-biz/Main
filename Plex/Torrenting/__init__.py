@@ -20,13 +20,6 @@ args.Arg(
     handler = lambda x: x.lower()
 )
 
-args.Arg(
-    name = 'seeders',
-    default = '15',
-    desc = 'Minimum # of seeders per torrent',
-    handler = int
-)
-
 #==============================================
 # Plex Module
 
