@@ -1,17 +1,11 @@
 from philh_myftp_biz.modules import Module, ModuleLockedError
 from philh_myftp_biz.web import api, Driver
 from philh_myftp_biz import ParsedArgs
+from philh_myftp_biz.pc import ProgressBar
 
 #==============================================
 # Parse commandline arguements
 args = ParsedArgs()
-
-args.Arg(
-    name = 'limit',
-    default = '100',
-    desc = 'Maximum # of torrents to download',
-    handler = int
-)
 
 args.Arg(
     name = 'filter',
@@ -19,6 +13,11 @@ args.Arg(
     desc = 'Only download items whose title contains this',
     handler = lambda x: x.lower()
 )
+
+#==============================================
+
+# Create a progress bar
+pbar = ProgressBar(0)
 
 #==============================================
 # Plex Module

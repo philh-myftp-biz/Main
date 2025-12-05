@@ -1,48 +1,19 @@
-from __init__ import qbit, driver, args, VM, this
-from philh_myftp_biz.pc import ProgressBar
-from Scanner import Scanner
+from __init__ import qbit, args, VM, this, pbar
+from philh_myftp_biz import thread
+from Scanner import Download
 import Media
 
-print('\nDiscovering Magnets ...')
-
-# Create a progress bar
-pbar = ProgressBar(args['limit'])
+# Clear the download queue
+qbit.clear()
 
 # List of downloads
 downloads: list[Media._Template] = []
 
-# Iter through downloads in scanner
-for download in Scanner():
-
-    # Start the download
-    download.file.start(True)
-
-    # Append the download to the list
-    downloads += [download]
-
-    # Update the progress bar
-    pbar.step()
-
-    # If enough downloads have already been started
-    if len(downloads) == args['limit']:
-        break
-
-# Stop the progress bar
-pbar.stop()
-
-# Close the webdriver
-driver.close()
-
-print('\nDownloading Magnets ...')
-
-# Create a progress bar
-pbar = ProgressBar(len(downloads))
+# Scan and download in the background
+t = thread(Download, downloads)
 
 # Loop until no downloads are left
-while len(downloads) > 0:
-
-    # Sort the download queue
-    qbit.sort()
+while t.running() or (len(downloads) > 0):
 
     # Iter through all downloads
     for x, d in enumerate(downloads):

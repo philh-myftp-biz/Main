@@ -1,6 +1,6 @@
+from __init__ import this, args, pbar, driver
 from philh_myftp_biz.classOBJ import log
 from typing import Generator, Literal
-from __init__ import this, args
 import Media
 
 def ReadName(
@@ -47,23 +47,19 @@ def Scanner() -> Generator[Media._Template]:
                     # If a file is downloading
                     if movie.file:
 
-                        # Debug: Log the movie
-                        if args['verbose']:
-                            log(movie, 'GREEN')
+                        log(movie, 'GREEN')
                         
                         yield movie
 
                     else:
+
+                        log(movie, 'RED')
 
                         # If a magnet has been found
                         if movie.magnet:
 
                             # Stop the magnet from downloading
                             movie.magnet.stop()
-
-                        # Debug: Log the movie        
-                        if args['verbose']:
-                            log(movie, 'RED')
 
     # Loop through all child directories of 'E:/Plex/Media/Shows' 
     for ShowDir in this.dir.child('/Media/Shows').children():
@@ -95,12 +91,26 @@ def Scanner() -> Generator[Media._Template]:
                             # If a file is downloading
                             if episode.file:
 
-                                # Debug: Log the Episode
-                                if args['verbose']:
-                                    log(episode, 'GREEN')
+                                log(episode, 'GREEN')
 
                                 yield episode
 
-                            # Debug: Log the Episode
-                            elif args['verbose']:
+                            else:
                                 log(episode, 'RED')
+
+def Download(downloads: list[Media._Template]):
+
+    # Iter through downloads in scanner
+    for download in Scanner():
+
+        # Start the download
+        download.file.start(True)
+
+        # Append the download to the list
+        downloads += [download]
+
+        # Step the total of the progress bar
+        pbar.step_total()
+
+    # Close the webdriver
+    driver.close()
