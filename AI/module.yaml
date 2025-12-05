@@ -4,5 +4,8 @@ enabled: true
 watch_files: []
 
 packages: [
-  'langchain_ollama'
+  'ollama',
+  'diffusers',
+  'transformers',
+  'torch torchvision --index-url https://download.pytorch.org/whl/cu130'
 ]
