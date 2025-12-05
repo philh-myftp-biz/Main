@@ -1,4 +1,4 @@
-from __init__ import args, Messages
+from __init__ import args, messages
 import ollama
 
 # ====================================================
@@ -12,16 +12,7 @@ args.Arg(
 )
 
 # ====================================================
-# PARSE MESSAGES
 
-if args['messages']:
-    messages = Messages(args['messages'])
-
-elif args['message']:
-    messages = Messages()
-    messages.add_text('user', args['message'])
-
-# ====================================================
 # INSTALL MODEL
 
 # Iter through installed modules

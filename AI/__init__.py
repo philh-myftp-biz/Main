@@ -18,7 +18,7 @@ args.Arg(
 )
 
 args.Arg(
-    name = 'message',
+    name = 'prompt',
     default = 'null',
     desc = '',
     handler = str
@@ -140,3 +140,15 @@ def PipeLine(model: str):
 
         # Return the pipeline
         return pipeline
+
+# ====================================================
+# PARSE MESSAGES
+
+if args['messages']:
+    messages = Messages(args['messages'])
+
+elif args['prompt']:
+    messages = Messages()
+    messages.add_text('user', args['prompt'])
+
+# ====================================================

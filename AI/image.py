@@ -1,4 +1,4 @@
-from __init__ import args, PipeLine, Messages
+from __init__ import args, PipeLine, messages
 from philh_myftp_biz.file import temp
 
 # ====================================================
@@ -10,16 +10,6 @@ args.Arg(
     desc = '',
     handler = str
 )
-
-# ====================================================
-# PARSE MESSAGES
-
-if args['messages']:
-    messages = Messages(args['messages'])
-
-elif args['message']:
-    messages = Messages()
-    messages.add_text('user', args['message'])
 
 # ====================================================
 # GENERATE IMAGE
