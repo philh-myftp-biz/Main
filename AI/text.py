@@ -1,4 +1,4 @@
-from __init__ import args, messages
+from __init__ import args, messages, this
 import ollama
 
 # ====================================================
@@ -10,6 +10,15 @@ args.Arg(
     desc = '',
     handler = str
 )
+
+# ====================================================
+# OLLAMA SERVICE
+import ollama
+
+try:
+    ollama.list()
+except ConnectionError:
+    this.run('StartOllama')
 
 # ====================================================
 

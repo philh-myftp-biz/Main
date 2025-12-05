@@ -36,15 +36,6 @@ cacheDir = this.dir.child('__pycache__/Models/')
 mkdir(cacheDir)
 
 # ====================================================
-# OLLAMA SERVICE
-import ollama
-
-try:
-    ollama.list()
-except ConnectionError:
-    this.run('StartOllama')
-
-# ====================================================
 # CLASSES + FUNCTIONS
 
 class Messages:
