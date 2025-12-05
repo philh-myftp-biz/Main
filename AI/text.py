@@ -1,25 +1,8 @@
-from philh_myftp_biz import json, ParsedArgs
-from philh_myftp_biz.pc import cls
+from __init__ import args, Messages
 import ollama
 
 # ====================================================
 # PARSE INPUT
-
-args = ParsedArgs()
-
-args.Arg(
-    name = 'messages',
-    default = 'null',
-    desc = '',
-    handler = json.loads
-)
-
-args.Arg(
-    name = 'message',
-    default = 'null',
-    desc = '',
-    handler = str
-)
 
 args.Arg(
     name = 'model',
@@ -31,16 +14,12 @@ args.Arg(
 # ====================================================
 # PARSE MESSAGES
 
-messages: list[dict[str, str]]
-
 if args['messages']:
-    messages = args['messages']
+    messages = Messages(args['messages'])
 
 elif args['message']:
-    messages = [{
-        'role': 'user',
-        'content': args['message']
-    }]
+    messages = Messages()
+    messages.add_text('user', args['message'])
 
 # ====================================================
 # INSTALL MODEL
@@ -77,14 +56,9 @@ for chunk in response:
 
         rcontent += chunk['message']['content']
 
-messages += [{
-    'role': 'assistant',
-    'content': rcontent
-}]
+messages.add_text('assistant', rcontent)
 
 # ====================================================
 # HANDLE OUTPUT
 
-#
-cls()
-print(messages)
+messages.output()
