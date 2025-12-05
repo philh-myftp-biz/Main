@@ -37,10 +37,10 @@ mkdir(cacheDir)
 
 # ====================================================
 # OLLAMA SERVICE
-from ollama import list
+import ollama
 
 try:
-    list()
+    ollama.list()
 except ConnectionError:
     this.run('StartOllama')
 
