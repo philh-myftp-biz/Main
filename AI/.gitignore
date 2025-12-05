@@ -4,3 +4,6 @@
 
 # Ollama Models
 /.ollama/models
+
+# Cache
+**/__pycache__/
