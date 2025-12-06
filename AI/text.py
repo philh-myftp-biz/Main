@@ -18,7 +18,7 @@ import ollama
 try:
     ollama.list()
 except ConnectionError:
-    this.run('StartOllama')
+    this.run('Ollama/Start')
 
 # ====================================================
 
@@ -44,7 +44,7 @@ else:
 #
 response = ollama.chat(
     model = 'llama3',
-    messages = messages,
+    messages = list(messages),
     stream = True
 )
 
