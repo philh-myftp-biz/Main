@@ -13,15 +13,14 @@ args.Arg(
 
 # ====================================================
 # OLLAMA SERVICE
-import ollama
 
-try:
-    ollama.list()
-except ConnectionError:
+running: bool = this.run('Ollama/Running', hide=True).output('json')
+
+if not running:
+
     this.run('Ollama/Start')
 
 # ====================================================
-
 # INSTALL MODEL
 
 # Iter through installed modules
