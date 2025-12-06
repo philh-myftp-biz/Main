@@ -1,6 +1,6 @@
 from philh_myftp_biz.pc import Path, mkdir, cls
 from philh_myftp_biz.modules import Module
-from typing import Literal
+from typing import Literal, Iterator
 
 this = Module('E:/AI/')
 
@@ -12,16 +12,11 @@ args = ParsedArgs()
 
 args.Arg(
     name = 'messages',
-    default = 'null',
-    desc = '',
     handler = json.loads
 )
 
 args.Arg(
-    name = 'prompt',
-    default = 'null',
-    desc = '',
-    handler = str
+    name = 'prompt'
 )
 
 # ====================================================
@@ -43,7 +38,6 @@ class Messages:
     def __init__(self,
         messages: list[dict[str, str]] = []
     ):
-        
         self.__messages = messages
 
     def add_text(self,
@@ -73,8 +67,8 @@ class Messages:
             'content': dumps(raw)
         }]
 
-    def read(self):
-        return self.__messages
+    def __iter__(self) -> Iterator[dict[str, str]]:
+        return iter(self.__messages)
     
     def output(self):
         
@@ -120,7 +114,8 @@ def PipeLine(model: str):
             pretrained_model_name_or_path = model,
             torch_dtype = torch.float16,
             cache_dir = str(cacheDir),
-            safety_checker = None
+            safety_checker = None,
+            low_cpu_mem_usage = False
         )
 
         # Move the pipeline to the GPU
