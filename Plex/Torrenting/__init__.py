@@ -4,6 +4,21 @@ from philh_myftp_biz import ParsedArgs
 from philh_myftp_biz.pc import ProgressBar
 
 #==============================================
+# Plex Module
+
+# Declare the 'Plex' module
+this = Module('E:/Plex')
+
+# If the Plex module is locked
+if this.lock.locked():
+    # Raise Error
+    raise ModuleLockedError(this)
+
+else:
+    # Lock the Plex module
+    this.lock.lock()
+
+#==============================================
 # Parse commandline arguements
 args = ParsedArgs()
 
@@ -18,21 +33,6 @@ args.Arg(
 
 # Create a progress bar
 pbar = ProgressBar(0)
-
-#==============================================
-# Plex Module
-
-# Declare the 'Plex' module
-this = Module('E:/Plex')
-
-# If the Plex module is locked
-if this.lock.locked():
-    # Raise Error
-    raise ModuleLockedError(this)
-
-else:
-    # Lock the Plex module
-    this.lock.lock()
 
 #==============================================
 # VM module
