@@ -1,10 +1,11 @@
 from __init__ import qbit, args, VM, this, pbar
 from philh_myftp_biz import thread
 from Scanner import Download
+from time import sleep
 import Media
 
 # Clear the download queue
-qbit.clear()
+qbit.clear(rm_files=False)
 
 # List of downloads
 downloads: list[Media._Template] = []
@@ -14,6 +15,12 @@ t = thread(Download, downloads)
 
 # Loop until no downloads are left
 while t.running() or (len(downloads) > 0):
+
+    #
+    sleep(1)
+    
+    #
+    qbit.sort()
 
     # Iter through all downloads
     for x, d in enumerate(downloads):
