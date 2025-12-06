@@ -7,5 +7,6 @@ packages: [
   'ollama',
   'diffusers',
   'transformers',
+  'accelerate',
   'torch torchvision --index-url https://download.pytorch.org/whl/cu130'
 ]
