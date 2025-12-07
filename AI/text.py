@@ -1,4 +1,4 @@
-from __init__ import args, messages, this
+from __init__ import args, messages, Ollama
 import ollama
 
 # ====================================================
@@ -14,11 +14,7 @@ args.Arg(
 # ====================================================
 # OLLAMA SERVICE
 
-running: bool = this.run('Ollama/Running', hide=True).output('json')
-
-if not running:
-
-    this.run('Ollama/Start')
+Ollama.Start()
 
 # ====================================================
 # INSTALL MODEL
