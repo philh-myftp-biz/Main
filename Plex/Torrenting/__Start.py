@@ -1,4 +1,6 @@
 from __init__ import qbit, args, VM, this, pbar, PIDstore
+from qbittorrentapi.exceptions import NotFound404Error
+from philh_myftp_biz.pc import warn
 from philh_myftp_biz import thread
 from Scanner import Download
 from time import sleep
@@ -22,45 +24,50 @@ while t.running() or (len(downloads) > 0):
 
     #
     sleep(1)
+
+    try:
     
-    #
-    qbit.sort()
+        #
+        qbit.sort()
 
-    # Iter through all downloads
-    for x, d in enumerate(downloads):
+        # Iter through all downloads
+        for x, d in enumerate(downloads):
 
-        # If the download is finished
-        if d.file.finished():
-            
-            # Get source and destination paths of file
-            src, dst = d.paths()
+            # If the download is finished
+            if d.file.finished():
+                
+                # Get source and destination paths of file
+                src, dst = d.paths()
 
-            # Debug: Print the src and destination
-            if args['verbose']:
-                print()
-                print('src:', src)
-                print('dst:', dst)
+                # Debug: Print the src and destination
+                if args['verbose']:
+                    print()
+                    print('src:', src)
+                    print('dst:', dst)
 
-            # Move the source file to the destination path
-            src.copy(
-                dst = dst,
-                show_progress = args['verbose']
-            )
+                # Move the source file to the destination path
+                src.copy(
+                    dst = dst,
+                    show_progress = args['verbose']
+                )
 
-            # Run any final commands for the download
-            d.finish()
+                # Run any final commands for the download
+                d.finish()
 
-            # Remove the download from the list
-            del downloads[x]
+                # Remove the download from the list
+                del downloads[x]
 
-            # Update the progress bar
-            pbar.step()
+                # Update the progress bar
+                pbar.step()
 
-        # If the magnet is errored
-        elif d.magnet.errored():
+            # If the magnet is errored
+            elif d.magnet.errored():
 
-            # Start the download            
-            d.magnet.start()
+                # Start the download            
+                d.magnet.start()
+
+    except NotFound404Error as e:
+        warn(e)
 
 # Clear the download queue
 qbit.clear()
