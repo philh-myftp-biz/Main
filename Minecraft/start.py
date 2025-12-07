@@ -1,26 +1,5 @@
-from __init__ import args, Worlds, Edition
-from philh_myftp_biz import run
+from __init__ import Worlds
 
-#
 for w in Worlds():
 
-    edit = Edition(w)
-
-    # If server is Java Edition
-    if edit == 'java':
-        args = [
-            'java', 
-            '-Xmx2G',
-            '-jar', 'fabric-server-launch.jar',
-            'nogui'
-        ]
-        
-    # If server is Bedrock Edition
-    elif edit == 'bedrock':
-        args = []
-
-    #
-    run(
-        args,
-        dir = w
-    )
+    w.Start()

@@ -1,4 +1,4 @@
-from philh_myftp_biz.modules import Module
+from philh_myftp_biz.modules import Module, Service
 from philh_myftp_biz import ParsedArgs
 from typing import Generator, Literal
 from philh_myftp_biz.pc import Path
@@ -31,24 +31,22 @@ def Edition(server:Path) -> None | Literal['java', 'bedrock']:
         elif p.ext() == 'exe':
             return 'bedrock'
 
-def Worlds() -> Generator[Path]:
-
-    Dir = this.dir.child('/Worlds/')
+def Worlds() -> Generator[Service]:
 
     # If a name is given
     if args['name']:
     
         # Yield the world folder with the given name
-        yield Dir.child(args['name'])
+        yield Service(this, f'/Worlds/{args['name']}/')
 
     #
     else:
 
         #
-        for s in Dir.children():
+        for s in this.dir.child('/Worlds/').children():
             
             #
             if s.isdir():
+
+                yield Service(this, f'/Worlds/{s.name()}/')
     
-                #
-                yield s

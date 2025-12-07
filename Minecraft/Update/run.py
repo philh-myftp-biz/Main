@@ -1,4 +1,4 @@
-from __init__ import World, this, File
+from __init__ import World, this, File, ControlsTempl
 from philh_myftp_biz.json import Dict
 from philh_myftp_biz.file import INI
 import Files
@@ -7,6 +7,15 @@ for p in this.dir.child('/Worlds/'):
     
     # Wrap the world
     w = World(p)
+
+    # Copy Controls
+    ControlsTempl.copy(w.path)
+
+    #
+    wasRunning = w.service.Running()
+
+    #
+    w.service.Stop()
 
     # Get a list of files to copy
     files: list[File] = getattr(Files, w.edition)
@@ -50,3 +59,8 @@ for p in this.dir.child('/Worlds/'):
         # Option: port/java
         props['server-port'] = w.config['port']['java']
 
+    #
+    if wasRunning:
+        
+        #
+        w.service.Start()
