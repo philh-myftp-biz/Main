@@ -23,7 +23,7 @@ Ollama.Start()
 for model in ollama.list()['models']:
     
     # If module is selected
-    if model['name'] == args['model']:
+    if model['model'] == args['model']:
         
         break
 
