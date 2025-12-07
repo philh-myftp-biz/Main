@@ -1,7 +1,8 @@
-from philh_myftp_biz.modules import Module, ModuleLockedError
 from philh_myftp_biz.web import api, Driver
-from philh_myftp_biz import ParsedArgs
+from philh_myftp_biz.modules import Module
 from philh_myftp_biz.pc import ProgressBar
+from philh_myftp_biz import ParsedArgs
+from philh_myftp_biz.file import TXT
 
 #==============================================
 # Plex Module
@@ -9,14 +10,8 @@ from philh_myftp_biz.pc import ProgressBar
 # Declare the 'Plex' module
 this = Module('E:/Plex')
 
-# If the Plex module is locked
-if this.lock.locked():
-    # Raise Error
-    raise ModuleLockedError(this)
-
-else:
-    # Lock the Plex module
-    this.lock.lock()
+# Store for execution pid
+PIDstore = TXT(this.dir.child('/Torrenting/__pycache__/PID.txt'))
 
 #==============================================
 # Parse commandline arguements

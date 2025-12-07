@@ -1,5 +1,5 @@
-from philh_myftp_biz.modules import Module, ModuleLockedError
-from philh_myftp_biz.file import ZIP, temp
+from philh_myftp_biz.file import ZIP, temp, TXT
+from philh_myftp_biz.modules import Module
 from philh_myftp_biz.web import download
 from philh_myftp_biz import ParsedArgs
 from philh_myftp_biz.pc import Path
@@ -15,14 +15,8 @@ args.Arg('limit', 5)
 # Declare the 'Plex' module
 this = Module('E:/Plex')
 
-# If the Plex module is locked
-if this.lock.locked():
-    # Raise Error
-    raise ModuleLockedError(this)
-
-else:
-    # Lock the Plex module
-    this.lock.lock()
+# Store for execution pid
+PIDstore = TXT(this.dir.child('/Optimization/__pycache__/PID.txt'))
 
 #==============================================
 

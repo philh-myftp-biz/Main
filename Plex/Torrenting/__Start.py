@@ -1,8 +1,12 @@
-from __init__ import qbit, args, VM, this, pbar
+from __init__ import qbit, args, VM, this, pbar, PIDstore
 from philh_myftp_biz import thread
 from Scanner import Download
 from time import sleep
+from os import getpid
 import Media
+
+# Store the pid of the current execution
+PIDstore.save(getpid())
 
 # Clear the download queue
 qbit.clear(rm_files=False)

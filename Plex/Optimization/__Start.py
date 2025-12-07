@@ -1,7 +1,11 @@
-from __init__ import this, QueueItem, args, ffmpeg
+from __init__ import this, QueueItem, args, ffmpeg, PIDstore
 from ffmpeg_progress_yield import FfmpegProgress
 from philh_myftp_biz.db import MimeType
 from tqdm import tqdm
+from os import getpid
+
+#
+PIDstore.save(getpid())
 
 #
 queue: list[QueueItem] = []
