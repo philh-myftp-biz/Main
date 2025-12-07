@@ -56,17 +56,12 @@ class Messages:
         role: Literal['user', 'assistant'],
         path: Path
     ):
-        from pickle import dumps
-        
-        # Read the file data
-        raw = path.open('rb').read()
 
         #
         self.__messages += [{
             'kind': 'file',
-            'ext': path.ext(),
             'role': role,
-            'content': dumps(raw)
+            'content': str(path)
         }]
 
     def __iter__(self) -> Iterator[dict[str, str]]:
@@ -121,7 +116,7 @@ def PipeLine(model: str):
         )
 
         # Move the pipeline to the GPU
-        pipeline.to("cuda")
+        #pipeline.to("cuda")
 
         # Pickle the pipeline
         pipePkl.save(pipeline)
