@@ -66,7 +66,7 @@ while t.running() or (len(downloads) > 0):
                 # Start the download            
                 d.magnet.start()
 
-    except NotFound404Error as e:
+    except (NotFound404Error, IndexError) as e:
         warn(e)
 
 # Clear the download queue
@@ -77,6 +77,3 @@ VM.run(
     'save', 'Torrenting',
     hide = (not args['verbose'])
 )
-
-# Unlock the Plex module
-this.lock.unlock()
