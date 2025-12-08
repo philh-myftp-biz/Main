@@ -1,6 +1,9 @@
 from philh_myftp_biz.modules import Module, Service
 from philh_myftp_biz.pc import Path, mkdir, cls
+from philh_myftp_biz import json, ParsedArgs
 from typing import Literal, Iterator
+
+# ====================================================
 
 this = Module('E:/AI/')
 
@@ -8,7 +11,6 @@ Ollama = Service(this, '/Ollama/')
 
 # ====================================================
 # PARSE INPUT
-from philh_myftp_biz import json, ParsedArgs
 
 args = ParsedArgs()
 
@@ -25,12 +27,14 @@ args.Arg(
 # DIRECTORIES
 
 #
-pipeDir = this.dir.child('__pycache__/PipeLines/')
-mkdir(pipeDir)
+class d:
 
-#
-cacheDir = this.dir.child('__pycache__/Models/')
-mkdir(cacheDir)
+    pipelines = this.dir.child('__pycache__/PipeLines/')
+    mkdir(pipelines)
+
+    #
+    models = this.dir.child('__pycache__/Models/')
+    mkdir(models)
 
 # ====================================================
 # CLASSES + FUNCTIONS
@@ -86,13 +90,13 @@ class Messages:
             return lmessage['content']
 
 def PipeLine(model: str):
+    from diffusers import StableDiffusionPipeline
     from philh_myftp_biz.text import hex
     from philh_myftp_biz.file import PKL
-    from diffusers import StableDiffusionPipeline
     import torch
     
     #
-    pipeFile = pipeDir.child(f'{hex.encode(model)}.pkl')
+    pipeFile = d.pipelines.child(f'{hex.encode(model)}.pkl')
 
     # Wrap the pipeline file
     pipePkl = PKL(pipeFile)
@@ -110,9 +114,9 @@ def PipeLine(model: str):
         pipeline = StableDiffusionPipeline.from_pretrained(
             pretrained_model_name_or_path = model,
             torch_dtype = torch.float16,
-            cache_dir = str(cacheDir),
+            cache_dir = str(d.models),
             safety_checker = None,
-            low_cpu_mem_usage = False
+            low_cpu_mem_usage = True
         )
 
         # Move the pipeline to the GPU
