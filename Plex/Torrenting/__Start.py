@@ -73,7 +73,6 @@ while t.running() or (len(downloads) > 0):
 qbit.clear()
 
 # Power off the Virtual Machine
-VM.run(
-    'save', 'Torrenting',
-    hide = (not args['verbose'])
+VM.runH(
+    'save', 'Torrenting'
 )

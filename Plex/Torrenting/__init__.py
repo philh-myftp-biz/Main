@@ -36,9 +36,8 @@ pbar = ProgressBar(0)
 VM = Module('E:/Virtual Machines')
 
 # Power on the Virtual Machine
-VM.run(
-    'start', 'Torrenting',
-    hide = (not args['verbose'])
+VM.runH(
+    'start', 'Torrenting'
 )
 
 #==============================================
@@ -59,7 +58,7 @@ driver = Driver(
 host = None
 
 while host is None:
-    host = VM.run('IP', 'Torrenting', hide=True).output('json')
+    host = VM.cap('IP', 'Torrenting')
 
 # Connect to the qbittorrent web interface on the 'Torrenting' Virtual Machine
 qbit = api.qBitTorrent(
