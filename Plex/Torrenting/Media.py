@@ -237,9 +237,15 @@ class Show:
         self.dir = this.dir.child(f"/Media/Shows/{title} ({year})/")
         """../Media/Shows/{Title} ({Year})/"""
 
-        # Fetch show details from the Open Movie Database
-        self.__seasons = omdb.show(title, year).Seasons
+        #
+        show = omdb.show(title, year)
+
+        self.__seasons: list[str] = []
         """raw list of seasons"""
+
+        # Fetch show details from the Open Movie Database
+        if show:
+            self.__seasons = show.Seasons
 
     def Seasons(self):
 
