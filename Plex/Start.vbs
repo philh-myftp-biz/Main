@@ -4,4 +4,4 @@ Set Shell = WScript.CreateObject("WScript.Shell")
 
 Shell.CurrentDirectory = "C:/Program Files/Plex/Plex Media Server/"
 
-Shell.run """Plex Media Server.exe""", 0, 1
+Shell.run """Plex Media Server.exe""", 0, 0
