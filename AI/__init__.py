@@ -116,7 +116,7 @@ def PipeLine(model: str):
         )
 
         # Move the pipeline to the GPU
-        #pipeline.to("cuda")
+        pipeline.to("cuda")
 
         # Pickle the pipeline
         pipePkl.save(pipeline)
