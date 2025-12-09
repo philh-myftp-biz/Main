@@ -1,5 +1,5 @@
-from __init__ import qbit, args, VM, this, pbar, PIDstore
 from qbittorrentapi.exceptions import NotFound404Error
+from __init__ import qbit, args, VM, pbar, PIDstore
 from philh_myftp_biz.pc import warn
 from philh_myftp_biz import thread
 from Scanner import Download
