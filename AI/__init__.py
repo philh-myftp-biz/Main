@@ -91,12 +91,11 @@ class Messages:
 
 def PipeLine(model: str):
     from diffusers import StableDiffusionPipeline
-    from philh_myftp_biz.text import hex
     from philh_myftp_biz.file import PKL
     import torch
     
     #
-    pipeFile = d.pipelines.child(f'{hex.encode(model)}.pkl')
+    pipeFile = d.pipelines.child(model.replace('/', '__') + '.pkl')
 
     # Wrap the pipeline file
     pipePkl = PKL(pipeFile)
