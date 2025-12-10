@@ -29,11 +29,11 @@ args.Arg(
 #
 class d:
 
-    pipelines = this.dir.child('__pycache__/PipeLines/')
+    pipelines = this.dir.child('/__pycache__/Pipelines/')
     mkdir(pipelines)
 
     #
-    models = this.dir.child('__pycache__/Models/')
+    models = this.dir.child('/StableDiffusion/data/')
     mkdir(models)
 
 # ====================================================

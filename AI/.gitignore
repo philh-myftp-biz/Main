@@ -2,8 +2,11 @@
 # Private SSH Key
 /.ollama/id_ed25519
 
-# Ollama Models
-/.ollama/models
+# Ollama Data
+/Ollama/Data
+
+# Stable Diffusion Data
+/StableDiffusion/Data
 
 # Cache
 **/__pycache__/
