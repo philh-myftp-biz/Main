@@ -104,7 +104,7 @@ def PipeLine(model: str):
     if pipeFile.exists():
 
         # Return the pickled pipeline
-        return pipePkl.read()
+        pipeline = pipePkl.read()
 
     # If the pipeline is not pickled
     else:
@@ -118,14 +118,14 @@ def PipeLine(model: str):
             low_cpu_mem_usage = True
         )
 
-        # Move the pipeline to the GPU
-        pipeline.to("cuda")
-
         # Pickle the pipeline
         pipePkl.save(pipeline)
 
-        # Return the pipeline
-        return pipeline
+    # Move the pipeline to the GPU
+    pipeline.to("cuda")
+
+    # Return the pipeline
+    return pipeline
 
 # ====================================================
 # PARSE MESSAGES
