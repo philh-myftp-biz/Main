@@ -8,6 +8,5 @@ packages: [
   'diffusers',
   'transformers',
   'accelerate',
-  'torch --index-url https://download.pytorch.org/whl/cu128',
-  'torchvision --index-url https://download.pytorch.org/whl/cu128'
+  'torch torchvision --index-url https://download.pytorch.org/whl/cu130'
 ]
