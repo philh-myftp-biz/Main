@@ -237,15 +237,11 @@ class Show:
         self.dir = this.dir.child(f"/Media/Shows/{title} ({year})/")
         """../Media/Shows/{Title} ({Year})/"""
 
-        #
-        show = omdb.show(title, year)
-
         self.__seasons: list[str] = []
         """raw list of seasons"""
 
         # Fetch show details from the Open Movie Database
-        if show:
-            self.__seasons = show.Seasons
+        self.__seasons = omdb.show(title, year).Seasons
 
     def Seasons(self):
 
@@ -283,8 +279,7 @@ class Season(_Template):
         """../Season {Season}/"""
 
         # Create the folder if it doesn't exist
-        if not self.dir.exists():
-            mkdir(self.dir)
+        mkdir(self.dir)
 
         self.queries = [
             f'{self.show.title} {self.show.year} Season {season:02d}',

@@ -61,6 +61,10 @@ def Scanner() -> Generator[Media._Template]:
                             # Stop the magnet from downloading
                             movie.magnet.stop()
 
+                elif args['verbose']:
+
+                    print('Exists:', movie.queries[0])
+
     # Loop through all child directories of 'E:/Plex/Media/Shows' 
     for ShowDir in this.dir.child('/Media/Shows').children():
 
@@ -97,6 +101,14 @@ def Scanner() -> Generator[Media._Template]:
 
                             else:
                                 log(episode, 'RED')
+
+                        elif args['verbose']:
+
+                            print('Exists:', episode.queries[0])
+
+                elif args['verbose']:
+
+                    print('Exists:', season.queries[0])
 
 def Download(downloads: list[Media._Template]):
 
