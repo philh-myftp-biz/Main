@@ -333,10 +333,13 @@ class Season(_Template):
         # Check if the file season is the same
         season = (data['season'] == int(self))
 
+        # If no episode # is found
+        episode = (data['episode'] is None)
+
         # Check if the title is more than 60% similar to the show title
         title = (similarity(data['title'], self.show.title) > .6)
 
-        return (title and season)
+        return (title and season and episode)
 
     def __int__(self):
         return self._season
