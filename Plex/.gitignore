@@ -19,6 +19,9 @@
 /Plex Media Server/Plug-in Support/*
 
 !/Plex Media Server/Plug-in Support/Databases/
+/Plex Media Server/Plug-in Support/Databases/*
+
+!/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db
 
 #==============================================================
 
