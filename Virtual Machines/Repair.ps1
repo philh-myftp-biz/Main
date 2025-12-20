@@ -36,15 +36,3 @@ Get-VM | ForEach-Object -Process {
         }
 
 }
-
-
-
-
-#
-Invoke-Command `
-    -VMName $Name `
-    -Credential (Get-Credential) `
-    -ScriptBlock {
-        Rename-Computer -NewName "<NewComputerName>";
-        Restart-Computer -Force;
-    }
