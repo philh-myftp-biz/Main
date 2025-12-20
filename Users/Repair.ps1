@@ -1,16 +1,26 @@
 
+param(
+    [String]$User = $null
+)
+
 #
 Import-Module "$PSScriptRoot\mod.psm1" -Function Repair-User
 
-#
-Get-ADUser -Filter * -SearchBase "CN=Users, DC=philh, DC=local" | ForEach-Object -Process {
+if ($User) {
 
-    $Username = $_.SamAccountName
+    Repair-User $User
+    
+} else {
 
-    if ($Username -ne 'administrator') {
+    #
+    Get-ADUser -Filter * -SearchBase "CN=Users, DC=philh, DC=local" | ForEach-Object -Process {
 
-        #
-        Repair-User $_.SamAccountName
+        if ($_.SamAccountName -ne 'administrator') {
+
+            #
+            Repair-User $_.SamAccountName
+
+        }
 
     }
 

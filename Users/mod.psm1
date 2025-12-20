@@ -104,7 +104,7 @@ function Repair-User {
         New-Item `
             -ItemType Junction `
             -Target "$Dir\Website" `
-            -Path "E:\Website\Root\Servers\FTP\User Web Shares\$Username" `
+            -Path "E:\Website\Root\Server\FTP\User Web Shares\$Username" `
             -ErrorAction SilentlyContinue `
             | Out-Null
 
@@ -124,7 +124,21 @@ function Repair-User {
             -Path "$Dir\Website" `
             -AclObject $Acl
 
+        #=====================================================================================================
+        
+        $VM = Get-VM -Name "User-$Username"
+
+        # If the vm does not exist
+        if ($null -eq $VM) {
+            ."E:/Virtual Machines/Create.ps1" -Name "User-$Username"
+        }
+
+        Grant-VMConnectAccess `
+            -VMName "User-$Username" `
+            -UserName $Username
+
     }
+
 }
 
 Export-ModuleMember -Function Repair-User
