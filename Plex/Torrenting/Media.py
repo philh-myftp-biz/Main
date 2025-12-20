@@ -212,8 +212,9 @@ class Movie(_Template):
 
     def finish(self):
 
-        # Stop the magnet
-        self.magnet.stop()
+        # Stop the magnet if it exists
+        if self.magnet:
+            self.magnet.stop()
 
         # If a todo/placeholder file was passed during initialization
         if self.__todo:

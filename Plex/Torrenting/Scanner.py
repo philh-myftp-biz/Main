@@ -38,8 +38,18 @@ def Scanner() -> Generator[Media._Template]:
                 # Create a new movie object
                 movie = Media.Movie(*ReadName(p.name()), p)
 
+                # If the movie has already been downloaded
+                if movie.exists():
+
+                    #
+                    movie.finish()
+
+                    if args['verbose']:
+
+                        print('Exists:', movie.queries[0])
+                        
                 # If the movie has not already been downloaded
-                if not movie.exists():
+                else:
 
                     # Start the download
                     movie.start()
@@ -60,10 +70,6 @@ def Scanner() -> Generator[Media._Template]:
 
                             # Stop the magnet from downloading
                             movie.magnet.stop()
-
-                elif args['verbose']:
-
-                    print('Exists:', movie.queries[0])
 
     # Loop through all child directories of 'E:/Plex/Media/Shows' 
     for ShowDir in this.dir.child('/Media/Shows').children():
