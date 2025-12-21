@@ -1,8 +1,8 @@
 from __init__ import this, QueueItem, ffmpeg, PIDstore
 from ffmpeg_progress_yield import FfmpegProgress
-from philh_myftp_biz.db import MimeType
+from philh_myftp_biz.pc import cls, print
 from philh_myftp_biz.classOBJ import log
-from philh_myftp_biz.pc import cls
+from philh_myftp_biz.db import MimeType
 from tqdm import tqdm
 from os import getpid
 
@@ -23,6 +23,8 @@ for src in this.dir.child('/Media/').descendants():
         # If the file is corrupted
         if i.corrupted:
 
+            print(i.src, color='RED')
+
             # Delete the source file
             i.src.delete()
 
@@ -35,15 +37,19 @@ for src in this.dir.child('/Media/').descendants():
                 # Create the placeholder file
                 todo.open('w')
 
-        # If the file is neither corrupted nor mp4
-        elif src.ext() != 'mp4':
+        # If the file is mkv
+        elif src.ext() == 'mkv':
+
+            print(i.src, color='YELLOW')
 
             # Append the item to the queue
             queue += [i]
 
-            print(src)
+        else:
 
-#
+            print(i.src, color='GREEN')
+
+# Sort the files by size (smallest first)
 queue.sort(
     key = lambda i: i.size
 )
@@ -51,7 +57,7 @@ queue.sort(
 # Iter through all items in the queue
 for i in queue:
     
-    #
+    # Clear the terminal window
     cls()
 
     # Print the source and destination paths
@@ -81,21 +87,22 @@ for i in queue:
             desc = "Encoding"
         )
         
-        #
+        # Run ffmpeg.exe
         for progress in ff.run_command_with_progress():
-            
-            #
+            # Update the progress bar
             pbar.update(progress - pbar.n)
 
+        # Close the progress bar
         pbar.close()
         
-        #
+        # Move the encoded file to the destination path
         i.tmp.move(i.dst)
 
         # Wait for any programs to release the source file
         while i.src.inuse():
             pass
 
+        # Delete the source file
         i.src.delete()
 
     except RuntimeError:
