@@ -126,16 +126,22 @@ function Repair-User {
 
         #=====================================================================================================
         
-        $VM = Get-VM -Name "User-$Username"
+        $VM = Get-VM `
+            -Name "User-$Username" `
+            -ErrorAction SilentlyContinue
 
         # If the vm does not exist
         if ($null -eq $VM) {
-            ."E:/Virtual Machines/Create.ps1" -Name "User-$Username"
+            ."E:/Virtual Machines/Create.ps1" `
+                -Name "User-$Username" `
+                | Out-Null
         }
 
         Grant-VMConnectAccess `
             -VMName "User-$Username" `
-            -UserName $Username
+            -UserName $Username `
+            -ErrorAction SilentlyContinue `
+            | Out-Null
 
     }
 
