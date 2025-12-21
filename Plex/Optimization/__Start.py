@@ -1,4 +1,4 @@
-from __init__ import this, QueueItem, ffmpeg, PIDstore
+from __init__ import this, QueueItem, ffmpeg, PIDstore, isCorrupted
 from ffmpeg_progress_yield import FfmpegProgress
 from philh_myftp_biz.pc import cls, print
 from philh_myftp_biz.classOBJ import log
@@ -20,8 +20,8 @@ for src in this.dir.child('/Media/').descendants():
 
         i = QueueItem(src)
 
-        # If the file is corrupted
-        if i.corrupted:
+        # If the source file is corrupted
+        if isCorrupted(i.src):
 
             print(i.src, color='RED')
 
@@ -51,7 +51,14 @@ for src in this.dir.child('/Media/').descendants():
 
 # Sort the files by size (smallest first)
 queue.sort(
-    key = lambda i: i.size
+    key = lambda i: i.src.size()
+)
+
+# Progress Bar
+pbar = tqdm(
+    total = 100,
+    position = 1,
+    desc = "Encoding"
 )
 
 # Iter through all items in the queue
@@ -59,6 +66,8 @@ for i in queue:
     
     # Clear the terminal window
     cls()
+
+    pbar.reset()
 
     # Print the source and destination paths
     log(i) 
@@ -80,30 +89,22 @@ for i in queue:
 
         ])
 
-        # Progress Bar
-        pbar = tqdm(
-            total = 100,
-            position = 1,
-            desc = "Encoding"
-        )
-        
         # Run ffmpeg.exe
         for progress in ff.run_command_with_progress():
             # Update the progress bar
             pbar.update(progress - pbar.n)
 
-        # Close the progress bar
-        pbar.close()
+        if not isCorrupted(i.tmp):
         
-        # Move the encoded file to the destination path
-        i.tmp.move(i.dst)
+            # Move the encoded file to the destination path
+            i.tmp.move(i.dst)
 
-        # Wait for any programs to release the source file
-        while i.src.inuse():
-            pass
+            # Wait for any programs to release the source file
+            while i.src.inuse():
+                pass
 
-        # Delete the source file
-        i.src.delete()
+            # Delete the source file
+            i.src.delete()
 
     except RuntimeError:
         pass

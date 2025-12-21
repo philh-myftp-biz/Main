@@ -20,32 +20,24 @@ class QueueItem:
     def __init__(self,
         src: Path
     ):
-        # ==========================================
-
         self.src = src
         self.dst = src.chext('mp4')
 
         self.tmp = temp('encoding', 'mp4')
 
-        self.size = src.size()
+def isCorrupted(file:Path) -> bool:
 
-        # ==========================================
+    cap = VideoCapture(str(file))
 
-        self.corrupted: bool = False
+    if cap.isOpened():
 
-        cap = VideoCapture(str(self.src))
+        ret, _ = cap.read()
 
-        if cap.isOpened():
+        if ret is None:
+            return True
 
-            ret, _ = cap.read()
-
-            if ret is None:
-                self.corrupted = True
-
-        else:
-            self.corrupted = True
-
-        cap.release()
+    else:
+        return True
 
 #==============================================
 # FFMPEG
