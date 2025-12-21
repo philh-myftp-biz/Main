@@ -15,13 +15,33 @@ queue: list[QueueItem] = []
 # Iter through descendants of 'E:/Plex/Media/'
 for src in this.dir.child('/Media/').descendants():
 
-    # If the path is a video, but not '.mp4'
-    if (MimeType.Path(src) == 'video') and (src.ext() != 'mp4'):
+    # If the path is a video file
+    if (MimeType.Path(src) == 'video'):
 
-        # Append the item to the queue
-        queue += [QueueItem(src)]
+        i = QueueItem(src)
 
-        print(src)
+        # If the file is corrupted
+        if i.corrupted:
+
+            # Delete the source file
+            i.src.delete()
+
+            # If file is movie
+            if str(i.src).startswith('E:/Plex/Media/Movies/'):
+
+                # Placeholder file
+                todo = i.src.chext('todo')
+
+                # Create the placeholder file
+                todo.open('w')
+
+        # If the file is neither corrupted nor mp4
+        elif src.ext() != 'mp4':
+
+            # Append the item to the queue
+            queue += [i]
+
+            print(src)
 
 #
 queue.sort(
@@ -44,15 +64,11 @@ for i in queue:
 
             str(ffmpeg), # Ffmpeg.exe
             
-            '-hwaccel', 'auto', # Use GPU
+            '-hwaccel', 'cuda', # Use GPU
 
             '-i', str(i.src), # Input Path
-            
-#            '-map', f'0:v:0', # Video Stream
-#            '-c:v', 'h264_nvenc', # Video Codec
 
-#            '-map', f'0:a:{i.streams['audio']['eng']}', # Audio Stream
-#            '-c:a', 'copy', # Audio Codec
+            '-c:v', 'h264_nvenc', # Video Codec
 
             str(i.tmp), # Output Path
 
@@ -70,15 +86,17 @@ for i in queue:
             
             #
             pbar.update(progress - pbar.n)
+
+        pbar.close()
         
         #
         i.tmp.move(i.dst)
 
-        #
+        # Wait for any programs to release the source file
+        while i.src.inuse():
+            pass
+
         i.src.delete()
 
-    except RuntimeError as e:
-
-        stderr: str = e.args[0]
-
-        raise RuntimeError(stderr.strip()) from None
+    except RuntimeError:
+        pass

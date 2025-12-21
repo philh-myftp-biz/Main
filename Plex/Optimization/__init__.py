@@ -2,8 +2,7 @@ from philh_myftp_biz.file import ZIP, temp, TXT
 from philh_myftp_biz.modules import Module
 from philh_myftp_biz.web import download
 from philh_myftp_biz.pc import Path
-from philh_myftp_biz import run
-from typing import Literal
+from cv2 import VideoCapture
 
 #==============================================
 # Plex Module
@@ -18,16 +17,6 @@ PIDstore = TXT(this.dir.child('/Optimization/__pycache__/PID.txt'))
 
 class QueueItem:
 
-    streams: dict[str, dict[str, int]] = {
-
-        'audio': {},
-
-        'video': {},
-
-        'subtitle': {}
-
-    }
-
     def __init__(self,
         src: Path
     ):
@@ -41,37 +30,22 @@ class QueueItem:
         self.size = src.size()
 
         # ==========================================
-        """
-        r = run(
-            args = [
-                ffprobe,
-                '-v', 'quiet',
-                '-print_format', 'json',
-                '-show_streams',
-                '-show_format', 
-                self.src
-            ],
-            wait = True,
-            hide = True
-        )
 
-        streams: dict[str, dict[str, str]] = r.output('json')['streams']
+        self.corrupted: bool = False
 
-        for stream in streams:
+        cap = VideoCapture(str(self.src))
 
-            if 'tags' in stream:
-            
-                if 'language' in stream['tags']:
+        if cap.isOpened():
 
-                    lang: str = stream['tags']['language']
+            ret, _ = cap.read()
 
-                    type: str = stream['codec_type']
+            if ret is None:
+                self.corrupted = True
 
-                    index = stream['index']
+        else:
+            self.corrupted = True
 
-                    self.streams[type][lang] = index
-        """
-        # ==========================================
+        cap.release()
 
 #==============================================
 # FFMPEG
@@ -79,7 +53,7 @@ class QueueItem:
 # Ffmpeg.exe
 ffmpeg = temp('ffmpeg', 'exe', '0')
 
-#
+# FFprobe.exe
 ffprobe = temp('ffprobe', 'exe', '0')
 
 # If ffmpeg.exe does not exist
@@ -88,7 +62,7 @@ if not (ffmpeg.exists() and ffprobe.exists()):
     # ffmpeg.zip
     zipfile = temp('ffmpeg', 'zip')
 
-    # Download ffmpeg.zip
+    # Download ffmpeg
     download(
         url = 'https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip',
         path = zipfile
@@ -103,7 +77,7 @@ if not (ffmpeg.exists() and ffprobe.exists()):
         path = ffmpeg
     )
 
-    #
+    # Extract ffprobe.exe from ffmpeg.zip
     zip.extractFile(
         file = next(zip.search('ffprobe.exe')),
         path = ffprobe
