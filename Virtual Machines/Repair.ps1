@@ -1,38 +1,21 @@
 
-#
-Get-VM | ForEach-Object -Process {
+param(
+    [string]$Name = $null
+)
 
-    #
-    Start-VM -VM $_
+Import-Module 'E:/Virtual Machines/mod.psm1' -Function Repair-VirtualMachine
 
-}
+# If a name was passed
+if ($Name) {
 
-#
-$Credentials = (Get-Credential)
+    Repair-VirtualMachine -Name $Name
 
-Get-VM | ForEach-Object -Process {
+} else {
 
-    #
-    while(-not $_.ExtensionData.Guest.guestOperationsReady) {
+    Get-ChildItem -Path 'E:/Virtual Machines/Hyper-V' -Directory | ForEach-Object {
         
-        Start-Sleep 5
-        $_.ExtensionData.UpdateViewData('Guest')
-    
+        Repair-VirtualMachine -Name $_.Name
+
     }
-
-    Invoke-Command `
-        -VMName $_.Name `
-        -Credential $Credentials `
-        -ScriptBlock { #
-
-            #
-            Rename-Computer -NewName "VM-$($_.Name)";
-            
-            #
-            Set-DnsClientServerAddress `
-                -ServerAddresses ('192.168.1.2', '8.8.8.8') `
-                -InterfaceIndex (Get-NetIpConfiguration | Select-Object -First 1).InterfaceIndex
-        
-        }
 
 }
