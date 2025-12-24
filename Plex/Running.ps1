@@ -1,9 +1,4 @@
 
-$process = (Get-Process | Where-Object ProcessName -eq 'Plex Media Server')
+$port = (Test-NetConnection localhost -Port 32400)
 
-# If process exists
-if ($process) {
-    Write-Host 'true'
-} else {
-    Write-Host 'false'
-}
+$port.TcpTestSucceeded | ConvertTo-Json | Write-Host
