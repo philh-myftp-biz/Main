@@ -3,6 +3,9 @@ from philh_myftp_biz.classOBJ import log
 from typing import Generator, Literal
 import Media
 
+# List of downloads
+queue: list[Media._Template] = []
+
 def ReadName(
     name: Literal['Title (Year)']
 ) -> list[str, int]:
@@ -116,19 +119,22 @@ def Scanner() -> Generator[Media._Template]:
 
                     print('Exists:', season.queries[0])
 
-def Download(downloads: list[Media._Template]):
+def Download():
 
-    # Iter through downloads in scanner
-    for download in Scanner():
+    while True:
 
-        # Start the download
-        download.file.start(True)
+        # Iter through downloads in scanner
+        for d in Scanner():
 
-        # Append the download to the list
-        downloads += [download]
+            # If the item is not already downloading
+            if not any([(d.queries == i.queries) for i in queue]):
 
-        # Step the total of the progress bar
-        pbar.step_total()
+                # Start the download
+                d.file.start(True)
 
-    # Close the webdriver
-    driver.close()
+                # Append the download to the list
+                queue += [d]
+
+                # Step the total of the progress bar
+                pbar.step_total()
+

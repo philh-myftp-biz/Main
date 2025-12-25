@@ -1,6 +1,7 @@
 from philh_myftp_biz.web import api, Driver
 from philh_myftp_biz.modules import Module
 from philh_myftp_biz.pc import ProgressBar
+from json.decoder import JSONDecodeError
 from philh_myftp_biz import ParsedArgs
 from philh_myftp_biz.file import TXT
 
@@ -58,7 +59,10 @@ driver = Driver(
 host = None
 
 while host is None:
-    host = VM.cap('IP', 'Torrenting')
+    try:
+        host = VM.cap('IP', 'Torrenting')
+    except JSONDecodeError:
+        pass
 
 # Connect to the qbittorrent web interface on the 'Torrenting' Virtual Machine
 qbit = api.qBitTorrent(
