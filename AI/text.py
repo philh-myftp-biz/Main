@@ -1,4 +1,4 @@
-from __init__ import args, messages, Ollama
+from __init__ import args, messages
 import ollama
 
 # ====================================================
@@ -10,11 +10,6 @@ args.Arg(
     desc = '',
     handler = str
 )
-
-# ====================================================
-# OLLAMA SERVICE
-
-Ollama.Start()
 
 # ====================================================
 # INSTALL MODEL

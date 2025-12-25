@@ -1,13 +1,11 @@
-from philh_myftp_biz.modules import Module, Service
 from philh_myftp_biz.pc import Path, mkdir, cls
 from philh_myftp_biz import json, ParsedArgs
+from philh_myftp_biz.modules import Module
 from typing import Literal, Iterator
 
 # ====================================================
 
 this = Module('E:/AI/')
-
-Ollama = Service(this, '/Ollama/')
 
 # ====================================================
 # PARSE INPUT
