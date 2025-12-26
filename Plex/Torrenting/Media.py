@@ -1,12 +1,13 @@
 from philh_myftp_biz.array import List, priority
 from philh_myftp_biz.web import Magnet, api
-from philh_myftp_biz.text import similarity
+from philh_myftp_biz.text import similarity, abbreviate
 from __init__ import this, tpb, omdb, args
 from philh_myftp_biz.pc import Path, mkdir
 from philh_myftp_biz.db import MimeType
 from philh_myftp_biz.json import Dict
 from typing import Callable
 import PTN
+from philh_myftp_biz.classOBJ import loc
 
 class _Template:
 
@@ -257,10 +258,8 @@ class Show:
             )
 
     def __str__(self):
-        from philh_myftp_biz.classOBJ import location
-        from philh_myftp_biz.text import abbreviate
 
-        return f'<Show "{abbreviate(15, self.title)}" @{location(self)}>'
+        return f'<Show "{abbreviate(15, self.title)}" @{loc(self)}>'
 
 class Season(_Template):
 
@@ -349,9 +348,7 @@ class Season(_Template):
         return f'{self._season:{format_spec}}'
     
     def __str__(self):
-        from philh_myftp_biz.classOBJ import location
-
-        return f'<Season "{self}" @{location(self)}>'
+        return f'<Season "{self}" @{loc(self)}>'
 
 class Episode(_Template):
 

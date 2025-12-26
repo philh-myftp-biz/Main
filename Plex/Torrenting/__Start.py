@@ -1,8 +1,8 @@
 from qbittorrentapi.exceptions import NotFound404Error
-from __init__ import qbit, args, VM, pbar, PIDstore
-from philh_myftp_biz.pc import warn
-from Scanner import Download, queue
-from philh_myftp_biz import thread
+from __init__ import qbit, args, pbar, PIDstore
+from philh_myftp_biz.terminal import warn
+from philh_myftp_biz.process import thread
+from Scanner import Download, Queue
 from time import sleep
 from os import getpid
 
@@ -16,7 +16,7 @@ qbit.clear(rm_files=False)
 t = thread(Download)
 
 # Loop until the thread stops and there are no downloads left
-while t.running() or (len(queue) > 0):
+while True:
 
     #
     sleep(1)
@@ -27,7 +27,7 @@ while t.running() or (len(queue) > 0):
         qbit.sort()
 
         # Iter through all downloads
-        for x, d in enumerate(queue):
+        for x, d in enumerate(Queue):
 
             # If the download is finished
             if d.file.finished():
@@ -51,7 +51,7 @@ while t.running() or (len(queue) > 0):
                 d.finish()
 
                 # Remove the download from the list
-                del queue[x]
+                del Queue[x]
 
                 # Update the progress bar
                 pbar.step()
@@ -64,13 +64,3 @@ while t.running() or (len(queue) > 0):
 
     except (NotFound404Error, IndexError) as e:
         warn(e)
-
-# Clear the download queue
-qbit.clear()
-
-# Power off the Virtual Machine
-VM.runH(
-    'stop', 'Torrenting'
-)
-
-exit()

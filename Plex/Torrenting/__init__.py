@@ -1,8 +1,7 @@
+from philh_myftp_biz.terminal import ParsedArgs, ProgressBar
 from philh_myftp_biz.web import api, Driver
 from philh_myftp_biz.modules import Module
-from philh_myftp_biz.pc import ProgressBar
 from json.decoder import JSONDecodeError
-from philh_myftp_biz import ParsedArgs
 from philh_myftp_biz.file import TXT
 
 #==============================================

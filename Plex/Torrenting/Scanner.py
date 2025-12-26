@@ -1,10 +1,11 @@
-from __init__ import this, args, pbar, driver
 from philh_myftp_biz.classOBJ import log
+from philh_myftp_biz.array import List
+from __init__ import this, args, pbar
 from typing import Generator, Literal
 import Media
 
 # List of downloads
-queue: list[Media._Template] = []
+Queue: List[Media._Template] = List()
 
 def ReadName(
     name: Literal['Title (Year)']
@@ -127,13 +128,13 @@ def Download():
         for d in Scanner():
 
             # If the item is not already downloading
-            if not any([(d.queries == i.queries) for i in queue]):
+            if not any([(d.queries == i.queries) for i in Queue]):
 
                 # Start the download
                 d.file.start(True)
 
                 # Append the download to the list
-                queue += [d]
+                Queue += d
 
                 # Step the total of the progress bar
                 pbar.step_total()
