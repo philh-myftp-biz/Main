@@ -1,6 +1,5 @@
-from philh_myftp_biz.file import ZIP, temp, TXT
+from philh_myftp_biz.file import temp, TXT
 from philh_myftp_biz.modules import Module
-from philh_myftp_biz.web import download
 from philh_myftp_biz.pc import Path
 from cv2 import VideoCapture
 
@@ -38,41 +37,3 @@ def isCorrupted(file:Path) -> bool:
 
     else:
         return True
-
-#==============================================
-# FFMPEG
-
-# Ffmpeg.exe
-ffmpeg = temp('ffmpeg', 'exe', '0')
-
-# FFprobe.exe
-ffprobe = temp('ffprobe', 'exe', '0')
-
-# If ffmpeg.exe does not exist
-if not (ffmpeg.exists() and ffprobe.exists()):
-
-    # ffmpeg.zip
-    zipfile = temp('ffmpeg', 'zip')
-
-    # Download ffmpeg
-    download(
-        url = 'https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip',
-        path = zipfile
-    )
-
-    # Wrap ffmpeg.zip
-    zip = ZIP(zipfile)
-
-    # Extract ffmpeg.exe from ffmpeg.zip
-    zip.extractFile(
-        file = next(zip.search('ffmpeg.exe')),
-        path = ffmpeg
-    )
-
-    # Extract ffprobe.exe from ffmpeg.zip
-    zip.extractFile(
-        file = next(zip.search('ffprobe.exe')),
-        path = ffprobe
-    )
-
-#==============================================

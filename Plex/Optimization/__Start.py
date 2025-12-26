@@ -1,6 +1,7 @@
-from __init__ import this, QueueItem, ffmpeg, PIDstore, isCorrupted
+from __init__ import this, QueueItem, PIDstore, isCorrupted
 from ffmpeg_progress_yield import FfmpegProgress
-from philh_myftp_biz.pc import cls, print
+from philh_myftp_biz.terminal import cls, print
+from philh_myftp_biz.programs import FFMPEG
 from philh_myftp_biz.classOBJ import log
 from philh_myftp_biz.db import MimeType
 from tqdm import tqdm
@@ -77,7 +78,7 @@ for i in queue:
         #
         ff = FfmpegProgress([
 
-            str(ffmpeg), # Ffmpeg.exe
+            str(FFMPEG()), # Ffmpeg.exe
             
             '-hwaccel', 'cuda', # Use GPU
 
