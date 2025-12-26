@@ -1,13 +1,13 @@
+from philh_myftp_biz.text import similarity, abbreviate
 from philh_myftp_biz.array import List, priority
 from philh_myftp_biz.web import Magnet, api
-from philh_myftp_biz.text import similarity, abbreviate
 from __init__ import this, tpb, omdb, args
 from philh_myftp_biz.pc import Path, mkdir
+from philh_myftp_biz.classOBJ import loc
 from philh_myftp_biz.db import MimeType
 from philh_myftp_biz.json import Dict
 from typing import Callable
 import PTN
-from philh_myftp_biz.classOBJ import loc
 
 class _Template:
 
