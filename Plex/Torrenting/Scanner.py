@@ -1,10 +1,8 @@
 from philh_myftp_biz.classOBJ import log
-from __init__ import this, args, pbar
+from __init__ import this, args
 from typing import Generator, Literal
+from philh_myftp_biz.terminal import ProgressBar
 import Media
-
-# List of downloads
-Queue: list[Media._Template] = []
 
 def ReadName(
     name: Literal['Title (Year)']
@@ -52,21 +50,22 @@ def DOWNLOADS() -> Generator[Media._Template]:
             # Iter through all seasons in the show
             for season in show.Seasons():
 
-                yield season
-
                 # Iter through all episodes in the season
                 for episode in season.episodes:
 
                     yield episode
 
-def Download():
+def Download(
+    queue: list[Media._Template],
+    pbar: ProgressBar
+):
 
     while True:
 
         for d in DOWNLOADS():
 
             # If the item is not already downloading
-            if not any([(d.queries == i.queries) for i in Queue]):
+            if not any([(d.queries == i.queries) for i in queue]):
 
                 if not d.exists():
 
@@ -80,7 +79,7 @@ def Download():
 
                         d.file.start()
 
-                        Queue += [d]
+                        queue += [d]
                         
                         # Step the total of the progress bar
                         pbar.step_total()

@@ -1,8 +1,8 @@
-from philh_myftp_biz.terminal import ParsedArgs, ProgressBar
+from philh_myftp_biz.terminal import ParsedArgs
 from philh_myftp_biz.web import api, Driver
 from philh_myftp_biz.modules import Module
 from json.decoder import JSONDecodeError
-from philh_myftp_biz.file import TXT
+from os import getpid
 
 #==============================================
 # Plex Module
@@ -10,8 +10,11 @@ from philh_myftp_biz.file import TXT
 # Declare the 'Plex' module
 this = Module('E:/Plex')
 
-# Store for execution pid
-PIDstore = TXT(this.dir.child('/Torrenting/__pycache__/PID.txt'))
+#==============================================
+# PID
+
+with this.dir.child('/Torrenting/__pycache__/PID.txt').open('w') as txt:
+    txt.write( str(getpid()) )
 
 #==============================================
 # Parse commandline arguements
@@ -25,20 +28,13 @@ args.Arg(
 )
 
 #==============================================
-
-# Create a progress bar
-pbar = ProgressBar(0)
-
-#==============================================
 # VM module
 
 # Declare the 'Virtual Machines' module
 VM = Module('E:/Virtual Machines')
 
 # Power on the Virtual Machine
-VM.runH(
-    'start', 'Torrenting'
-)
+VM.runH('start', 'Torrenting')
 
 #==============================================
 

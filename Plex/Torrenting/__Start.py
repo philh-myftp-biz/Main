@@ -1,33 +1,32 @@
 from qbittorrentapi.exceptions import NotFound404Error
-from __init__ import qbit, args, pbar, PIDstore
-from philh_myftp_biz.terminal import warn
+from philh_myftp_biz.terminal import warn, ProgressBar
 from philh_myftp_biz.process import thread
-from Scanner import Download, Queue
-from time import sleep
-from os import getpid
+from __init__ import qbit, args
+from Scanner import Download
+import Media
 
-# Store the pid of the current execution
-PIDstore.save(getpid())
+# List of downloads
+queue: list[Media._Template] = []
+
+# Create a progress bar
+pbar = ProgressBar(0)
 
 # Clear the download queue
 qbit.clear(rm_files=False)
 
 # Scan for downloads in the background
-t = thread(Download)
+t = thread(Download, queue=queue, pbar=pbar)
 
 # Loop until the thread stops and there are no downloads left
 while True:
 
-    #
-    sleep(1)
-
     try:
     
-        #
+        # Sort the download queue
         qbit.sort()
 
         # Iter through all downloads
-        for x, d in enumerate(Queue):
+        for x, d in enumerate(queue):
 
             # If the download is finished
             if d.file.finished():
@@ -51,7 +50,7 @@ while True:
                 d.finish()
 
                 # Remove the download from the list
-                del Queue[x]
+                del queue[x]
 
                 # Update the progress bar
                 pbar.step()
