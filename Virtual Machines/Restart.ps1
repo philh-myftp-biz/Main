@@ -5,5 +5,6 @@ param(
     
 Restart-VM `
     -Name $Name `
-    -Confirm `
+    -Confirm:$false `
+    -Force `
     > $null
