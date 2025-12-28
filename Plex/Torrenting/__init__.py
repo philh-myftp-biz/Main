@@ -33,9 +33,6 @@ args.Arg(
 # Declare the 'Virtual Machines' module
 VM = Module('E:/Virtual Machines')
 
-# Power on the Virtual Machine
-VM.runH('start', 'Torrenting')
-
 #==============================================
 
 # Create a new Webdriver

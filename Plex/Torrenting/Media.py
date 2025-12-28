@@ -60,25 +60,21 @@ class _Template:
             # Iter through all magnets found with the query
             for m in tpb.search(query):
 
-                # If there are at least 10 seeders
-                seeders = (m.seeders >= 10)
+                # If there are at least 15 seeders
+                seeders = (m.seeders >= 15)
 
                 # If the name is valid
                 name = self.validName(m.title)
-
-                # If the quality is at most 1080p
-                quality = m.quality <= 1080
 
                 # Debug: Print magnet details
                 if args['verbose']:
                     print('Scanning:', {
                         'name': [name, m.title],
-                        'seeders': [seeders, m.seeders],
-                        'quality': [quality, m.quality]
+                        'seeders': [seeders, m.seeders]
                     })
 
-                # If all three conditions are true
-                if seeders and name and quality:
+                # If both conditions are true
+                if seeders and name:
 
                     # Append the magnet to the list
                     magnets += m
@@ -99,8 +95,7 @@ class _Template:
             if args['verbose']:
                 print('Found:', {
                     'name': self.magnet.title,
-                    'seeders': self.magnet.seeders,
-                    'quality': self.magnet.quality
+                    'seeders': self.magnet.seeders
                 })
 
             # Download the magnet
