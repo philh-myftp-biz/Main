@@ -234,23 +234,21 @@ class Show:
         self.dir = this.dir.child(f"/Media/Shows/{title} ({year})/")
         """../Media/Shows/{Title} ({Year})/"""
 
-        self.__seasons: list[str] = []
-        """raw list of seasons"""
+        # =================================================================
 
-        # Fetch show details from the Open Movie Database
-        self.__seasons = omdb.show(title, year).Seasons
+        self.seasons: list[Season] = []
+        """"""
 
-    def Seasons(self):
+        for s, episodes in omdb.show(title, year).Seasons.items():
 
-        # Iter through all seasons from the omdb data
-        for s in self.__seasons:
-            
             # Yield a Season Instance 
-            yield Season(
+            self.seasons += [Season(
                 show = self, # This Show
                 season = int(s), # Season number
-                episodes = self.__seasons[s] # Array of episode numbers as strings
-            )
+                episodes = episodes # Array of episode numbers as strings
+            )]
+
+        # =================================================================
 
     def __str__(self):
 

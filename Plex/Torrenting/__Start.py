@@ -20,13 +20,22 @@ qbit.clear(rm_files=False)
 # Loop until the thread stops and there are no downloads left
 while True:
 
+    # ===============================================================
+    # FIND MAGNETS
+
+    # Scan and iter through downloads
     for d in Downloads():
 
-        # If the item is not already downloading and does not already exist 
-        if not (any([(d.queries == i.queries) for i in queue]) and d.exists()):
+        # If the item is not already downloading 
+        if not any([(d.queries == i.queries) for i in queue]):
 
-            # Start the download
-            d.start()
+            
+            try:
+                # Start the download
+                d.start()
+
+            except TimeoutError:
+                continue
 
             # If a valid file has been found
             if d.file:
@@ -46,11 +55,10 @@ while True:
                 log(d, 'RED')
 
     # ===============================================================
+    # MANAGE DOWNLOADS
 
     #
     qbit.sort()
-
-    # ===============================================================
 
     # Iter through all downloads
     for x, d in enumerate(queue):

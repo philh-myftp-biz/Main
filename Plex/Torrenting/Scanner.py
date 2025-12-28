@@ -22,8 +22,11 @@ def ReadName(
 
 def Downloads() -> Generator[Media._Template]:
     """
-    Generate a list of Movie or Episode Downloads
+    Generate a list of Movie and Episode Downloads
     """
+
+    #==========================================================
+    # MOVIES
 
     # Iter through all movie files
     for p in this.dir.child('/Media/Movies/').children():
@@ -34,7 +37,14 @@ def Downloads() -> Generator[Media._Template]:
             # Check if the file ends with '.todo'
             if p.ext() == 'todo':
 
-                yield Media.Movie(*ReadName(p.name()), p)
+                movie = Media.Movie(*ReadName(p.name()), p)
+
+                if not movie.exists():
+
+                    yield movie
+
+    #==========================================================
+    # EPISODES
 
     # Loop through all child directories of 'E:/Plex/Media/Shows' 
     for ShowDir in this.dir.child('/Media/Shows').children():
@@ -46,11 +56,17 @@ def Downloads() -> Generator[Media._Template]:
             show = Media.Show(*ReadName(ShowDir.name()))
 
             # Iter through all seasons in the show
-            for season in show.Seasons():
+            for season in show.seasons:
 
-                yield season
+                if not season.exists():
 
-                # Iter through all episodes in the season
-                for episode in season.episodes:
+                    season.start()
 
-                    yield episode
+                    # Iter through all episodes in the season
+                    for episode in season.episodes:
+
+                        if not episode.exists():
+                            
+                            yield episode
+
+    #==========================================================
