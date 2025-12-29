@@ -239,14 +239,20 @@ class Show:
         self.seasons: list[Season] = []
         """"""
 
-        for s, episodes in omdb.show(title, year).Seasons.items():
+        try:
+            
+            # Iter through imdb data for show seasons
+            for s, episodes in omdb.show(title, year).Seasons.items():
 
-            # Yield a Season Instance 
-            self.seasons += [Season(
-                show = self, # This Show
-                season = int(s), # Season number
-                episodes = episodes # Array of episode numbers as strings
-            )]
+                # Yield a Season Instance 
+                self.seasons += [Season(
+                    show = self, # This Show
+                    season = int(s), # Season number
+                    episodes = episodes # Array of episode numbers as strings
+                )]
+
+        except AttributeError:
+            pass
 
         # =================================================================
 
