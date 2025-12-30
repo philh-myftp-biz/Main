@@ -1,12 +1,14 @@
-from philh_myftp_biz.terminal import ProgressBar
+from philh_myftp_biz.terminal import ProgressBar, cls
 from philh_myftp_biz.classOBJ import log
-from __init__ import qbit, args, VM
+from __init__ import qbit, VM, driver
 from Scanner import Downloads
-from time import sleep
 import Media
 
+# ===============================================================
+# INITIALIZATION
+
 # Start the Virtual Machine
-VM.run('Start', 'Torrenting')
+VM.runH('Start', 'Torrenting')
 
 # List of downloads
 queue: list[Media._Template] = []
@@ -17,50 +19,54 @@ pbar = ProgressBar(0)
 # Clear the download queue
 qbit.clear(rm_files=False)
 
-# Loop until the thread stops and there are no downloads left
-while True:
+# ===============================================================
+# FIND MAGNETS
 
-    # ===============================================================
-    # FIND MAGNETS
+# Scan and iter through downloads
+for d in Downloads():
+        
+    try:
+        # Start the download
+        d.start()
 
-    # Scan and iter through downloads
-    for d in Downloads():
+    except TimeoutError:
+        continue
 
-        # If the item is not already downloading 
-        if not any([(d.queries == i.queries) for i in queue]):
+    # If a valid file has been found
+    if d.file:
 
-            
-            try:
-                # Start the download
-                d.start()
+        log(d, 'GREEN')
 
-            except TimeoutError:
-                continue
+        # Start downloading the file
+        d.file.start()
 
-            # If a valid file has been found
-            if d.file:
+        # Add the download item to the queue
+        queue += [d]
+        
+        # Step the total of the progress bar
+        pbar.step_total()
 
-                log(d, 'GREEN')
+    else:
+        log(d, 'RED')
 
-                # Start downloading the file
-                d.file.start()
+# ===============================================================
 
-                # Add the download item to the queue
-                queue += [d]
-                
-                # Step the total of the progress bar
-                pbar.step_total()
+# Close the WebDriver
+driver.close()
 
-            else:
-                log(d, 'RED')
+# Sort the download queue
+qbit.sort()
 
-    # ===============================================================
-    # MANAGE DOWNLOADS
+# Clear the terminal window
+cls()
 
-    #
-    qbit.sort()
+# ===============================================================
+# MANAGE DOWNLOADS
 
-    # Iter through all downloads
+# Loop until there are no downloads left
+while len(queue) > 0:
+
+    # Iter through the download queue
     for x, d in enumerate(queue):
 
         # If the download is finished
@@ -69,17 +75,11 @@ while True:
             # Get source and destination paths of file
             src, dst = d.paths()
 
-            # Debug: Print the src and destination
-            if args['verbose']:
-                print()
-                print('src:', src)
-                print('dst:', dst)
-
             # Move the source file to the destination path
-            src.copy(
-                dst = dst,
-                show_progress = args['verbose']
-            )
+            src.copy(dst, False)
+
+            # Log the finished download
+            log(d, 'GREEN')
 
             # Run any final commands for the download
             d.finish()
@@ -96,7 +96,4 @@ while True:
             # Start the download            
             d.magnet.start()
 
-    # ===============================================================
-
-    # Wait 5 minutes
-    sleep(60 * 5)
+# ===============================================================

@@ -60,8 +60,8 @@ class _Template:
             # Iter through all magnets found with the query
             for m in tpb.search(query):
 
-                # If there are at least 15 seeders
-                seeders = (m.seeders >= 15)
+                # If there are enough seeders
+                seeders = (m.seeders >= args['seeders'])
 
                 # If the name is valid
                 name = self.validName(m.title)
@@ -177,9 +177,6 @@ class Movie(_Template):
                     
                     # Set the 'file' attr to the current file
                     self.file = f
-
-                    # Start downloading the file
-                    f.start(True)
                     
                     break
 
@@ -207,10 +204,6 @@ class Movie(_Template):
         return src, dst
 
     def finish(self):
-
-        # Stop the magnet if it exists
-        if self.magnet:
-            self.magnet.stop()
 
         # If a todo/placeholder file was passed during initialization
         if self.__todo:
@@ -410,12 +403,6 @@ class Episode(_Template):
 
                         break
 
-        #
-        if self.file:
-
-            #
-            self.file.start()
-
     def validName(self, name:str) -> bool:
 
         # Parse the file name
@@ -452,6 +439,4 @@ class Episode(_Template):
         return f'{self._episode:{format_spec}}'
 
     def finish(self):
-
-        # Stop downloading the file
-        self.file.stop()
+        pass

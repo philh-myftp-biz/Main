@@ -27,6 +27,13 @@ args.Arg(
     handler = lambda x: x.lower()
 )
 
+args.Arg(
+    name = 'seeders',
+    default = 15,
+    desc = 'Minimum # of seeders for torrents',
+    handler = int
+)
+
 #==============================================
 # VM module
 
