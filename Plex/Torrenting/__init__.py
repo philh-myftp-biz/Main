@@ -34,6 +34,13 @@ args.Arg(
     handler = int
 )
 
+args.Arg(
+    name = 'limit',
+    default = 100,
+    desc = 'Maximum # of items to download',
+    handler = int
+)
+
 #==============================================
 # VM module
 

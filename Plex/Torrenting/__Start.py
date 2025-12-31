@@ -1,6 +1,6 @@
 from philh_myftp_biz.terminal import ProgressBar, cls
 from philh_myftp_biz.classOBJ import log
-from __init__ import qbit, VM, driver
+from __init__ import qbit, VM, driver, args
 from Scanner import Downloads
 import Media
 
@@ -13,41 +13,41 @@ VM.runH('Start', 'Torrenting')
 # List of downloads
 queue: list[Media._Template] = []
 
-# Create a progress bar
-pbar = ProgressBar(0)
-
 # Clear the download queue
 qbit.clear(rm_files=False)
 
 # ===============================================================
 # FIND MAGNETS
 
-# Scan and iter through downloads
-for d in Downloads():
-        
+downloads = Downloads()
+ran = iter(range(args['limit']))
+
+while True:
+
     try:
+
+        next(ran)
+        d = next(downloads)
+
         # Start the download
         d.start()
 
-    except TimeoutError:
-        continue
+        # If a valid file has been found
+        if d.file:
 
-    # If a valid file has been found
-    if d.file:
+            log(d, 'GREEN')
 
-        log(d, 'GREEN')
+            # Start downloading the file
+            d.file.start()
 
-        # Start downloading the file
-        d.file.start()
+            # Add the download item to the queue
+            queue += [d]
 
-        # Add the download item to the queue
-        queue += [d]
-        
-        # Step the total of the progress bar
-        pbar.step_total()
-
-    else:
-        log(d, 'RED')
+        else:
+            log(d, 'RED')
+    
+    except TimeoutError, StopIteration:
+        break
 
 # ===============================================================
 
@@ -59,6 +59,9 @@ qbit.sort()
 
 # Clear the terminal window
 cls()
+
+# Create a progress bar
+pbar = ProgressBar(len(queue))
 
 # ===============================================================
 # MANAGE DOWNLOADS
@@ -83,6 +86,9 @@ while len(queue) > 0:
 
             # Run any final commands for the download
             d.finish()
+
+            #
+            d.file.stop()
 
             # Remove the download from the list
             del queue[x]

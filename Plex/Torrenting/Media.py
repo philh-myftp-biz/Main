@@ -81,11 +81,7 @@ class _Template:
 
         # Return the best remaining magnet
         self.magnet = magnets.max(
-            lambda m: priority(
-                _1 = m.quality, # 1st. Quality
-                _2 = m.seeders, # 2nd. Seeders
-                reverse = True
-            ) 
+            lambda m: m.seeders
         )
 
         # If a magnet has been found
