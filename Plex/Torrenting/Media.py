@@ -1,5 +1,5 @@
 from philh_myftp_biz.text import similarity, abbreviate
-from philh_myftp_biz.array import List, priority
+from philh_myftp_biz.array import List
 from philh_myftp_biz.web import Magnet, api
 from __init__ import this, tpb, omdb, args
 from philh_myftp_biz.pc import Path, mkdir
@@ -96,6 +96,10 @@ class _Template:
 
             # Download the magnet
             self.magnet.start()
+
+            #
+            for file in self.magnet.files():
+                file.stop()
 
         # If a magnet has not been found and debug
         elif args['verbose']:
@@ -200,7 +204,6 @@ class Movie(_Template):
         return src, dst
 
     def finish(self):
-
         # If a todo/placeholder file was passed during initialization
         if self.__todo:
 
