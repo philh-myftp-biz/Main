@@ -19,15 +19,9 @@ qbit.clear(rm_files=False)
 # ===============================================================
 # FIND MAGNETS
 
-downloads = Downloads()
-ran = iter(range(args['limit']))
-
-while True:
+for d in Downloads():
 
     try:
-
-        next(ran)
-        d = next(downloads)
 
         # Start the download
         d.start()
@@ -46,7 +40,10 @@ while True:
         else:
             log(d, 'RED')
     
-    except TimeoutError, StopIteration:
+    except TimeoutError:
+        continue
+
+    if len(queue) >= args['limit']:
         break
 
 # ===============================================================
@@ -103,3 +100,6 @@ while len(queue) > 0:
             d.magnet.start()
 
 # ===============================================================
+
+# Stop the Virtual Machine
+VM.runH('Stop', 'Torrenting')
