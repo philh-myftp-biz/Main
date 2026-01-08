@@ -19,9 +19,15 @@ qbit.clear(rm_files=False)
 # ===============================================================
 # FIND MAGNETS
 
-for d in Downloads():
+# Initialize the download generator
+downloads = Downloads()
+
+while True:
 
     try:
+
+        # Get the next download from the generator
+        d = next(downloads)
 
         # Start the download
         d.start()
@@ -37,12 +43,25 @@ for d in Downloads():
             # Add the download item to the queue
             queue += [d]
 
+        # If no valid file has been found
         else:
             log(d, 'RED')
     
+    # If the download has timed out
     except TimeoutError:
+        
+        log(d, 'RED')
+
+        # Skip to the next download
         continue
 
+    # If the generator is exhausted
+    except StopIteration:
+
+        # Break the loop
+        break
+
+    # Break the loop if the queue limit has been reached
     if len(queue) >= args['limit']:
         break
 
@@ -84,7 +103,7 @@ while len(queue) > 0:
             # Run any final commands for the download
             d.finish()
 
-            #
+            # Stop downloading the file
             d.file.stop()
 
             # Remove the download from the list

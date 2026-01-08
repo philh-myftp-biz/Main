@@ -41,6 +41,13 @@ args.Arg(
     handler = int
 )
 
+args.Arg(
+    name = 'timeout',
+    default = 300, # 5 minutes
+    desc = '# of seconds to wait before timing out',
+    handler = int
+)
+
 #==============================================
 # VM module
 
@@ -75,7 +82,8 @@ qbit = api.qBitTorrent(
     host = host,
     username = 'admin',
     password = 'Torrenting123!',
-    debug = args['verbose']
+    debug = args['verbose'],
+    timeout = args['timeout']
 )
 
 #==============================================
