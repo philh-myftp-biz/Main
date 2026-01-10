@@ -1,10 +1,10 @@
 from philh_myftp_biz.text import similarity, abbreviate
-from philh_myftp_biz.array import List
 from philh_myftp_biz.web import Magnet, api
 from __init__ import this, tpb, omdb, args
 from philh_myftp_biz.pc import Path, mkdir
 from philh_myftp_biz.classOBJ import loc
 from philh_myftp_biz.db import MimeType
+from philh_myftp_biz.array import List
 from philh_myftp_biz.json import Dict
 from typing import Callable
 import PTN
@@ -188,8 +188,8 @@ class Movie(_Template):
         # Check if the year is the same
         year = (data['year'] == self.Year)
 
-        # Check if the title is more than 60% similar
-        title = (similarity(self.Title, data['title']) > .6)
+        # Check if the title is more than 75% similar
+        title = (similarity(self.Title, data['title']) > .75)
         
         return (year and title)
 
@@ -327,8 +327,8 @@ class Season(_Template):
         # If no episode # is found
         episode = (data['episode'] is None)
 
-        # Check if the title is more than 60% similar to the show title
-        title = (similarity(data['title'], self.show.title) > .6)
+        # Check if the title is more than 75% similar to the show title
+        title = (similarity(data['title'], self.show.title) > .75)
 
         return (title and season and episode)
 

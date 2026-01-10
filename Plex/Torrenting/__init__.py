@@ -54,6 +54,8 @@ args.Arg(
 # Declare the 'Virtual Machines' module
 VM = Module('E:/Virtual Machines')
 
+VM.runH('start', 'Torrenting')
+
 #==============================================
 
 # Create a new Webdriver
@@ -72,6 +74,10 @@ driver = Driver(
 host = None
 
 while host is None:
+    
+    if args['verbose']:
+        print('Contacting Virtual Machine ...')
+    
     try:
         host = VM.cap('IP', 'Torrenting')
     except JSONDecodeError:

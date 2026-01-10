@@ -1,6 +1,6 @@
 from philh_myftp_biz.terminal import ProgressBar, cls
-from philh_myftp_biz.classOBJ import log
 from __init__ import qbit, VM, driver, args
+from philh_myftp_biz.classOBJ import log
 from Scanner import Downloads
 import Media
 
@@ -45,17 +45,16 @@ while True:
 
         # If no valid file has been found
         else:
+
             log(d, 'RED')
     
-    # If the download has timed out
+    # Continue the loop if the download has timed out
     except TimeoutError:
-        
-        log(d, 'RED')
 
         # Skip to the next download
         continue
 
-    # If the generator is exhausted
+    # Break the loop if the generator is exhausted
     except StopIteration:
 
         # Break the loop
@@ -63,6 +62,7 @@ while True:
 
     # Break the loop if the queue limit has been reached
     if len(queue) >= args['limit']:
+
         break
 
 # ===============================================================
