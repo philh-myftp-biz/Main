@@ -6,5 +6,6 @@ watch_files: []
 packages: [
   'git+https://github.com/MineFartS/parse-torrent-title',
   'ffmpeg-progress-yield',
-  '--only-binary=numpy opencv-python'
+  '--only-binary=numpy opencv-python',
+  'pymediainfo'
 ]

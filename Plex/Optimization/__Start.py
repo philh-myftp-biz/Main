@@ -1,4 +1,4 @@
-from __init__ import this, QueueItem, PIDstore, isCorrupted
+from __init__ import this, QueueItem, PIDstore
 from ffmpeg_progress_yield import FfmpegProgress
 from philh_myftp_biz.terminal import cls, print
 from philh_myftp_biz.programs import FFMPEG
@@ -10,51 +10,6 @@ from os import getpid
 #
 PIDstore.save(getpid())
 
-#
-queue: list[QueueItem] = []
-
-# Iter through descendants of 'E:/Plex/Media/'
-for src in this.dir.child('/Media/').descendants():
-
-    # If the path is a video file
-    if (MimeType.Path(src) == 'video'):
-
-        i = QueueItem(src)
-
-        # If the source file is corrupted
-        if isCorrupted(i.src):
-
-            print(i.src, color='RED')
-
-            # Delete the source file
-            i.src.delete()
-
-            # If file is movie
-            if str(i.src).startswith('E:/Plex/Media/Movies/'):
-
-                # Placeholder file
-                todo = i.src.chext('todo')
-
-                # Create the placeholder file
-                todo.open('w')
-
-        # If the file is mkv
-        elif src.ext() == 'mkv':
-
-            print(i.src, color='YELLOW')
-
-            # Append the item to the queue
-            queue += [i]
-
-        else:
-
-            print(i.src, color='GREEN')
-
-# Sort the files by size (smallest first)
-queue.sort(
-    key = lambda i: i.src.size()
-)
-
 # Progress Bar
 pbar = tqdm(
     total = 100,
@@ -62,50 +17,64 @@ pbar = tqdm(
     desc = "Encoding"
 )
 
-# Iter through all items in the queue
-for i in queue:
-    
-    # Clear the terminal window
-    cls()
+# Iter through descendants of 'E:/Plex/Media/'
+for src in this.dir.child('/Media/Shows/The Walking Dead (2010)/Season 07').descendants():
 
-    pbar.reset()
+    # If the path is a video file
+    if (MimeType.Path(src) == 'video'):
 
-    # Print the source and destination paths
-    log(i) 
+        i = QueueItem(src)
 
-    try:
+        # If the file is mkv
+        if (i.is_h264 or i.is_h265) and (not i.is_corrupted):
 
-        #
-        ff = FfmpegProgress([
+            print(i.src)
 
-            str(FFMPEG()), # Ffmpeg.exe
-            
-            '-hwaccel', 'cuda', # Use GPU
+        else:
 
-            '-i', str(i.src), # Input Path
+            pbar.reset()
 
-            '-c:v', 'h264_nvenc', # Video Codec
+            # Print the source and destination paths
+            log(i)
 
-            str(i.tmp), # Output Path
+            input('..')
 
-        ])
+            continue
 
-        # Run ffmpeg.exe
-        for progress in ff.run_command_with_progress():
-            # Update the progress bar
-            pbar.update(progress - pbar.n)
+            try:
 
-        if not isCorrupted(i.tmp):
-        
-            # Move the encoded file to the destination path
-            i.tmp.move(i.dst)
+                #
+                ff = FfmpegProgress([
 
-            # Wait for any programs to release the source file
-            while i.src.inuse():
+                    str(FFMPEG()), # Ffmpeg.exe
+                    
+                    '-hwaccel', 'cuda', # Use GPU
+
+                    '-i', str(i.src), # Input Path
+
+                    '-c:v', 'h265_nvenc', # Video Codec
+
+                    '-c:a', 'aac', # Audio Codec
+
+                    str(i.tmp), # Output Path
+
+                ])
+
+                # Run ffmpeg.exe
+                for progress in ff.run_command_with_progress():
+                    
+                    # Update the progress bar
+                    pbar.update(progress - pbar.n)
+                
+                # Move the encoded file to the destination path
+                i.tmp.move(i.dst)
+
+                # Wait for any programs to release the source file
+                while i.src.inuse():
+                    pass
+
+                # Delete the source file
+                i.src.delete()
+
+            except RuntimeError:
                 pass
-
-            # Delete the source file
-            i.src.delete()
-
-    except RuntimeError:
-        pass

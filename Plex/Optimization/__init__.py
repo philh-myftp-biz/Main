@@ -1,6 +1,7 @@
 from philh_myftp_biz.file import temp, TXT
 from philh_myftp_biz.modules import Module
 from philh_myftp_biz.pc import Path
+from pymediainfo import MediaInfo
 from cv2 import VideoCapture
 
 #==============================================
@@ -21,19 +22,39 @@ class QueueItem:
     ):
         self.src = src
         self.dst = src.chext('mp4')
-
         self.tmp = temp('encoding', 'mp4')
 
-def isCorrupted(file:Path) -> bool:
+        # ===========================================
 
-    cap = VideoCapture(str(file))
+        self.is_corrupted = False
 
-    if cap.isOpened():
+        cap = VideoCapture(str(src))
 
-        ret, _ = cap.read()
+        if cap.isOpened():
 
-        if ret is None:
-            return True
+            if cap.read()[0] is None:
 
-    else:
-        return True
+                self.is_corrupted = True
+
+        else:
+
+            self.is_corrupted = True
+    
+        # ===========================================
+
+        self.is_h264 = False
+        self.is_h265 = False
+
+        for track in MediaInfo.parse(str(src)).tracks:
+            
+            if track.track_type == 'Video':
+
+                if (track.format == "AVC") or (track.codec_id == "avc1"):
+                    self.is_h264 = True
+                
+                elif (track.format == "HEVC") or (track.codec_id == "hvc1"):
+                    self.is_h265 = True
+
+                break
+
+        # ===========================================
