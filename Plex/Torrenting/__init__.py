@@ -62,9 +62,6 @@ VM.runH('start', 'Torrenting')
 driver = Driver(
     headless = (not args['verbose']),
     debug = args['verbose'],
-    extensions = [
-        'https://addons.mozilla.org/firefox/downloads/file/4619486/adguard_adblocker-5.2.113.0.xpi' # AdBlocker
-    ],
     fast_load = True
 )
 
