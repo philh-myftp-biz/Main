@@ -158,6 +158,7 @@ class Movie(_Template):
         """Placeholder File"""
 
         self.queries = [
+            title,
             f'{title} {year}'
         ]
 
