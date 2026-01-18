@@ -70,9 +70,6 @@ while True:
 # Close the WebDriver
 driver.close()
 
-# Sort the download queue
-qbit.sort()
-
 # Clear the terminal window
 cls()
 
