@@ -1,4 +1,4 @@
-from philh_myftp_biz.terminal import ProgressBar, cls
+from philh_myftp_biz.terminal import ProgressBar, cls, warn
 from __init__ import qbit, VM, driver, args
 from philh_myftp_biz.classOBJ import log
 from Scanner import Downloads
@@ -118,4 +118,4 @@ while len(queue) > 0:
 # ===============================================================
 
 # Stop the Virtual Machine
-VM.runH('Stop', 'Torrenting')
+VM.runH('Save', 'Torrenting')
