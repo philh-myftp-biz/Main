@@ -235,13 +235,12 @@ class Show:
         try:
             
             # Iter through imdb data for show seasons
-            for s, episodes in omdb.show(title, year).Seasons.items():
+            for season in omdb.show(title, year).Seasons:
 
                 # Yield a Season Instance 
                 self.seasons += [Season(
                     show = self, # This Show
-                    season = int(s), # Season number
-                    episodes = episodes # Array of episode numbers as strings
+                    season = season # Season number
                 )]
 
         except AttributeError:
@@ -257,8 +256,7 @@ class Season(_Template):
 
     def __init__(self,
         show: 'Show',
-        season: int,
-        episodes: list[str]
+        season: api.omdb.Season
     ):
         
         self.show = show
@@ -283,12 +281,12 @@ class Season(_Template):
         """List of Episodes"""
 
         # Iter through all raw episodes
-        for e in episodes:
+        for episode in season.Episodes:
 
             # Append an episode object to the list
             self.episodes += [Episode(
                 season = self, # This Season
-                episode = int(e) # Episode number
+                episode = episode, # Episode number
             )]
 
     def start(self):
@@ -334,10 +332,10 @@ class Season(_Template):
         return (title and season and episode)
 
     def __int__(self):
-        return self._season
+        return self._season.Number
     
     def __format__(self, format_spec):
-        return f'{self._season:{format_spec}}'
+        return f'{self._season.Number:{format_spec}}'
     
     def __str__(self):
         return f'<Season "{self}" @{loc(self)}>'
@@ -346,7 +344,7 @@ class Episode(_Template):
 
     def __init__(self,
         season: 'Season',
-        episode: int
+        episode: api.omdb.Episode
     ):
 
         self.season = season
@@ -362,7 +360,8 @@ class Episode(_Template):
 
         self.queries = [
             f'{self.show.title} s{season:02d}e{self:02d}',
-            f'{self.show.title} {season:02d}x{self:02d}'
+            f'{self.show.title} {season:02d}x{self:02d}',
+            f'{self.show.title} {episode.Title}'
         ]
 
     def start(self):
@@ -433,10 +432,10 @@ class Episode(_Template):
         return src, dst
 
     def __int__(self):
-        return self._episode
+        return self._episode.Number
     
     def __format__(self, format_spec):
-        return f'{self._episode:{format_spec}}'
+        return f'{self._episode.Number:{format_spec}}'
 
     def finish(self):
         pass
