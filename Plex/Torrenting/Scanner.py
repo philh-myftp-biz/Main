@@ -1,5 +1,6 @@
-from __init__ import this, args
+from philh_myftp_biz.terminal import Log
 from typing import Generator, Literal
+from __init__ import this, args
 import Media
 
 def ReadName(
@@ -39,9 +40,17 @@ def Downloads() -> Generator[Media._Template]:
 
                 movie = Media.Movie(*ReadName(p.name()), p)
 
-                if not movie.exists():
+                if movie.exists():
+
+                    Log.verbose(f'Media Exists: {str(movie)}')
+
+                else:
 
                     yield movie
+
+        else:
+
+            Log.verbose(f'Skipping Media: {p}')
 
     #==========================================================
     # EPISODES
@@ -58,15 +67,27 @@ def Downloads() -> Generator[Media._Template]:
             # Iter through all seasons in the show
             for season in show.seasons:
 
-                if not season.exists():
+                if season.exists():
+
+                    Log.verbose(f'Media Exists: {str(season)}')
+
+                else:
 
                     season.start()
 
                     # Iter through all episodes in the season
                     for episode in season.episodes:
 
-                        if not episode.exists():
+                        if episode.exists():
+
+                            Log.verbose(f'Media Exists: {str(episode)}')
+
+                        else:
                             
                             yield episode
+
+        else:
+
+            Log.verbose(f'Skipping Media: {ShowDir}')
 
     #==========================================================

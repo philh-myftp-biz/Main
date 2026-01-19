@@ -9,6 +9,8 @@ from philh_myftp_biz.json import Dict
 from typing import Callable
 import PTN
 
+from philh_myftp_biz.terminal import Log
+
 class _Template:
 
     validName: Callable[[str], bool]
@@ -31,12 +33,12 @@ class _Template:
     List of queries to be used when searching thepiratebay.org 
     """
 
-    paths: Callable[[], list[Path, Path]]
+    paths: Callable[[], tuple[Path, Path]]
     """
     Get the source and destination paths of the file
     """
 
-    finish: Callable[[], None]
+    finish: Callable[[], None] = lambda s: None
     """
     Object-Specific tasks to run after the download is complete
     """
@@ -66,12 +68,8 @@ class _Template:
                 # If the name is valid
                 name = self.validName(m.title)
 
-                # Debug: Print magnet details
-                if args['verbose']:
-                    print('Scanning:', {
-                        'name': [name, m.title],
-                        'seeders': [seeders, m.seeders]
-                    })
+                # Log magnet details
+                Log.verbose(f'Scanning: (name=(valid={name}, {m.title}), seeders=(valid={seeders}, {m.seeders}))')
 
                 # If both conditions are true
                 if seeders and name:
@@ -87,12 +85,8 @@ class _Template:
         # If a magnet has been found
         if self.magnet:
 
-            # Debug: Print magnet details
-            if args['verbose']:
-                print('Found:', {
-                    'name': self.magnet.title,
-                    'seeders': self.magnet.seeders
-                })
+            # Log magnet details
+            Log.verbose(f'Found: (name={self.magnet.title}, seeders=[{self.magnet.seeders}])')
 
             # Download the magnet
             self.magnet.start()
@@ -104,8 +98,8 @@ class _Template:
         # If a magnet has not been found and debug
         elif args['verbose']:
 
-            # Debug: Print magnet details
-            print('Found:', None)
+            # Log magnet details
+            Log.verbose('Found: None')
 
     def exists(self) -> bool:
         """
@@ -205,6 +199,7 @@ class Movie(_Template):
         return src, dst
 
     def finish(self):
+
         # If a todo/placeholder file was passed during initialization
         if self.__todo:
 
@@ -218,76 +213,52 @@ class Show:
         year: int             
     ):
 
-        self.title = title
-        """Show Title"""
+        # Store title
+        self.Title = title
+        
+        # Store year 
+        self.Year = year
 
-        self.year = year
-        """Release Year"""
-
+        # Show Root Directory
         self.dir = this.dir.child(f"/Media/Shows/{title} ({year})/")
         """../Media/Shows/{Title} ({Year})/"""
 
-        # =================================================================
-
-        self.seasons: list[Season] = []
-        """"""
-
-        try:
-            
-            # Iter through imdb data for show seasons
-            for season in omdb.show(title, year).Seasons:
-
-                # Yield a Season Instance 
-                self.seasons += [Season(
-                    show = self, # This Show
-                    season = season # Season number
-                )]
-
-        except AttributeError:
-            pass
-
-        # =================================================================
+        # List of 'Season' OBJs
+        self.seasons = [Season(self, *i) for i in omdb.show(title, year).Seasons.items()]
 
     def __str__(self):
-
-        return f'<Show "{abbreviate(15, self.title)}" @{loc(self)}>'
+        return f'<Show "{self.Title}" @{loc(self)}>'
 
 class Season(_Template):
 
     def __init__(self,
         show: 'Show',
-        season: api.omdb.Season
+        season: str,
+        episodes: dict[str, api.omdb.Episode]
     ):
         
+        # Store 'Show' OBJ
         self.show = show
-        """This Show"""
 
-        self._season = season
-        """season #"""
+        # Integer Function
+        self.__int = int(season)
 
+        # Destination File Directory
         self.dir = show.dir.child(f"/Season {self:02d}/")
         """../Season {Season}/"""
 
         # Create the folder if it doesn't exist
         mkdir(self.dir)
 
+        # List of TPB queries
         self.queries = [
-            f'{self.show.title} {self.show.year} Season {season:02d}',
-            f'{self.show.title} Season {season:02d}',
-            f'{self.show.title} s{season:02d}',
+            f'{self.show.Title} {self.show.Year} Season {self:02d}',
+            f'{self.show.Title} Season {self:02d}',
+            f'{self.show.Title} s{self:02d}',
         ]
 
-        self.episodes: list[Episode] = []
-        """List of Episodes"""
-
-        # Iter through all raw episodes
-        for episode in season.Episodes:
-
-            # Append an episode object to the list
-            self.episodes += [Episode(
-                season = self, # This Season
-                episode = episode, # Episode number
-            )]
+        # List of 'Episode' OBJs
+        self.episodes = [Episode(self, i[1]) for i in episodes.items()]
 
     def start(self):
 
@@ -327,18 +298,18 @@ class Season(_Template):
         episode = (data['episode'] is None)
 
         # Check if the title is more than 75% similar to the show title
-        title = (similarity(data['title'], self.show.title) > .75)
+        title = (similarity(data['title'], self.show.Title) > .75)
 
         return (title and season and episode)
-
-    def __int__(self):
-        return self._season.Number
     
+    def __int__(self):
+        return self.__int
+
     def __format__(self, format_spec):
-        return f'{self._season.Number:{format_spec}}'
+        return f'{int(self):{format_spec}}'
     
     def __str__(self):
-        return f'<Season "{self}" @{loc(self)}>'
+        return f'<Season "{self}" - "{self.show.Title}" @{loc(self)}>'
 
 class Episode(_Template):
 
@@ -347,21 +318,27 @@ class Episode(_Template):
         episode: api.omdb.Episode
     ):
 
-        self.season = season
-        """This Season"""
-
+        # Store 'Show' OBJ
         self.show = season.show
-        """This Show"""
-
-        self._episode = episode
-        """Episode #"""
         
-        self.dir = season.dir
+        # Store 'Season' OBJ
+        self.season = season
 
+        # Store Episode Title
+        self.Title = episode.Title
+
+        # Store Directory
+        self.dir = season.dir
+        """../Season {Season}/"""
+
+        # Integer Function
+        self.__int = episode.Number
+
+        # List of TPB queries
         self.queries = [
-            f'{self.show.title} s{season:02d}e{self:02d}',
-            f'{self.show.title} {season:02d}x{self:02d}',
-            f'{self.show.title} {episode.Title}'
+            f'{self.show.Title} s{season:02d}e{self:02d}',
+            f'{self.show.Title} {season:02d}x{self:02d}',
+            f'{self.show.Title} {self.Title}'
         ]
 
     def start(self):
@@ -383,6 +360,7 @@ class Episode(_Template):
 
                     break
 
+        # If no file was found
         if self.file is None:
 
             # Start downloading the episode
@@ -430,12 +408,12 @@ class Episode(_Template):
         dst = self.dir.child(f'/Season {self.season:02d} Episode {self:02d}.{src.ext()}')
 
         return src, dst
-
-    def __int__(self):
-        return self._episode.Number
     
-    def __format__(self, format_spec):
-        return f'{self._episode.Number:{format_spec}}'
+    def __int__(self):
+        return self.__int
 
-    def finish(self):
-        pass
+    def __format__(self, format_spec):
+        return f'{int(self):{format_spec}}'
+    
+    def __str__(self):
+        return f'<Episode "{self.season}x{self}" - "{self.show.Title}" @{loc(self)}>'
