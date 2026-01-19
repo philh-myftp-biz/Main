@@ -189,8 +189,8 @@ class Movie(_Template):
         # Check if the year is the same
         year = (data['year'] == self.Year)
 
-        # Check if the title is more than 75% similar
-        title = (similarity(self.Title, data['title']) > .75)
+        # Check if the title is more than 65% similar
+        title = (similarity(self.Title, data['title']) > .65)
         
         return (year and title)
 
