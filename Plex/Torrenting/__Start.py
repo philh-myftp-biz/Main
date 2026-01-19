@@ -73,7 +73,7 @@ while True:
     # Break the loop if the queue limit has been reached
     if len(queue) >= args['limit']:
 
-        Log.verbose('Download Limit Reached')
+        Log.write('Download Limit Reached')
 
         break
 

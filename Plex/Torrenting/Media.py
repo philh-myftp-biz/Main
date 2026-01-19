@@ -69,7 +69,7 @@ class _Template:
                 name = self.validName(m.title)
 
                 # Log magnet details
-                Log.verbose(f'Scanning: (name=(valid={name}, {m.title}), seeders=(valid={seeders}, {m.seeders}))')
+                Log.write(f'Scanning: (name=(valid={name}, {m.title}), seeders=(valid={seeders}, {m.seeders}))')
 
                 # If both conditions are true
                 if seeders and name:
@@ -86,7 +86,7 @@ class _Template:
         if self.magnet:
 
             # Log magnet details
-            Log.verbose(f'Found: (name={self.magnet.title}, seeders=[{self.magnet.seeders}])')
+            Log.write(f'Found: (name={self.magnet.title}, seeders=[{self.magnet.seeders}])')
 
             # Download the magnet
             self.magnet.start()
@@ -99,7 +99,7 @@ class _Template:
         elif args['verbose']:
 
             # Log magnet details
-            Log.verbose('Found: None')
+            Log.write('Found: None')
 
     def exists(self) -> bool:
         """

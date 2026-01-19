@@ -42,7 +42,7 @@ def Downloads() -> Generator[Media._Template]:
 
                 if movie.exists():
 
-                    Log.verbose(f'Media Exists: {str(movie)}')
+                    Log.write(f'Media Exists: {str(movie)}')
 
                 else:
 
@@ -50,7 +50,7 @@ def Downloads() -> Generator[Media._Template]:
 
         else:
 
-            Log.verbose(f'Skipping Media: {p}')
+            Log.write(f'Skipping Media: {p}')
 
     #==========================================================
     # EPISODES
@@ -69,7 +69,7 @@ def Downloads() -> Generator[Media._Template]:
 
                 if season.exists():
 
-                    Log.verbose(f'Media Exists: {str(season)}')
+                    Log.write(f'Media Exists: {str(season)}')
 
                 else:
 
@@ -80,7 +80,7 @@ def Downloads() -> Generator[Media._Template]:
 
                         if episode.exists():
 
-                            Log.verbose(f'Media Exists: {str(episode)}')
+                            Log.write(f'Media Exists: {str(episode)}')
 
                         else:
                             
@@ -88,6 +88,6 @@ def Downloads() -> Generator[Media._Template]:
 
         else:
 
-            Log.verbose(f'Skipping Media: {ShowDir}')
+            Log.write(f'Skipping Media: {ShowDir}')
 
     #==========================================================
