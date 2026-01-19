@@ -1,4 +1,4 @@
-from philh_myftp_biz.terminal import ProgressBar, cls, warn
+from philh_myftp_biz.terminal import ProgressBar, dash, warn
 from __init__ import qbit, VM, driver, args
 from philh_myftp_biz.classOBJ import log
 from Scanner import Downloads
@@ -49,7 +49,10 @@ while True:
             log(d, 'RED')
     
     # Continue the loop if the download has timed out
-    except TimeoutError:
+    except TimeoutError as e:
+
+        if args['verbose']:
+            warn(e)
 
         # Skip to the next download
         continue
@@ -60,8 +63,20 @@ while True:
         # Break the loop
         break
 
+    #
+    except ConnectionAbortedError as e:
+
+        #
+        warn(e)
+
+        #
+        break
+
     # Break the loop if the queue limit has been reached
     if len(queue) >= args['limit']:
+
+        if args['verbose']:
+            print('Closing Scanner - Download Limit Reached')
 
         break
 
@@ -71,7 +86,7 @@ while True:
 driver.close()
 
 # Clear the terminal window
-cls()
+dash()
 
 # Create a progress bar
 pbar = ProgressBar(len(queue))
