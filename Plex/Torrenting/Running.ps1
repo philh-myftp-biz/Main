@@ -1,13 +1,16 @@
 
-$filePath = "E:\Plex\Torrenting\__pycache__\PID.txt"
+$processes = Get-Content -Path "$PSScriptRoot\__pycache__\PID.json" -Raw | ConvertFrom-Json | ForEach-Object {
+    
+    try {
+        Get-Process -Id $_ -ErrorAction SilentlyContinue
+    } catch {
+        Write-Host 'false'
+        exit
+    }
 
-$pyPID = Get-Content -Path $filePath -Raw
+}
 
-$process = Get-Process `
-    -Id $pyPID `
-    -ErrorAction SilentlyContinue
-
-if ($process) {
+if ($processes.Length -gt 0) {
     Write-Host 'true'
 } else {
     Write-Host 'false'

@@ -3,6 +3,8 @@ from philh_myftp_biz.web import api, Driver
 from philh_myftp_biz.modules import Module
 from json.decoder import JSONDecodeError
 from philh_myftp_biz.terminal import Log
+from philh_myftp_biz.array import List
+from philh_myftp_biz.file import JSON
 from os import getpid
 
 #==============================================
@@ -14,8 +16,14 @@ this = Module('E:/Plex')
 #==============================================
 # PID
 
-with this.dir.child('/Torrenting/__pycache__/PID.txt').open('w') as txt:
-    txt.write( str(getpid()) )
+#
+PIDstore: List[int] = List(JSON(this.dir.child('/Torrenting/__pycache__/PID.json')))
+
+# Clear the PID store
+PIDstore.save([])
+
+# Store the pid of this execution
+PIDstore += getpid()
 
 #==============================================
 # Parse commandline arguements
@@ -56,6 +64,9 @@ driver = Driver(
     headless = (not args['verbose']),
     fast_load = True
 )
+
+#
+PIDstore += driver.PID
 
 #==============================================
 # qBitTorrent

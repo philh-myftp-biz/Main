@@ -1,5 +1,5 @@
 from philh_myftp_biz.terminal import ProgressBar, Log
-from __init__ import qbit, VM, driver, args
+from __init__ import qbit, VM, driver, args, PIDstore
 from philh_myftp_biz.classOBJ import log
 from Scanner import Downloads
 import Media
@@ -78,6 +78,9 @@ while True:
         break
 
 # ===============================================================
+
+#
+PIDstore -= driver.PID
 
 # Close the WebDriver
 driver.close()

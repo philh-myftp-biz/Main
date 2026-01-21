@@ -1,6 +1,4 @@
 
-$filePath = "E:\Plex\Torrenting\__pycache__\PID.txt"
-
-$pyPID = Get-Content -Path $filePath -Raw
-
-Stop-Process -Id $pyPID -Force
+Get-Content -Path "$PSScriptRoot\__pycache__\PID.json" -Raw | ConvertFrom-Json | ForEach-Object {
+    Stop-Process -Id $_ -Force
+}
