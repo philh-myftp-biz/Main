@@ -52,7 +52,7 @@ while True:
     # Continue the loop if the download has timed out
     except TimeoutError as e:
 
-        Log.error(e)
+        Log.FAIL(e)
 
         # Skip to the next download
         continue
@@ -66,7 +66,7 @@ while True:
     #
     except ConnectionAbortedError as e:
 
-        Log.crit(e)
+        Log.CRIT(e)
 
         #
         break
@@ -74,7 +74,7 @@ while True:
     # Break the loop if the queue limit has been reached
     if len(queue) >= args['limit']:
 
-        Log.write('Download Limit Reached')
+        Log.INFO('Download Limit Reached')
 
         break
 

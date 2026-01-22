@@ -67,7 +67,7 @@ class _Template:
                 # If there are enough seeders
                 SEEDERS = (m.seeders >= args['seeders'])
 
-                Log.verbose(f'Scanning: {args['seeders']=} {SEEDERS=} | {m.title=} {TITLE=}')
+                Log.VERB(f'Scanning: {args['seeders']=} {SEEDERS=} | {m.title=} {TITLE=}')
 
                 if TITLE and SEEDERS:
                     # Append the magnet to the list
@@ -81,7 +81,7 @@ class _Template:
         # If a magnet has been found
         if self.magnet:
 
-            Log.write(f'Found: {self.magnet.title=} | {self.magnet.seeders=}')
+            Log.INFO(f'Found: {self.magnet.title=} | {self.magnet.seeders=}')
 
             # Download the magnet
             self.magnet.start()
@@ -94,7 +94,7 @@ class _Template:
         elif args['verbose']:
 
             # Log magnet details
-            Log.write('Found: None')
+            Log.INFO('Found: None')
 
     def exists(self) -> bool:
         """
@@ -181,7 +181,7 @@ class Movie(_Template):
         # If the year is the same
         YEAR = (data['year'] == self.Year)
 
-        Log.verbose(f'Validating: {name=} | {data['title']=} {self.Title=} {TITLE=} | {data['year']=} {self.Year=} {YEAR=}')
+        Log.VERB(f'Validating: {name=} | {data['title']=} {self.Title=} {TITLE=} | {data['year']=} {self.Year=} {YEAR=}')
         
         return (TITLE and YEAR)
 
@@ -300,7 +300,7 @@ class Season(_Template):
         # Check if the year is either the same or missing
         YEAR = ((data['year'] is None) or (data['year'] == self.show.Year))
 
-        Log.verbose(f'Validating: {name=} | {data['title']=} {self.show.Title=} {TITLE=} | {data['season']=} {int(self)=} {SEASON=} | {data['episode']=} {EPISODE=} | {data['year']=} {self.show.Year=} {YEAR=}')
+        Log.VERB(f'Validating: {name=} | {data['title']=} {self.show.Title=} {TITLE=} | {data['season']=} {int(self)=} {SEASON=} | {data['episode']=} {EPISODE=} | {data['year']=} {self.show.Year=} {YEAR=}')
 
         return (TITLE and SEASON and EPISODE and YEAR)
     
@@ -404,7 +404,7 @@ class Episode(_Template):
         # Check if the year is either the same or missing
         YEAR = ((data['year'] is None) or (data['year'] == self.show.Year))
 
-        Log.verbose(f'Validating: {name=} | {data['title']=} {self.show.Title=} {TITLE=} | {data['season']=} {int(self.season)=} {SEASON=} | {data['episode']=} {int(self)=} {EPISODE=} | {data['year']=} {self.show.Year=} {YEAR=}')
+        Log.VERB(f'Validating: {name=} | {data['title']=} {self.show.Title=} {TITLE=} | {data['season']=} {int(self.season)=} {SEASON=} | {data['episode']=} {int(self)=} {EPISODE=} | {data['year']=} {self.show.Year=} {YEAR=}')
 
         return (TITLE and SEASON and EPISODE and YEAR)
 
