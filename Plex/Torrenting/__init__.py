@@ -38,7 +38,7 @@ args.Arg(
 
 args.Arg(
     name = 'seeders',
-    default = 15,
+    default = 6,
     desc = 'Minimum # of seeders for torrents',
     handler = int
 )
