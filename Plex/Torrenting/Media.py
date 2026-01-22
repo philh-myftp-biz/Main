@@ -1,15 +1,14 @@
-from philh_myftp_biz.text import similarity, abbreviate
+from philh_myftp_biz.text import similarity
 from philh_myftp_biz.web import Magnet, api
 from __init__ import this, tpb, omdb, args
 from philh_myftp_biz.pc import Path, mkdir
 from philh_myftp_biz.classOBJ import loc
+from philh_myftp_biz.terminal import Log
 from philh_myftp_biz.db import MimeType
 from philh_myftp_biz.array import List
 from philh_myftp_biz.json import Dict
 from typing import Callable
 import PTN
-
-from philh_myftp_biz.terminal import Log
 
 class _Template:
 
@@ -62,22 +61,19 @@ class _Template:
             # Iter through all magnets found with the query
             for m in tpb.search(query):
 
+                # If the title is valid
+                TITLE = self.validName(m.title)
+
                 # If there are enough seeders
-                seeders = (m.seeders >= args['seeders'])
+                SEEDERS = (m.seeders >= args['seeders'])
 
-                # If the name is valid
-                name = self.validName(m.title)
+                Log.write(f'Scanning: {args['seeders']=} {SEEDERS=} | {m.title=} {TITLE=}')
 
-                # Log magnet details
-                Log.write(f'Scanning: (name=(valid={name}, {m.title}), seeders=(valid={seeders}, {m.seeders}))')
-
-                # If both conditions are true
-                if seeders and name:
-
+                if TITLE and SEEDERS:
                     # Append the magnet to the list
                     magnets += m
 
-        # Return the best remaining magnet
+        # Find the best remaining magnet
         self.magnet = magnets.max(
             lambda m: m.seeders
         )
@@ -85,13 +81,12 @@ class _Template:
         # If a magnet has been found
         if self.magnet:
 
-            # Log magnet details
-            Log.write(f'Found: (name={self.magnet.title}, seeders=[{self.magnet.seeders}])')
+            Log.write(f'Found: {self.magnet.title=} | {self.magnet.seeders=}')
 
             # Download the magnet
             self.magnet.start()
 
-            #
+            # Stop all files in the magnet
             for file in self.magnet.files():
                 file.stop()
 
@@ -177,16 +172,18 @@ class Movie(_Template):
 
     def validName(self, name:str) -> bool:
         
-        # Parse the file name
+        # Parse the given name
         data: Dict[str] = Dict(PTN.parse(name))
 
-        # Check if the year is the same
-        year = (data['year'] == self.Year)
+        # If the title is similar enough
+        TITLE = (similarity(self.Title, data['title']) > args['similarity'])
 
-        # Check if the title is more than 65% similar
-        title = (similarity(self.Title, data['title']) > .65)
+        # If the year is the same
+        YEAR = (data['year'] == self.Year)
+
+        Log.write(f'Validating: {name=} | {data['title']=} {TITLE=} | {data['year']=} {YEAR=}')
         
-        return (year and title)
+        return (TITLE and YEAR)
 
     def paths(self):
 
@@ -288,19 +285,24 @@ class Season(_Template):
 
     def validName(self, name:str) -> bool:
 
-        # Parse the file name
+        # Parse the given name
         data: Dict[str] = Dict(PTN.parse(name))
 
-        # Check if the file season is the same
-        season = (data['season'] == int(self))
+        # If the title is similar
+        TITLE = (similarity(data['title'], self.show.Title) > args['similarity'])
+
+        # If the file season is the same
+        SEASON = (data['season'] == int(self))
 
         # If no episode # is found
-        episode = (data['episode'] is None)
+        EPISODE = (data['episode'] is None)
 
-        # Check if the title is more than 75% similar to the show title
-        title = (similarity(data['title'], self.show.Title) > .75)
+        # Check if the year is either the same or missing
+        YEAR = ((data['year'] is None) or (data['year'] == self.show.Year))
 
-        return (title and season and episode)
+        Log.write(f'Validating: {name=} | {data['title']=} {TITLE=} | {data['season']=} {SEASON=} | {data['episode']=} {EPISODE=} | {data['year']=} {YEAR=}')
+
+        return (TITLE and SEASON and EPISODE and YEAR)
     
     def __int__(self):
         return self.__int
@@ -382,22 +384,29 @@ class Episode(_Template):
 
     def validName(self, name:str) -> bool:
 
-        # Parse the file name
+        # Parse the given name
         data: Dict[str] = Dict(PTN.parse(name))
 
-        # Check if the file season is the same
-        season = (data['season'] == int(self.season))
+        # If the title is similar
+        TITLE = (similarity(data['title'], self.show.Title) > args['similarity'])
+
+        # If the season is the same
+        SEASON = (data['season'] == int(self.season))
 
         # If the name has multiple episode #s
         if isinstance(data['episode'], list):
             # If the 1st num is the same
-            episode = (int(self) == data['episode'][0])
-        
+            EPISODE = (int(self) == data['episode'][0])
         else:
             # If the episode num is the same
-            episode = (int(self) == data['episode'])
+            EPISODE = (int(self) == data['episode'])
 
-        return (season and episode)
+        # Check if the year is either the same or missing
+        YEAR = ((data['year'] is None) or (data['year'] == self.show.Year))
+
+        Log.write(f'Validating: {name=} | {data['title']=} {TITLE=} | {data['season']=} {SEASON=} | {data['episode']=} {EPISODE=} | {data['year']=} {YEAR=}')
+
+        return (TITLE and SEASON and EPISODE and YEAR)
 
     def paths(self):
 
