@@ -20,10 +20,7 @@ this = Module('E:/Plex')
 PIDstore: List[int] = List(JSON(this.dir.child('/Torrenting/__pycache__/PID.json')))
 
 # Clear the PID store
-PIDstore.save([])
-
-# Store the pid of this execution
-PIDstore += getpid()
+PIDstore.save([getpid()])
 
 #==============================================
 # Parse commandline arguements
@@ -57,6 +54,13 @@ args.Arg(
     handler = int
 )
 
+args.Arg(
+    name = 'similarity',
+    default = .65,
+    desc = 'Percent of magnet title which must match',
+    handler = lambda i: int(i) / 100
+)
+
 #==============================================
 # WEBDRIVER
 
@@ -66,7 +70,8 @@ driver = Driver(
 )
 
 #
-PIDstore += driver.PID
+for pid in driver.Task.PIDs():
+    PIDstore += pid
 
 #==============================================
 # qBitTorrent
