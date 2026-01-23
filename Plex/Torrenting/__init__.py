@@ -61,6 +61,13 @@ args.Arg(
     handler = lambda i: int(i) / 100
 )
 
+args.Arg(
+    name = 'apikey',
+    default = 0,
+    desc = 'Index # of api key to use',
+    handler = int
+)
+
 #==============================================
 # WEBDRIVER
 
@@ -110,6 +117,7 @@ qbit = api.qBitTorrent(
 
 # Connect to 'thepiratebay.org'
 tpb = api.thePirateBay(
+    url = 'thepiratebay11.com',
     driver = driver,
     qbit = qbit
 )
@@ -118,6 +126,6 @@ tpb = api.thePirateBay(
 # omdb
 
 # Connect to 'omdbapi.com'
-omdb = api.omdb()
+omdb = api.omdb( key=args['apikey'] )
 
 #==============================================
