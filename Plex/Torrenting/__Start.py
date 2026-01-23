@@ -1,6 +1,5 @@
 from philh_myftp_biz.terminal import ProgressBar, Log
 from __init__ import qbit, VM, driver, args, PIDstore
-from philh_myftp_biz.classOBJ import log
 from Scanner import Downloads
 from os import getpid
 import Media
@@ -36,7 +35,7 @@ while True:
         # If a valid file has been found
         if d.file:
 
-            log(d, 'GREEN')
+            Log.INFO(f'Discovered Queued File: {str(d)}')
 
             # Start downloading the file
             d.file.start()
@@ -47,12 +46,12 @@ while True:
         # If no valid file has been found
         else:
 
-            log(d, 'RED')
+            Log.WARN(f'Queued File Not Discovered: {str(d)}')
     
     # Continue the loop if the download has timed out
-    except TimeoutError as e:
+    except TimeoutError:
 
-        Log.FAIL(e)
+        Log.FAIL('', exc_info=True)
 
         # Skip to the next download
         continue
@@ -64,17 +63,17 @@ while True:
         break
 
     #
-    except ConnectionAbortedError as e:
+    except ConnectionAbortedError:
 
-        Log.CRIT(e)
+        Log.CRIT('', exc_info=True)
 
-        #
+        # Break the loop
         break
 
     # Break the loop if the queue limit has been reached
     if len(queue) >= args['limit']:
 
-        Log.INFO('Download Limit Reached')
+        Log.WARN('Download Limit Reached')
 
         break
 
@@ -100,17 +99,18 @@ while len(queue) > 0:
 
         # If the download is finished
         if d.file.finished():
+
+            Log.INFO(f'Download Complete: {str(d)}')
             
             # Get source and destination paths of file
             src, dst = d.paths()
 
             # Move the source file to the destination path
-            src.copy(dst, False)
+            src.copy(dst)
 
-            # Log the finished download
-            log(d, 'GREEN')
+            Log.INFO(f'Copy Complete: {str(d)}')
 
-            # Run any final commands for the download
+            # Run any media-specific final commands for the download
             d.finish()
 
             # Stop downloading the file
@@ -131,4 +131,4 @@ while len(queue) > 0:
 # ===============================================================
 
 # Stop the Virtual Machine
-VM.runH('Save', 'Torrenting')
+#VM.runH('Save', 'Torrenting')

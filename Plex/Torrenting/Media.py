@@ -67,9 +67,12 @@ class _Template:
                 # If there are enough seeders
                 SEEDERS = (m.seeders >= args['seeders'])
 
-                Log.VERB(f'Scanning: {args['seeders']=} {SEEDERS=} | {m.title=} {TITLE=}')
+                #
+                QUALITY = (m.quality in [720, 1080])
 
-                if TITLE and SEEDERS:
+                Log.VERB(f'Scanning: {args['seeders']=} {SEEDERS=} | {m.title=} {TITLE=} | {m.quality=} {QUALITY=}')
+
+                if TITLE and SEEDERS and QUALITY:
                     # Append the magnet to the list
                     magnets += m
 
@@ -81,7 +84,7 @@ class _Template:
         # If a magnet has been found
         if self.magnet:
 
-            Log.INFO(f'Found: {self.magnet.title=} | {self.magnet.seeders=}')
+            Log.INFO(f'Found: {str(self)=} | {self.magnet.title=} | {self.magnet.seeders=} | {self.magnet.quality=}')
 
             # Download the magnet
             self.magnet.start()
@@ -91,10 +94,10 @@ class _Template:
                 file.stop()
 
         # If a magnet has not been found and debug
-        elif args['verbose']:
+        else:
 
             # Log magnet details
-            Log.INFO('Found: None')
+            Log.INFO(f'Found: {str(self)=} | None')
 
     def exists(self) -> bool:
         """

@@ -29,7 +29,7 @@ def Downloads() -> Generator[Media._Template]:
     #==========================================================
     # MOVIES
 
-    # Iter through all movie files
+    # Iter through all child directories of 'E:/Plex/Media/Movies/'
     for p in this.dir.child('/Media/Movies/').children():
 
         # If the file name matches the filter
@@ -40,14 +40,17 @@ def Downloads() -> Generator[Media._Template]:
 
                 movie = Media.Movie(*ReadName(p.name()), p)
 
+                # If the movie is already downloaded
                 if movie.exists():
 
-                    Log.INFO(f'Media Exists: {str(movie)}')
+                    Log.WARN(f'Media Exists: {str(movie)}')
 
+                # If the movie is missing
                 else:
 
                     yield movie
 
+        # If the file name does not match the filter
         else:
 
             Log.INFO(f'Skipping Media: {p}')
@@ -55,7 +58,7 @@ def Downloads() -> Generator[Media._Template]:
     #==========================================================
     # EPISODES
 
-    # Loop through all child directories of 'E:/Plex/Media/Shows' 
+    # Iter through all child directories of 'E:/Plex/Media/Shows/'
     for ShowDir in this.dir.child('/Media/Shows').children():
 
         # If the folder name matches the filter
@@ -64,33 +67,46 @@ def Downloads() -> Generator[Media._Template]:
             # Get Show from the filename 
             show = Media.Show(*ReadName(ShowDir.name()))
 
+            Log.INFO(f'Scanning: {ShowDir=} | {str(show)=}')
+
             # Iter through all seasons in the show
             for season in show.seasons:
 
+                if int(season) != 10:
+                    continue # TODO
+
+                # If the season is already completely downloaded
                 if season.exists():
 
-                    Log.INFO(f'Media Exists: {str(season)}')
+                    Log.WARN(f'Media Exists: {str(season)}')
 
+                # If the season is missing episodes
                 else:
 
+                    # Attempt to start downloading the season
                     try:
                         season.start()
-                    except TimeoutError as e:
-                        Log.FAIL(e)
+                    except TimeoutError:
+                        Log.FAIL('', exc_info=True)
 
                     # Iter through all episodes in the season
                     for episode in season.episodes:
 
+                        # If the episode is already downloaded
                         if episode.exists():
 
-                            Log.INFO(f'Media Exists: {str(episode)}')
+                            Log.WARN(f'Media Exists: {str(episode)}')
 
+                        # If the episode is missing
                         else:
-                            
+
+                            Log.INFO(f'Media Discovered: {str(episode)}')
+
                             yield episode
 
+        # If the folder name does not match the filter
         else:
 
-            Log.INFO(f'Skipping Media: {ShowDir}')
+            Log.VERB(f'Skipping Media: {ShowDir}')
 
     #==========================================================
