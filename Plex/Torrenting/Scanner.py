@@ -73,7 +73,10 @@ def Downloads() -> Generator[Media._Template]:
 
                 else:
 
-                    season.start()
+                    try:
+                        season.start()
+                    except TimeoutError as e:
+                        Log.FAIL(e)
 
                     # Iter through all episodes in the season
                     for episode in season.episodes:
