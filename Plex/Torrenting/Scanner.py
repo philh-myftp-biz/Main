@@ -67,7 +67,7 @@ def Downloads() -> Generator[Media._Template]:
             # Get Show from the filename 
             show = Media.Show(*ReadName(ShowDir.name()))
 
-            Log.INFO(f'Scanning: {ShowDir=} | {str(show)=}')
+            Log.INFO(f'Scanning: {str(ShowDir)=} | {str(show)=}')
 
             # Iter through all seasons in the show
             for season in show.seasons:
