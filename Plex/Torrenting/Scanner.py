@@ -72,9 +72,6 @@ def Downloads() -> Generator[Media._Template]:
             # Iter through all seasons in the show
             for season in show.seasons:
 
-                if int(season) != 10:
-                    continue # TODO
-
                 # If the season is already completely downloaded
                 if season.exists():
 
