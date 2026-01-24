@@ -125,4 +125,4 @@ while len(queue) > 0:
 # ===============================================================
 
 # Stop the Virtual Machine
-#VM.runH('Save', 'Torrenting')
+VM.runH('Save', 'Torrenting')
