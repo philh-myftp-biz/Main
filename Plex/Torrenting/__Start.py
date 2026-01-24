@@ -1,5 +1,5 @@
-from philh_myftp_biz.terminal import ProgressBar, Log
 from __init__ import qbit, VM, driver, args, PIDstore
+from philh_myftp_biz.terminal import Log
 from Scanner import Downloads
 from os import getpid
 import Media
@@ -85,9 +85,6 @@ PIDstore.save([getpid()])
 # Close the WebDriver
 driver.close()
 
-# Create a progress bar
-pbar = ProgressBar(len(queue))
-
 # ===============================================================
 # MANAGE DOWNLOADS
 
@@ -118,9 +115,6 @@ while len(queue) > 0:
 
             # Remove the download from the list
             queue.remove(d)
-
-            # Update the progress bar
-            pbar.step()
 
         # If the magnet is errored
         elif d.magnet.errored():
