@@ -95,14 +95,14 @@ host = None
 #
 while host is None:
     
-    Log.INFO('Discovering VM: (name=Torrenting)')
+    Log.VERB("Discovering VM: (name='Torrenting')")
     
     try:
         host = VM.cap('IP', 'Torrenting')
     except JSONDecodeError:
         pass
 
-Log.INFO(f'Discovered VM: (name=Torrenting, ip={host})')
+Log.INFO(f"Discovered VM: (name='Torrenting', {host=})")
 
 # Connect to the qbittorrent web interface on the 'Torrenting' Virtual Machine
 qbit = api.qBitTorrent(

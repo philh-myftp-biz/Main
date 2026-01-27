@@ -90,11 +90,11 @@ class _Template:
             for file in self.magnet.files():
                 file.stop()
 
-        # If a magnet has not been found and debug
+        # If a magnet has not been found
         else:
 
             # Log magnet details
-            Log.INFO(f'Found: {str(self)=} | None')
+            Log.WARN(f'Found: {str(self)=} | None')
 
     def exists(self) -> bool:
         """

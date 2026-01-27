@@ -35,7 +35,7 @@ while True:
         # If a valid file has been found
         if d.file:
 
-            Log.INFO(f'Discovered Queued File: {str(d)}')
+            Log.INFO(f'Downloading File: {str(d)}')
 
             # Start downloading the file
             d.file.start()
@@ -46,7 +46,7 @@ while True:
         # If no valid file has been found
         else:
 
-            Log.WARN(f'Queued File Not Discovered: {str(d)}')
+            Log.WARN(f'File Failed to Download: {str(d)}')
     
     # Continue the loop if the download has timed out
     except TimeoutError:
@@ -84,6 +84,8 @@ PIDstore.save([getpid()])
 
 # Close the WebDriver
 driver.close()
+
+Log.INFO(f'Waiting for downloads: {len(queue)=}')
 
 # ===============================================================
 # MANAGE DOWNLOADS

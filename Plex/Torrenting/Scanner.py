@@ -43,17 +43,19 @@ def Downloads() -> Generator[Media._Template]:
                 # If the movie is already downloaded
                 if movie.exists():
 
-                    Log.WARN(f'Media Exists: {str(movie)}')
+                    Log.VERB(f'Media Exists: {str(movie)}')
 
                 # If the movie is missing
                 else:
+
+                    Log.WARN(f'Media Missing: {str(movie)}')
 
                     yield movie
 
         # If the file name does not match the filter
         else:
 
-            Log.INFO(f'Skipping Media: {p}')
+            Log.VERB(f'Skipping Media: {p}')
 
     #==========================================================
     # EPISODES
@@ -67,7 +69,7 @@ def Downloads() -> Generator[Media._Template]:
             # Get Show from the filename 
             show = Media.Show(*ReadName(ShowDir.name()))
 
-            Log.INFO(f'Scanning: {str(ShowDir)=} | {str(show)=}')
+            Log.VERB(f'Scanning: {str(ShowDir)=} | {str(show)=}')
 
             # Iter through all seasons in the show
             for season in show.seasons:
@@ -75,7 +77,7 @@ def Downloads() -> Generator[Media._Template]:
                 # If the season is already completely downloaded
                 if season.exists():
 
-                    Log.WARN(f'Media Exists: {str(season)}')
+                    Log.VERB(f'Media Exists: {str(season)}')
 
                 # If the season is missing episodes
                 else:
@@ -92,12 +94,12 @@ def Downloads() -> Generator[Media._Template]:
                         # If the episode is already downloaded
                         if episode.exists():
 
-                            Log.WARN(f'Media Exists: {str(episode)}')
+                            Log.VERB(f'Media Exists: {str(episode)}')
 
                         # If the episode is missing
                         else:
 
-                            Log.INFO(f'Media Discovered: {str(episode)}')
+                            Log.WARN(f'Media Missing: {str(episode)}')
 
                             yield episode
 
