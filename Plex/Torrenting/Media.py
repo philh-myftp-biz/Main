@@ -64,12 +64,9 @@ class _Template:
                 # If the title is valid
                 TITLE = self.validName(m.title)
 
-                # If there are enough seeders
-                SEEDERS = (m.seeders >= args['seeders'])
+                Log.VERB(f'Scanning: {m.title=} {TITLE=}')
 
-                Log.VERB(f'Scanning: {args['seeders']=} {SEEDERS=} | {m.title=} {TITLE=}')
-
-                if TITLE and SEEDERS:
+                if TITLE:
                     # Append the magnet to the list
                     magnets += m
 
@@ -176,7 +173,7 @@ class Movie(_Template):
         data: Dict[str] = Dict(PTN.parse(name))
 
         # If the title is similar enough
-        TITLE = (similarity(self.Title, data['title']) > args['similarity'])
+        TITLE = (similarity(self.Title, data['title']) > .65)
 
         # If the year is the same
         YEAR = (data['year'] == self.Year)
@@ -289,7 +286,7 @@ class Season(_Template):
         data: Dict[str] = Dict(PTN.parse(name))
 
         # If the title is similar
-        TITLE = (similarity(data['title'], self.show.Title) > args['similarity'])
+        TITLE = (similarity(data['title'], self.show.Title) > .65)
 
         # If the file season is the same
         SEASON = (data['season'] == int(self))
@@ -388,7 +385,7 @@ class Episode(_Template):
         data: Dict[str] = Dict(PTN.parse(name))
 
         # If the title is either similar or missing
-        TITLE = (data['title'] is None) or (similarity(data['title'], self.show.Title) > args['similarity'])
+        TITLE = (data['title'] is None) or (similarity(data['title'], self.show.Title) > .65)
 
         # If the season is the same
         SEASON = (data['season'] == int(self.season))

@@ -34,13 +34,6 @@ args.Arg(
 )
 
 args.Arg(
-    name = 'seeders',
-    default = 6,
-    desc = 'Minimum # of seeders for torrents',
-    handler = int
-)
-
-args.Arg(
     name = 'limit',
     default = 100,
     desc = 'Maximum # of items to download',
@@ -51,20 +44,6 @@ args.Arg(
     name = 'timeout',
     default = 300, # 5 minutes
     desc = '# of seconds to wait before timing out',
-    handler = int
-)
-
-args.Arg(
-    name = 'similarity',
-    default = .65,
-    desc = 'Percent of magnet title which must match',
-    handler = lambda i: int(i) / 100
-)
-
-args.Arg(
-    name = 'apikey',
-    default = 0,
-    desc = 'Index # of api key to use',
     handler = int
 )
 
@@ -126,6 +105,6 @@ tpb = api.thePirateBay(
 # omdb
 
 # Connect to 'omdbapi.com'
-omdb = api.omdb( key=args['apikey'] )
+omdb = api.omdb()
 
 #==============================================
