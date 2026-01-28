@@ -17,10 +17,10 @@ this = Module('E:/Plex')
 # PID
 
 #
-PIDstore: List[int] = List(JSON(this.dir.child('/Torrenting/__pycache__/PID.json')))
+PIDstore: List[str] = List(JSON(this.dir.child('/Torrenting/__pycache__/PID.json')))
 
 # Clear the PID store
-PIDstore.save([getpid()])
+PIDstore.save([f'python-{getpid()}'])
 
 #==============================================
 # Parse commandline arguements
@@ -78,7 +78,7 @@ driver = Driver(
 
 #
 for pid in driver.Task.PIDs():
-    PIDstore += pid
+    PIDstore += f'firefox-{pid}'
 
 #==============================================
 # qBitTorrent
