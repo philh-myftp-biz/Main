@@ -1,6 +1,7 @@
 from __init__ import qbit, VM, driver, args, PIDstore
 from philh_myftp_biz.terminal import Log
 from Scanner import Downloads
+from time import sleep
 from os import getpid
 import Media
 
@@ -93,13 +94,15 @@ Log.INFO(f'Waiting for downloads: {len(queue)=}')
 # Loop until there are no downloads left
 while len(queue) > 0:
 
+    sleep(1)
+
     # Iter through the download queue
     for x, d in enumerate(queue):
 
         # If the download is finished
         if d.file.finished():
 
-            Log.INFO(f'Download Complete: {str(d)}')
+            Log.INFO(f'Download Complete: {str(d)=}')
             
             # Get source and destination paths of file
             src, dst = d.paths()
@@ -107,7 +110,7 @@ while len(queue) > 0:
             # Move the source file to the destination path
             src.copy(dst)
 
-            Log.INFO(f'Copy Complete: {str(d)}')
+            Log.INFO(f'Copy Complete: {str(d)=}')
 
             # Run any media-specific final commands for the download
             d.finish()
@@ -123,6 +126,10 @@ while len(queue) > 0:
 
             # Start the download            
             d.magnet.start()
+
+        #
+        elif d.magnet.stalled():
+            d.magnet.reannounce()
 
 # ===============================================================
 
