@@ -85,7 +85,12 @@ def Downloads() -> Generator[Media._Template]:
                     # Attempt to start downloading the season
                     try:
                         season.start()
+                        
                     except TimeoutError:
+
+                        if season.magnet:
+                            season.magnet.stop()
+    
                         Log.FAIL('', exc_info=True)
 
                     # Iter through all episodes in the season
