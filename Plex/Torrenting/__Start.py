@@ -124,12 +124,8 @@ while len(queue) > 0:
         # If the magnet is errored
         elif d.magnet.errored():
 
-            # Start the download            
+            # Start the download
             d.magnet.start()
-
-        #
-        elif d.magnet.stalled():
-            d.magnet.reannounce()
 
 # ===============================================================
 
