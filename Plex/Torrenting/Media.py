@@ -64,7 +64,10 @@ class _Template:
                 # If the title is valid
                 TITLE = self.validName(m.title)
 
-                Log.VERB(f'Scanning: {m.title=} {TITLE=}')
+                Log.VERB(
+                    f'Scanning Magnet: {str(m)}\n'+ \
+                    f'{TITLE} {m.title=}'
+                )
 
                 if TITLE:
                     # Append the magnet to the list
@@ -78,7 +81,13 @@ class _Template:
         # If a magnet has been found
         if self.magnet:
 
-            Log.INFO(f'Found: {str(self)=} | {self.magnet.title=} | {self.magnet.seeders=}')
+            Log.INFO(f'Found: {str(self)}\n{self.magnet.title=}\n{self.magnet.seeders=}')
+
+            Log.VERB(
+                f'Found: {str(self)}\n'+ \
+                f'{self.magnet.title=}\n'+ \
+                f'{self.magnet.seeders=}\n'
+            )
 
             # Download the magnet
             self.magnet.start()
@@ -91,7 +100,7 @@ class _Template:
         else:
 
             # Log magnet details
-            Log.WARN(f'Found: {str(self)=} | None')
+            Log.WARN(f'None Found: {str(self)}')
 
     def exists(self) -> bool:
         """
@@ -117,12 +126,12 @@ class _Template:
         """
 
         # If the mimetype of the file is 'video' or 'ignore'
-        type = (MimeType.Path(path) in ['video', 'ignore'])
+        TYPE = (MimeType.Path(path) in ['video', 'ignore'])
 
         # If the name of the file is valid
-        name = self.validName(path.name())
+        NAME = self.validName(path.name())
 
-        return (type and name)
+        return (TYPE and NAME)
     
 class Movie(_Template):
 
@@ -178,7 +187,11 @@ class Movie(_Template):
         # If the year is the same
         YEAR = (data['year'] == self.Year)
 
-        Log.VERB(f'Validating: {name=} | {data['title']=} {self.Title=} {TITLE=} | {data['year']=} {self.Year=} {YEAR=}')
+        Log.VERB(
+            f'Validating: {name=}\n'+ \
+            f'{TITLE} |{data['title']=} | {self.Title=}\n'+ \
+            f'{YEAR} | {data['year']=} | {self.show.Year=}'
+        )
         
         return (TITLE and YEAR)
 
@@ -297,7 +310,13 @@ class Season(_Template):
         # Check if the year is either the same or missing
         YEAR = ((data['year'] is None) or (data['year'] == self.show.Year))
 
-        Log.VERB(f'Validating: {name=} | {data['title']=} {self.show.Title=} {TITLE=} | {data['season']=} {int(self)=} {SEASON=} | {data['episode']=} {EPISODE=} | {data['year']=} {self.show.Year=} {YEAR=}')
+        Log.VERB(
+            f'Validating: {name=}\n'+ \
+            f'{TITLE} | {data['title']=} | {self.show.Title=}\n'+ \
+            f'{SEASON} | {data['season']=} | {int(self)=}\n'+ \
+            f'{EPISODE} | {data['episode']=}\n'+ \
+            f'{YEAR} | {data['year']=} | {self.show.Year=}'
+        )
 
         return (TITLE and SEASON and EPISODE and YEAR)
     
@@ -401,7 +420,13 @@ class Episode(_Template):
         # Check if the year is either the same or missing
         YEAR = ((data['year'] is None) or (data['year'] == self.show.Year))
 
-        Log.VERB(f'Validating: {name=} | {data['title']=} {self.show.Title=} {TITLE=} | {data['season']=} {int(self.season)=} {SEASON=} | {data['episode']=} {int(self)=} {EPISODE=} | {data['year']=} {self.show.Year=} {YEAR=}')
+        Log.VERB(
+            f'Validating: {name=}\n'+ \
+            f'{TITLE} | {data['title']=} | {self.show.Title=}\n'+ \
+            f'{SEASON} | {data['season']=} | {int(self)=}\n'+ \
+            f'{EPISODE} | {data['episode']=}\n'+ \
+            f'{YEAR} | {data['year']=} | {self.show.Year=}'
+        )
 
         return (TITLE and SEASON and EPISODE and YEAR)
 

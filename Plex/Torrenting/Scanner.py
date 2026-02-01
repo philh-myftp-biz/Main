@@ -43,19 +43,30 @@ def Downloads() -> Generator[Media._Template]:
                 # If the movie is already downloaded
                 if movie.exists():
 
-                    Log.VERB(f'Media Exists: {str(movie)}')
+                    Log.VERB(
+                        f'Movie Exists\n'+ \
+                        f'{movie.Title=}\n'+ \
+                        f'{movie.Year=}'
+                    )
 
                 # If the movie is missing
                 else:
 
-                    Log.WARN(f'Media Missing: {str(movie)}')
+                    Log.WARN(
+                        f'Movie Missing\n'+ \
+                        f'{movie.Title=}\n'+ \
+                        f'{movie.Year=}'
+                    )
 
                     yield movie
 
         # If the file name does not match the filter
         else:
 
-            Log.VERB(f'Skipping Media: {p}')
+            Log.VERB(
+                f'Skipping Movie\n'+ \
+                f'{p=}'
+            )
 
     #==========================================================
     # EPISODES
@@ -69,7 +80,11 @@ def Downloads() -> Generator[Media._Template]:
             # Get Show from the filename 
             show = Media.Show(*ReadName(ShowDir.name()))
 
-            Log.VERB(f'Scanning: {str(ShowDir)=} | {str(show)=}')
+            Log.VERB(
+                f'Scanning Show\n'+ \
+                f'{str(ShowDir)=}\n'+ \
+                f'{str(show)=}'
+            )
 
             # Iter through all seasons in the show
             for season in show.seasons:
@@ -77,7 +92,11 @@ def Downloads() -> Generator[Media._Template]:
                 # If the season is already completely downloaded
                 if season.exists():
 
-                    Log.VERB(f'Media Exists: {str(season)}')
+                    Log.VERB(
+                        f'Show Exists\n'+ \
+                        f'{str(show)=}\n'+ \
+                        f'{str(season)=}'
+                    )
 
                 # If the season is missing episodes
                 else:
@@ -99,18 +118,31 @@ def Downloads() -> Generator[Media._Template]:
                         # If the episode is already downloaded
                         if episode.exists():
 
-                            Log.VERB(f'Media Exists: {str(episode)}')
+                            Log.VERB(
+                                f'Episode Exists\n'+ \
+                                f'{str(show)=}\n'+ \
+                                f'{str(season)=}\n'+ \
+                                f'{str(episode)=}'
+                            )
 
                         # If the episode is missing
                         else:
 
-                            Log.WARN(f'Media Missing: {str(episode)}')
+                            Log.WARN(
+                                f'Episode Missing\n'+ \
+                                f'{str(show)=}\n'+ \
+                                f'{str(season)=}\n'+ \
+                                f'{str(episode)=}'
+                            )
 
                             yield episode
 
         # If the folder name does not match the filter
         else:
 
-            Log.VERB(f'Skipping Media: {ShowDir}')
+            Log.VERB(
+                f'Skipping Show\n'+ \
+                f'{str(ShowDir)=}'
+            )
 
     #==========================================================

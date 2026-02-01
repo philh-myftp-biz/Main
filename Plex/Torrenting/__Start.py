@@ -6,10 +6,6 @@ from os import getpid
 import Media
 
 # ===============================================================
-# INITIALIZATION
-
-# Start the Virtual Machine
-VM.runH('Start', 'Torrenting')
 
 # List of downloads
 queue: list[Media._Template] = []

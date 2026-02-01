@@ -65,23 +65,29 @@ for pid in driver.Task.PIDs():
 # Declare the 'Virtual Machines' module
 VM = Module('E:/Virtual Machines')
 
-#
-VM.runH('start', 'Torrenting')
+# # Start the Virtual Machine
+VM.runH('Start', 'Torrenting')
 
-#
 host = None
 
-#
+# Loop until an IP address has been found
 while host is None:
-    
-    Log.VERB("Discovering VM: (name='Torrenting')")
-    
+
+    Log.VERB(
+        f'Discovering VM\n'+ \
+        f"name='Torrenting'"
+    )
+
     try:
         host = VM.cap('IP', 'Torrenting')
     except JSONDecodeError:
         pass
 
-Log.INFO(f"Discovered VM: (name='Torrenting', {host=})")
+Log.VERB(
+    f'Discovering VM\n'+ \
+    f"name='Torrenting'\n"+ \
+    f"{host=}"
+)
 
 # Connect to the qbittorrent web interface on the 'Torrenting' Virtual Machine
 qbit = api.qBitTorrent(
