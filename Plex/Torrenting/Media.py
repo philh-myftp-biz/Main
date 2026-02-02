@@ -65,8 +65,8 @@ class _Template:
                 TITLE = self.validName(m.title)
 
                 Log.VERB(
-                    f'Scanning Magnet: {str(m)}\n'+ \
-                    f'{TITLE} {m.title=}'
+                    f'Scanning Magnet: {m}\n'+ \
+                    f'{TITLE:d} | {m.title=}'
                 )
 
                 if TITLE:
@@ -81,12 +81,10 @@ class _Template:
         # If a magnet has been found
         if self.magnet:
 
-            Log.INFO(f'Found: {str(self)}\n{self.magnet.title=}\n{self.magnet.seeders=}')
-
             Log.VERB(
-                f'Found: {str(self)}\n'+ \
+                f'Found: {self}\n'+ \
                 f'{self.magnet.title=}\n'+ \
-                f'{self.magnet.seeders=}\n'
+                f'{self.magnet.seeders=}'
             )
 
             # Download the magnet
@@ -100,7 +98,7 @@ class _Template:
         else:
 
             # Log magnet details
-            Log.WARN(f'None Found: {str(self)}')
+            Log.WARN(f'None Found: {self}')
 
     def exists(self) -> bool:
         """
@@ -189,8 +187,8 @@ class Movie(_Template):
 
         Log.VERB(
             f'Validating: {name=}\n'+ \
-            f'{TITLE} |{data['title']=} | {self.Title=}\n'+ \
-            f'{YEAR} | {data['year']=} | {self.show.Year=}'
+            f'{TITLE:d} |{data['title']=} | {self.Title=}\n'+ \
+            f'{YEAR:d} | {data['year']=} | {self.show.Year=}'
         )
         
         return (TITLE and YEAR)
@@ -233,7 +231,7 @@ class Show:
         # List of 'Season' OBJs
         self.seasons = [Season(self, *i) for i in omdb.show(title, year).Seasons.items()]
 
-    def __str__(self):
+    def __repr__(self):
         return f'<Show "{self.Title}" @{loc(self)}>'
 
 class Season(_Template):
@@ -312,10 +310,10 @@ class Season(_Template):
 
         Log.VERB(
             f'Validating: {name=}\n'+ \
-            f'{TITLE} | {data['title']=} | {self.show.Title=}\n'+ \
-            f'{SEASON} | {data['season']=} | {int(self)=}\n'+ \
-            f'{EPISODE} | {data['episode']=}\n'+ \
-            f'{YEAR} | {data['year']=} | {self.show.Year=}'
+            f'{TITLE:d} | {data['title']=} | {self.show.Title=}\n'+ \
+            f'{SEASON:d} | {data['season']=} | {int(self)=}\n'+ \
+            f'{EPISODE:d} | {data['episode']=}\n'+ \
+            f'{YEAR:d} | {data['year']=} | {self.show.Year=}'
         )
 
         return (TITLE and SEASON and EPISODE and YEAR)
@@ -326,7 +324,7 @@ class Season(_Template):
     def __format__(self, format_spec):
         return f'{int(self):{format_spec}}'
     
-    def __str__(self):
+    def __repr__(self):
         return f'<Season "{self}" - "{self.show.Title}" @{loc(self)}>'
 
 class Episode(_Template):
@@ -422,10 +420,10 @@ class Episode(_Template):
 
         Log.VERB(
             f'Validating: {name=}\n'+ \
-            f'{TITLE} | {data['title']=} | {self.show.Title=}\n'+ \
-            f'{SEASON} | {data['season']=} | {int(self)=}\n'+ \
-            f'{EPISODE} | {data['episode']=}\n'+ \
-            f'{YEAR} | {data['year']=} | {self.show.Year=}'
+            f'{TITLE:d} | {data['title']=} | {self.show.Title=}\n'+ \
+            f'{SEASON:d} | {data['season']=} | {int(self)=}\n'+ \
+            f'{EPISODE:d} | {data['episode']=}\n'+ \
+            f'{YEAR:d} | {data['year']=} | {self.show.Year=}'
         )
 
         return (TITLE and SEASON and EPISODE and YEAR)
@@ -446,5 +444,5 @@ class Episode(_Template):
     def __format__(self, format_spec):
         return f'{int(self):{format_spec}}'
     
-    def __str__(self):
+    def __repr__(self):
         return f'<Episode "{self.season}x{self}" - "{self.show.Title}" @{loc(self)}>'

@@ -32,7 +32,7 @@ while True:
         # If a valid file has been found
         if d.file:
 
-            Log.INFO(f'Downloading File: {str(d)}')
+            Log.INFO(f'Downloading File: {d=}')
 
             # Start downloading the file
             d.file.start()
@@ -43,7 +43,7 @@ while True:
         # If no valid file has been found
         else:
 
-            Log.WARN(f'File Failed to Download: {str(d)}')
+            Log.WARN(f'File Failed to Download: {d=}')
     
     # Continue the loop if the download has timed out
     except TimeoutError:
@@ -76,6 +76,11 @@ while True:
 
 # ===============================================================
 
+# Clear all queue items that have timed out
+qbit.clear(
+    filter_func = lambda t: t.force_start
+)
+
 #
 PIDstore.save([f'python-{getpid()}'])
 
@@ -98,7 +103,7 @@ while len(queue) > 0:
         # If the download is finished
         if d.file.finished():
 
-            Log.INFO(f'Download Complete: {str(d)=}')
+            Log.INFO(f'Download Complete: {d=}')
             
             # Get source and destination paths of file
             src, dst = d.paths()
@@ -106,7 +111,7 @@ while len(queue) > 0:
             # Move the source file to the destination path
             src.copy(dst)
 
-            Log.INFO(f'Copy Complete: {str(d)=}')
+            Log.INFO(f'Copy Complete: {d=}')
 
             # Run any media-specific final commands for the download
             d.finish()

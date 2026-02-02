@@ -82,8 +82,8 @@ def Downloads() -> Generator[Media._Template]:
 
             Log.VERB(
                 f'Scanning Show\n'+ \
-                f'{str(ShowDir)=}\n'+ \
-                f'{str(show)=}'
+                f'{ShowDir=}\n'+ \
+                f'{show=}'
             )
 
             # Iter through all seasons in the show
@@ -94,8 +94,8 @@ def Downloads() -> Generator[Media._Template]:
 
                     Log.VERB(
                         f'Show Exists\n'+ \
-                        f'{str(show)=}\n'+ \
-                        f'{str(season)=}'
+                        f'{show=}\n'+ \
+                        f'{season=}'
                     )
 
                 # If the season is missing episodes
@@ -105,11 +105,7 @@ def Downloads() -> Generator[Media._Template]:
                     try:
                         season.start()
                         
-                    except TimeoutError:
-
-                        if season.magnet:
-                            season.magnet.stop()
-    
+                    except TimeoutError:    
                         Log.FAIL('', exc_info=True)
 
                     # Iter through all episodes in the season
@@ -120,9 +116,9 @@ def Downloads() -> Generator[Media._Template]:
 
                             Log.VERB(
                                 f'Episode Exists\n'+ \
-                                f'{str(show)=}\n'+ \
-                                f'{str(season)=}\n'+ \
-                                f'{str(episode)=}'
+                                f'{show=}\n'+ \
+                                f'{season=}\n'+ \
+                                f'{episode=}'
                             )
 
                         # If the episode is missing
@@ -130,9 +126,9 @@ def Downloads() -> Generator[Media._Template]:
 
                             Log.WARN(
                                 f'Episode Missing\n'+ \
-                                f'{str(show)=}\n'+ \
-                                f'{str(season)=}\n'+ \
-                                f'{str(episode)=}'
+                                f'{show=}\n'+ \
+                                f'{season=}\n'+ \
+                                f'{episode=}'
                             )
 
                             yield episode
@@ -142,7 +138,7 @@ def Downloads() -> Generator[Media._Template]:
 
             Log.VERB(
                 f'Skipping Show\n'+ \
-                f'{str(ShowDir)=}'
+                f'{ShowDir=}'
             )
 
     #==========================================================
