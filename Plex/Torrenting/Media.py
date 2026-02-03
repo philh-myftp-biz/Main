@@ -65,7 +65,7 @@ class _Template:
                 TITLE = self.validName(m.title)
 
                 Log.VERB(
-                    f'Scanning Magnet: {m}\n'+ \
+                    f'Scanning Magnet: {m=}\n'+ \
                     f'{TITLE:d} | {m.title=}'
                 )
 
@@ -82,7 +82,7 @@ class _Template:
         if self.magnet:
 
             Log.VERB(
-                f'Found: {self}\n'+ \
+                f'Found: {self=}\n'+ \
                 f'{self.magnet.title=}\n'+ \
                 f'{self.magnet.seeders=}'
             )
@@ -98,7 +98,7 @@ class _Template:
         else:
 
             # Log magnet details
-            Log.WARN(f'None Found: {self}')
+            Log.WARN(f'None Found: {self=}')
 
     def exists(self) -> bool:
         """
@@ -188,7 +188,7 @@ class Movie(_Template):
         Log.VERB(
             f'Validating: {name=}\n'+ \
             f'{TITLE:d} |{data['title']=} | {self.Title=}\n'+ \
-            f'{YEAR:d} | {data['year']=} | {self.show.Year=}'
+            f'{YEAR:d} | {data['year']=} | {self.Year=}'
         )
         
         return (TITLE and YEAR)
@@ -210,6 +210,9 @@ class Movie(_Template):
 
             # Delete the placeholder file
             self.__todo.delete()
+
+    def __repr__(self):
+        return f'<Movie "{self.Title} ({self.Year})" @{loc(self)}>'
 
 class Show:
 
