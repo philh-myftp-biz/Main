@@ -76,11 +76,6 @@ while True:
 
 # ===============================================================
 
-# Clear all queue items that have timed out
-qbit.clear(
-    filter_func = lambda t: t.force_start
-)
-
 #
 PIDstore.save([f'python-{getpid()}'])
 
@@ -96,6 +91,11 @@ Log.INFO(f'Waiting for downloads: {len(queue)=}')
 while len(queue) > 0:
 
     sleep(1)
+
+    # Clear queue items that have nothing selected
+    qbit.clear(
+        filter_func = lambda t: not any((f.priority > 0) for f in t.files)
+    )
 
     # Iter through the download queue
     for x, d in enumerate(queue):
