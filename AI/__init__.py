@@ -1,7 +1,9 @@
-from philh_myftp_biz.pc import Path, mkdir, cls
-from philh_myftp_biz import json, ParsedArgs
+from philh_myftp_biz.terminal import ParsedArgs, cls
+from philh_myftp_biz.pc import Path, mkdir
 from philh_myftp_biz.modules import Module
 from typing import Literal, Iterator
+from philh_myftp_biz import json
+from sys import argv
 
 # ====================================================
 
@@ -21,6 +23,8 @@ args.Arg(
     name = 'prompt'
 )
 
+
+
 # ====================================================
 # DIRECTORIES
 
@@ -39,13 +43,15 @@ class d:
 
 class Messages:
 
+    type roleHint = Literal['user', 'assistant']
+
     def __init__(self,
         messages: list[dict[str, str]] = []
     ):
         self.__messages = messages
 
     def add_text(self,
-        role: Literal['user', 'assistant'],
+        role: roleHint,
         content: str
     ) -> None:
         self.__messages += [{
@@ -55,11 +61,9 @@ class Messages:
         }]
 
     def add_file(self,
-        role: Literal['user', 'assistant'],
+        role: roleHint,
         path: Path
     ):
-
-        #
         self.__messages += [{
             'kind': 'file',
             'role': role,
@@ -128,7 +132,11 @@ def PipeLine(model: str):
 # ====================================================
 # PARSE MESSAGES
 
-if args['messages']:
+# Do nothing if '-h' is passed
+if '-h' in argv:
+    messages = None
+
+elif args['messages']:
     messages = Messages(args['messages'])
 
 elif args['prompt']:
@@ -136,7 +144,6 @@ elif args['prompt']:
     messages.add_text('user', args['prompt'])
 
 else:
-
     raise Exception('No prompt or messages given')
 
 # ====================================================

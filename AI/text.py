@@ -2,36 +2,29 @@ from __init__ import args, messages
 import ollama
 
 # ====================================================
-# PARSE INPUT
+# INSTALL MODEL
 
 args.Arg(
     name = 'model',
-    default = 'llama3',
-    desc = '',
-    handler = str
+    default = 'llama3'
 )
 
-# ====================================================
-# INSTALL MODEL
-
-# Iter through installed modules
+# Iter through installed models
 for model in ollama.list()['models']:
     
-    # If module is selected
+    # If model is selected
     if model['model'] == args['model']:
-        
         break
 
 # If the model is not installed
 else:
 
-    # Download & Install the model
+    # Download & install the model
     ollama.pull(args['model'])
 
 # ====================================================
 # HANDLE RESPONSE
 
-#
 response = ollama.chat(
     model = 'llama3',
     messages = list(messages),

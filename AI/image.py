@@ -1,6 +1,7 @@
 from __init__ import args, PipeLine, messages
-from philh_myftp_biz.text import random
+from philh_myftp_biz.file import temp
 from philh_myftp_biz.pc import Path
+from philh_myftp_biz.num import nearest_multiple
 
 # ====================================================
 # PARSE INPUT
@@ -12,7 +13,7 @@ args.Arg(
 
 args.Arg(
     name = 'path',
-    default = Path(f'E:/__temp__/{random(15)}.png'),
+    default = temp('gen_image', 'png'),
     desc = 'Path to save image',
     handler = Path
 )
@@ -20,15 +21,13 @@ args.Arg(
 args.Arg(
     name = 'width',
     default = 512,
-    
-    handler = lambda x: int(x)//8 * 8
+    handler = lambda x: nearest_multiple(int(x), 8)
 )
 
 args.Arg(
     name = 'height',
-    default = 512,
-    
-    handler = lambda x: int(x)//8 * 8
+    default = 512,    
+    handler = lambda x: nearest_multiple(int(x), 8)
 )
 
 # ====================================================
