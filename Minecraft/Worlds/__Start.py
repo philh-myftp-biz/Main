@@ -5,7 +5,7 @@ from __init__ import Worlds, Tasks
 for w in Worlds():
 
     #
-    match YAML(w.child('config.yaml'))['edition']:
+    match YAML(w.child('config.yaml')).read()['edition']:
 
         #
         case 'java':

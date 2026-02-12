@@ -31,8 +31,8 @@ Tasks: Dict[SysTask] = Dict(PKL(
 
 def Worlds() -> Generator[Path]:
 
-    # If a name is given
-    if args['name']:
+    # If a specific world is given
+    if args['world']:
     
         # Yield the world folder with the given name
         yield this.dir.child(f'/Worlds/{args['world']}/')
