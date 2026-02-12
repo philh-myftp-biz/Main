@@ -1,6 +1,6 @@
 from philh_myftp_biz.file import INI, YAML
 from philh_myftp_biz.json import Dict
-from philh_myftp_biz.file import Path
+from philh_myftp_biz.pc import Path
 
 def Java(path: Path):
 
