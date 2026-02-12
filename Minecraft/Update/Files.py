@@ -20,7 +20,7 @@ class Files(dict[str, Path]):
             name = hex.encode(name)
         )
 
-        download(url, path)
+        download(url, path, False)
 
         Log.INFO(f'Cached File: {NAME=}')
 
@@ -32,7 +32,10 @@ class Files(dict[str, Path]):
 Log.INFO('Initializing File Discovery')
 
 # Create new webdriver
-driver = Driver(headless=(not VERBOSE))
+driver = Driver(
+    headless = (not VERBOSE),
+    fast_load = True
+)
 
 # List of java files
 java = Files()
