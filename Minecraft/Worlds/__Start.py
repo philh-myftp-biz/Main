@@ -1,11 +1,38 @@
-from philh_myftp_biz.process import Start
+from philh_myftp_biz.process import Start, SubProcess
+from philh_myftp_biz.terminal import Log
 from philh_myftp_biz.file import YAML
+from philh_myftp_biz.web import Port
 from __init__ import Worlds, Tasks
+
+processes: list[SubProcess] = []
+
+#========================================================================================================
 
 for w in Worlds():
 
+    #====================================================
+
+    NAME = w.name()
+
+    config = YAML(w.child('config.yaml')).read()
+
+    #====================================================
+
+    Ports = [
+        Port(config['port']['java']),
+        Port(config['port']['bedrock'])
+    ]
+
+    if any([p.listening for p in Ports]):
+        
+        Log.FAIL(f'Port Failure: {NAME=} {Ports[0]} | {Ports[1]}')
+        
+        continue
+
+    #====================================================
+
     #
-    match YAML(w.child('config.yaml')).read()['edition']:
+    match config['edition']:
 
         #
         case 'java':
@@ -23,9 +50,20 @@ for w in Worlds():
     #====================================================
 
     #
-    r = Start(
+    process = Start(
         args = args,
         dir = w.path
     )
 
-    Tasks[w.name()] = r._task
+    while process._task is None:
+        pass
+    
+    Tasks[w.name()] = process._task
+
+    processes += [process]
+
+#========================================================================================================
+
+# Wait for all subprocesses to complete
+for process in processes:
+    process.wait()
