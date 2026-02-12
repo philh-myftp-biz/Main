@@ -1,12 +1,14 @@
 from philh_myftp_biz.modules import Service
 from philh_myftp_biz.terminal import Log
 from philh_myftp_biz.file import YAML
+from philh_myftp_biz.json import Dict
+from time import sleep
 
 Worlds = Service('E:/Minecraft/Worlds/')
 
 for world in Worlds.path.children():
 
-    if world.isfile():
+    if world.isfile() or world.name().startswith('__'):
         continue
 
     #==================================================
@@ -19,7 +21,7 @@ for world in Worlds.path.children():
     Log.INFO(f"Selected World: {NAME=}")
 
     # Config
-    config = YAML(world.child('config.yaml')).read()
+    config = Dict(YAML(world.child('config.yaml')))
 
     #==================================================
     # IMPORTS
@@ -55,7 +57,18 @@ for world in Worlds.path.children():
     #==================================================
     #
 
-    SyncConfig(world)
+    try:
+        SyncConfig(config, world)
+
+    except:
+
+        Log.FAIL('', exc_info=True)
+
+        serv.Start()
+
+        sleep(10)
+
+        serv.Stop()
 
     #==================================================
     # RESTORE STATE
@@ -64,6 +77,6 @@ for world in Worlds.path.children():
     if wasRunning:
         
         #
-        world.Start()
+        serv.Start()
 
     #==================================================
