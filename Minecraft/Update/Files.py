@@ -8,17 +8,7 @@ from philh_myftp_biz import VERBOSE
 #========================================================================
 
 class Files(dict[str, Path]):
-
-    def __init__(self):
-
-        super().__init__()
-        
-        # Iter through files in template directory
-        for path in Path('E:/Minecraft/Update/Template/').children():
-            
-            # Save file to dictionary
-            super().__setitem__(path.name(), path)
-
+    
     def __setitem__(self,
         name: str,
         url: str
@@ -27,8 +17,7 @@ class Files(dict[str, Path]):
         Log.VERB(f'Found Link: {NAME=} | {URL=}')
 
         path = temp(
-            name = hex.encode(name),
-            ext = name.split('.')[-1]
+            name = hex.encode(name)
         )
 
         download(url, path)

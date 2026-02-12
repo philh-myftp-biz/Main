@@ -1,5 +1,5 @@
-from __init__ import Worlds
+from __init__ import Worlds, Tasks
 
 for w in Worlds():
 
-    w.Stop()
+    Tasks[w.name()].stop()
