@@ -1,35 +1,22 @@
 from philh_myftp_biz.modules import Module, Service
-from philh_myftp_biz import ParsedArgs
-from typing import Generator, Literal
-from philh_myftp_biz.pc import Path
+from philh_myftp_biz.terminal import ParsedArgs
+from typing import Generator
 
 # Minecraft Module
 this = Module('E:/Minecraft')
+
+#============================================================
 
 # Parsed COmmand Line Arguements
 args = ParsedArgs()
 
 # Parse Age: name
 args.Arg(
-    'name',
-    'Select Server by name'
+    name = 'world',
+    desc = 'Select Specific World'
 )
 
-def Edition(server:Path) -> None | Literal['java', 'bedrock']:
-    """
-    Assume the edition (java/bedrock) of a server by it's path
-    """
-
-    # Wait until args are declared
-    for p in server.children():
-
-        # If server is Java Edition
-        if p.ext() == 'jar':
-            return 'java'
-            
-        # If server is Bedrock Edition
-        elif p.ext() == 'exe':
-            return 'bedrock'
+#============================================================
 
 def Worlds() -> Generator[Service]:
 
@@ -37,16 +24,14 @@ def Worlds() -> Generator[Service]:
     if args['name']:
     
         # Yield the world folder with the given name
-        yield Service(this, f'/Worlds/{args['name']}/')
+        yield Service(f'E:/Minecraft/Worlds/{args['world']}/')
 
     #
     else:
 
         #
         for s in this.dir.child('/Worlds/').children():
-            
-            #
-            if s.isdir():
 
-                yield Service(this, f'/Worlds/{s.name()}/')
+            # Yield the world folder with the given name
+            yield Service(f'E:/Minecraft/Worlds/{s.name()}/')
     
