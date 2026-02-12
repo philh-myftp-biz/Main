@@ -1,18 +1,28 @@
-from philh_myftp_biz.file import INI, YAML
+from philh_myftp_biz.terminal import Log
 from philh_myftp_biz.json import Dict
+from philh_myftp_biz.file import INI
 from philh_myftp_biz.pc import Path
 
-def Java(path: Path):
-
-    #======================================================
-
-    # Wrap the 'server.properties' file
-    props = Dict(INI(path.child('server.properties')))
-
-    # Wrap the 'config.yaml' file
-    config = YAML(path.child('config.yaml')).read()
+def Java(
+    config: Dict,
+    path: Path
+):
     
+    NAME = path.name()
+
     #======================================================
+    # Agree to EULA
+
+    Log.VERB(f'Agreeing to EULA: {NAME=}')
+
+    eula = Dict(INI(path.child('eula.txt')))
+
+    eula['eula'] = True
+
+    #======================================================
+    # Sync server.properties
+
+    Log.VERB(f"Syncing Config: {NAME=} FILE='server.properties'")
 
     # Wrap the 'server.properties' file
     props = Dict(INI(path.child('server.properties')))
@@ -41,5 +51,8 @@ def Java(path: Path):
     #======================================================
 
 
-def Bedrock(path: Path):
+def Bedrock(
+    config: Dict,
+    path: Path
+):
     pass
