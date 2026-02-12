@@ -1,6 +1,6 @@
 
 $pyPID = Get-Content `
-    -Path "$PSScriptRoot\.PID.txt" `
+    -Path "$PSScriptRoot\__PID__.txt" `
     -Raw
 
 $process = Get-Process `
