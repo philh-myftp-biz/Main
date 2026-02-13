@@ -2,7 +2,7 @@
 **/__pycache__/
 **/session.lock
 !/worlds/
-!/Worlds/Test
-/Worlds/Test/*
-!/Worlds/Test/config.yaml
-!/Worlds/Test/world
+!/Worlds/Creative
+/Worlds/Creative/*
+!/Worlds/Creative/config.yaml
+!/Worlds/Creative/world
