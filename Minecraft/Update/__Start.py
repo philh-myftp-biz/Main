@@ -28,6 +28,15 @@ for world in Worlds.path.children():
     config = Dict(YAML(world.child('config.yaml')))
 
     #==================================================
+    #
+
+    for child in world.children():
+
+        if child.seg() not in ['world', 'config.yaml']:
+
+            child.delete()
+
+    #==================================================
     # GIT IGNORE
 
     with world.child('.gitignore').open('w') as file:
