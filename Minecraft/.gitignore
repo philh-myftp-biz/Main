@@ -1,8 +1,4 @@
-# Auto Generated
+
 **/__pycache__/
-**/session.lock
-!/worlds/
-!/Worlds/Creative
-/Worlds/Creative/*
-!/Worlds/Creative/config.yaml
-!/Worlds/Creative/world
+
+**/Thumbs.db

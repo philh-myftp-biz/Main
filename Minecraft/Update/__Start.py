@@ -6,6 +6,10 @@ from time import sleep
 
 Worlds = Service('E:/Minecraft/Worlds/')
 
+# Reveal Hidden Files
+Worlds.path.visibility.show()
+
+# Iter through world folders
 for world in Worlds.path.children():
 
     if world.isfile() or world.name().startswith('__'):
@@ -22,6 +26,29 @@ for world in Worlds.path.children():
 
     # Config
     config = Dict(YAML(world.child('config.yaml')))
+
+    #==================================================
+    # GIT IGNORE
+
+    with world.child('.gitignore').open('w') as file:
+        
+        # Hide Everything
+        file.write('/*\n')
+
+        # Unhide './Config.yaml'
+        file.write('!config.yaml\n')
+
+        # Unhide './world/'
+        file.write('!world\n')
+
+        # Hide './world/icon.png'
+        file.write('world/icon.png\n')
+
+        # Hide './world/level.dat_old'
+        file.write('world/level.dat_old\n')
+
+        # Hide './world/session.lock'
+        file.write('world/session.lock\n')
 
     #==================================================
     # IMPORTS
