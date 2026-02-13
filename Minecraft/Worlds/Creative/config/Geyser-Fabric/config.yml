@@ -29,7 +29,7 @@ bedrock:
 java:
   # What type of authentication Bedrock players will be checked against when logging into the Java server.
   # Can be "floodgate" (see https://wiki.geysermc.org/floodgate/), "online", or "offline".
-  auth-type: online
+  auth-type: floodgate
 
 # MOTD settings
 motd:
@@ -59,7 +59,7 @@ motd:
 # Gameplay options that affect Bedrock players
 gameplay:
   # The server name that will be sent to Minecraft: Bedrock Edition clients. This is visible in both the pause menu and the settings menu.
-  server-name: Geyser
+  server-name: Phils Creative World
 
   # Allow a fake cooldown indicator to be sent. Bedrock players otherwise do not see a cooldown as they still use 1.8 combat.
   # Please note: if the cooldown is enabled, some users may see a black box during the cooldown sequence, like below:
@@ -81,7 +81,7 @@ gameplay:
   # Bedrock prevents building and displaying blocks above Y127 in the Nether.
   # This config option works around that by changing the Nether dimension ID to the End ID.
   # The main downside to this is that the entire Nether will have the same red fog rather than having different fog for each biome.
-  nether-roof-workaround: false
+  nether-roof-workaround: true
 
   # Whether to show Bedrock Edition emotes to other Bedrock Edition players.
   emotes-enabled: true
@@ -143,7 +143,7 @@ saved-user-logins:
 # For online mode authentication type only.
 # Specify how many seconds to wait while user authorizes Geyser to access their Microsoft account.
 # User is allowed to disconnect from the server during this period.
-pending-authentication-timeout: 120
+pending-authentication-timeout: 200
 
 # Whether to alert the console and operators that a new Geyser version is available that supports a Bedrock version
 # that this Geyser version does not support. It's recommended to keep this option enabled, as many Bedrock platforms
@@ -237,7 +237,7 @@ advanced:
 enable-metrics: true
 
 # The bstats metrics uuid. Do not touch!
-metrics-uuid: ffa4b539-89ea-4f3f-b9e9-23592cbf6ac4
+metrics-uuid: 218cc360-9e51-47e8-8cfe-cc0d0af7485e
 
 # If debug messages should be sent through console
 debug-mode: false
