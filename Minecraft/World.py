@@ -1,6 +1,6 @@
-from philh_myftp_biz.file import YAML, temp, INI
 from philh_myftp_biz.web import download, Driver
 from typing import Generator, Callable, Literal
+from philh_myftp_biz.file import YAML, temp
 from philh_myftp_biz.process import Start
 from philh_myftp_biz.terminal import Log
 from philh_myftp_biz.json import Dict
@@ -70,7 +70,8 @@ class World(Path, Dict):
 
     _args: list[str]
 
-    _ignore: list[str]
+    _safe: list[str]
+    """Don't Delete these"""
 
     WebFiles: Callable[[], Generator[tuple[Path, Path]]]
     """Get a list of downloaded files to copy"""
@@ -79,6 +80,9 @@ class World(Path, Dict):
     """Configure the world"""
 
     Edition: Literal['Java', 'Bedrock']
+    """ """
+
+    _GIT_IGNORE: str
     """ """
 
     def __init__(self, name:str):
@@ -107,6 +111,8 @@ class World(Path, Dict):
 
         #============================================
 
+        driver.close()
+
         for name, url in files.items():
 
             tmp = temp(hex.encode(self.name()))
@@ -118,14 +124,25 @@ class World(Path, Dict):
 
         #============================================
 
+    def _Configure_Base(self):
+
+        #======================================================
+        # GIT IGNORE
+
+        gitignore = self.child('.gitignore')
+
+        gitignore.open('w').write(self._GIT_IGNORE)
+
+        #======================================================
+
     def GenFiles(self) -> Generator[Path]:
         """All generated/expendable files in the world folder"""
 
         #
-        for child in self.children():
+        for child in self.descendants():
 
-            #
-            if child.seg() not in self._ignore:
+            # If the child is not related to any of the safe files
+            if not any([self.child(f).isrelated(child) for f in self._safe]):
 
                 yield child
 
@@ -156,10 +173,35 @@ class Java(World):
         'nogui'
     ]
 
-    _ignore = [
-        'world', 
-        'config.yaml'
+    _safe = [
+        'world/',
+        'server.properties',
+        'config/Geyser-Fabric/config.yml'
     ]
+    
+    _GIT_IGNORE = """
+# Hide Everything
+/*
+
+# Unhide Main Configuration Files
+!server.properties
+
+# Unhide World Save Data
+!world
+
+# Hide Certain Files in Save Data Folder
+world/icon.png
+world/level.dat_old
+world/session.lock
+
+# Unhide Geyser Configuration
+!config
+/config/*
+!/config/Geyser-Fabric
+/config/Geyser-Fabric/*
+!/config/Geyser-Fabric/config.yml
+
+"""
 
     def WebFiles(self):
         
@@ -205,66 +247,16 @@ class Java(World):
 
     def Configure(self) -> None:
             
-        #======================================================
-        # GIT IGNORE
-
-        with self.child('.gitignore').open('w') as file:
-        
-            # Hide Everything
-            file.write('/*\n')
-
-            # Unhide './Config.yaml'
-            file.write('!config.yaml\n')
-
-            # Unhide './world/'
-            file.write('!world\n')
-
-            # Hide './world/icon.png'
-            file.write('world/icon.png\n')
-
-            # Hide './world/level.dat_old'
-            file.write('world/level.dat_old\n')
-
-            # Hide './world/session.lock'
-            file.write('world/session.lock')
+        super()._Configure_Base()
 
         #======================================================
         # Agree to EULA
 
         Log.VERB(f'Agreeing to EULA: {self}')
 
-        eula = Dict(INI(self.child('eula.txt')))
+        with self.child('eula.txt').open('w') as file:
 
-        eula['eula'] = True
-
-        #======================================================
-        # Sync server.properties
-
-        Log.VERB(f"Syncing Config: {self} FILE='server.properties'")
-
-        # Wrap the 'server.properties' file
-        props = Dict(INI(self.child('server.properties')))
-
-        # Option: difficulty
-        props['difficulty'] = self['difficulty']
-
-        # Option: cheats
-        props['enable-command-block'] = self['cheats']
-
-        # Option: gamemode
-        props['gamemode'] = self['gamemode']
-
-        # Option: players
-        props['max-players'] = self['players']
-
-        # Option: message
-        props['motd'] = self['message']
-
-        # Option: pvp
-        props['pvp'] = self['pvp']
-
-        # Option: port/java
-        props['server-port'] = self['port']['java']
+            file.write('eula=true')
 
         #======================================================
 
