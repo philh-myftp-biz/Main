@@ -11,7 +11,7 @@ from cv2 import VideoCapture
 this = Module('E:/Plex')
 
 # Store for execution pid
-PIDstore = TXT(this.dir.child('/Optimization/__pycache__/PID.txt'))
+PIDstore = TXT(this.child('/Optimization/__pycache__/PID.txt'))
 
 #==============================================
 

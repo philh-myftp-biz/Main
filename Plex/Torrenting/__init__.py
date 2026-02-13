@@ -17,7 +17,7 @@ this = Module('E:/Plex')
 # PID
 
 #
-PIDstore: List[str] = List(JSON(this.dir.child('/Torrenting/__pycache__/PID.json')))
+PIDstore: List[str] = List(JSON(this.child('/Torrenting/__pycache__/PID.json')))
 
 # Clear the PID store
 PIDstore.save([f'python-{getpid()}'])

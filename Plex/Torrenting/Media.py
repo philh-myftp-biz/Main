@@ -133,7 +133,7 @@ class _Template:
     
 class Movie(_Template):
 
-    dir = this.dir.child('/Media/Movies/')
+    dir = this.child('/Media/Movies/')
 
     def __init__(self,
         title: str,
@@ -199,7 +199,7 @@ class Movie(_Template):
         src = self.file.path
 
         # The destination file path
-        dst = this.dir.child(f"/Media/Movies/{self.Title} ({self.Year}).{src.ext()}")
+        dst = this.child(f"/Media/Movies/{self.Title} ({self.Year}).{src.ext()}")
 
         return src, dst
 
@@ -228,7 +228,7 @@ class Show:
         self.Year = year
 
         # Show Root Directory
-        self.dir = this.dir.child(f"/Media/Shows/{title} ({year})/")
+        self.dir = this.child(f"/Media/Shows/{title} ({year})/")
         """../Media/Shows/{Title} ({Year})/"""
 
         # List of 'Season' OBJs

@@ -30,7 +30,7 @@ def Downloads() -> Generator[Media._Template]:
     # MOVIES
 
     # Iter through all child directories of 'E:/Plex/Media/Movies/'
-    for p in this.dir.child('/Media/Movies/').children():
+    for p in this.child('/Media/Movies/').children():
 
         # If the file name matches the filter
         if args['filter'] in p.name().lower():
@@ -72,7 +72,7 @@ def Downloads() -> Generator[Media._Template]:
     # EPISODES
 
     # Iter through all child directories of 'E:/Plex/Media/Shows/'
-    for ShowDir in this.dir.child('/Media/Shows').children():
+    for ShowDir in this.child('/Media/Shows').children():
 
         # If the folder name matches the filter
         if args['filter'] in ShowDir.name().lower():
