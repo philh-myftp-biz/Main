@@ -1,12 +1,12 @@
-from philh_myftp_biz.modules import Module
 from philh_myftp_biz.terminal import ParsedArgs
-from typing import Generator
-
-from philh_myftp_biz.pc import Path
 from philh_myftp_biz.process import SysTask
-
-from philh_myftp_biz.file import PKL
+from philh_myftp_biz.modules import Module
 from philh_myftp_biz.json import Dict
+from philh_myftp_biz.file import PKL
+from typing import Generator
+from World import Bedrock, Java, AutoEdition
+
+#============================================================
 
 # Minecraft Module
 this = Module('E:/Minecraft')
@@ -24,17 +24,18 @@ args.Arg(
 #============================================================
 
 Tasks: Dict[SysTask] = Dict(PKL(
-    path = this.dir.child('/Worlds/__pycache__/Tasks.pkl'),
+    path = this.dir.child('/__pycache__/Tasks.pkl'),
     default = {}
 ))
 
-def Worlds() -> Generator[Path]:
+#============================================================
+
+def Worlds() -> Generator[Bedrock|Java]:
 
     # If a specific world is given
     if args['world']:
-    
-        # Yield the world folder with the given name
-        yield this.dir.child(f'/Worlds/{args['world']}/')
+
+        yield AutoEdition(args['world'])
 
     #
     else:
@@ -42,5 +43,4 @@ def Worlds() -> Generator[Path]:
         #
         for s in this.dir.child('/Worlds/').children():
 
-            # Yield the world folder with the given name
-            yield this.dir.child(f'/Worlds/{s.name()}/')
+            yield AutoEdition(s.name())
