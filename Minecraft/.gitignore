@@ -1,6 +1,8 @@
-
-# Cache
+# Auto Generated
 **/__pycache__/
-
-# Session Lock
 **/session.lock
+!/worlds/
+!/Worlds/Test
+/Worlds/Test/*
+!/Worlds/Test/config.yaml
+!/Worlds/Test/world
