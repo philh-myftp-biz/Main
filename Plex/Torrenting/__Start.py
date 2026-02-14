@@ -26,6 +26,9 @@ while True:
         # Get the next download from the generator
         d = next(downloads)
 
+        # Start the download
+        d.start()
+
         # If a valid file has been found
         if d.file:
 
@@ -36,6 +39,19 @@ while True:
 
             # Add the download item to the queue
             queue += [d]
+
+        # If no valid file has been found
+        else:
+
+            Log.WARN(f'File Failed to Download: {d=}')
+    
+    # Continue the loop if the download has timed out
+    except TimeoutError:
+
+        Log.FAIL('', exc_info=True)
+
+        # Skip to the next download
+        continue
 
     # Break the loop if the generator is exhausted
     except StopIteration:
