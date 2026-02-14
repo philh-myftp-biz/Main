@@ -22,6 +22,11 @@ class _Template:
     Magnet Instance
     """
 
+    magnets: list[Magnet] = []
+    """
+    Magnet Instance
+    """
+
     file: api.qBitTorrent.File = None
     """
     File Instance
@@ -73,26 +78,49 @@ class _Template:
                     # Append the magnet to the list
                     magnets += m
 
-        # Find the best remaining magnet
-        self.magnet = magnets.max(
-            lambda m: m.seeders
-        )
+        # Remove all magnets with 0 seeders
+        magnets.filter(lambda m: m.seeders > 0)
 
-        # If a magnet has been found
-        if self.magnet:
+        # Sort magnets list by seeders (High-Low)
+        magnets.sort(lambda m: -m.seeders)
 
-            Log.VERB(
-                f'Found: {self=}\n'+ \
-                f'{self.magnet.title=}\n'+ \
-                f'{self.magnet.seeders=}'
-            )
+        # Iter through the top 3 most seeded magnets
+        for magnet in magnets:
 
-            # Download the magnet
-            self.magnet.start()
+            try:
 
-            # Stop all files in the magnet
-            for file in self.magnet.files():
-                file.stop()
+                Log.VERB(
+                    f'Testing: {self=}\n'+ \
+                    f'{magnet.title=}\n'+ \
+                    f'{magnet.seeders=}'
+                )
+
+                # Download the magnet
+                magnet.start()
+
+                # If a valid file has been found
+                if self.file:
+
+                    # Stop all files in the magnet
+                    for file in magnet.files():
+                        file.stop()
+
+                    # Store the current magnet
+                    self.magnet = magnet
+
+                    break
+
+                # If a valid file has not been found
+                else:
+                    raise FileNotFoundError()
+
+            except TimeoutError, FileNotFoundError:
+
+                Log.VERB('', exc_info=True)
+
+                magnet.stop()
+
+                continue
 
         # If a magnet has not been found
         else:
