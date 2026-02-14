@@ -12,8 +12,6 @@ for world in Worlds():
 
     Log.INFO(f"Selected World: {world}")
 
-    world.Configure()
-
     #==================================================
     # Clear Previously Generated Files
 
@@ -40,8 +38,6 @@ for world in Worlds():
     processes += [process]
 
     #==================================================
-    #
-
 
 #========================================================================================================
 
