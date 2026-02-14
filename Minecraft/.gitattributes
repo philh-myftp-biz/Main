@@ -1,1 +1,0 @@
-*.jar,*.mca,*.dat filter=lfs diff=lfs merge=lfs -text
