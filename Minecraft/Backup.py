@@ -1,19 +1,36 @@
 from philh_myftp_biz.modules import Repo
+from philh_myftp_biz.terminal import Log
 from philh_myftp_biz.time import now
 
-WORLDS = Repo('E:/Minecraft/Worlds')
+repo = Repo('E:/Minecraft/Worlds')
+
+Log.INFO('Tracking Files')
+repo.git.add(A=True)
     
-new_commit = WORLDS.index.commit(
-    message = f"Automatic Backup",
-    skip_hooks = True
-)
 
-WORLDS.create_tag(
-    now().ISO, 
-    ref = new_commit
-)
+filecount = len(repo.index.diff(repo.head.commit))
 
-#WORLDS.origin.push()
+if filecount == 0:
 
-print(f"Successfully created commit: {new_commit.hexsha}")
-print(f"Files included in commit: {new_commit.stats.files.keys()}")
+    Log.WARN('No Modified Files Found')
+    
+else:
+
+    Log.INFO(f'{filecount} Modified Files Found')
+
+    Log.INFO('Committing')
+    new_commit = repo.index.commit(
+        message = f"Automatic Backup",
+        skip_hooks = True,
+    )
+
+    TAG = int(now().unix)
+
+    Log.INFO(f'Applying Tag: {TAG}')
+
+    repo.create_tag(TAG, new_commit)
+
+
+    Log.INFO(f'Pushing to Remote')
+
+    repo.REMOTE.push()
