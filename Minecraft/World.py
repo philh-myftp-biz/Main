@@ -1,74 +1,24 @@
 from philh_myftp_biz.web import download, Driver
 from typing import Generator, Callable, Literal
-from philh_myftp_biz.file import YAML, temp
+from philh_myftp_biz.file import temp, INI
 from philh_myftp_biz.process import Start
-from philh_myftp_biz.terminal import Log
 from philh_myftp_biz.json import Dict
 from philh_myftp_biz.text import hex
 from philh_myftp_biz.pc import Path
 from philh_myftp_biz import VERBOSE
 
-
 def AutoEdition(name: str) -> Generator[Java|Bedrock]:
     """ """
 
-    match World(name)['edition']:
+    match INI(World(name).child('edition.ini')).read()['edition']:
 
-        case 'java':
+        case 'Java':
             return Java(name)
         
-        case 'bedrock':
+        case 'Bedrock':
             return Bedrock(name)
 
-CONFIG_TEMPLATE = """
-# Edition
-# [java, bedrock]
-edition: java
-
-# Difficulty
-# [peaceful, easy, normal, hard]
-difficulty: easy
-
-# Cheats Enabled
-# {boolean}
-cheats: true
-
-# Gamemode
-# [adventure, survival, creative]
-gamemode: creative
-
-# Max Players
-# {integer}
-players: 20
-
-# Message of the Day
-# {string}
-message: New World
-
-# Player vs Player Enabled
-# {boolean}
-pvp: true
-
-# Server Port
-port:
-
-  # Java Port
-  # [{integer}, null]
-  java: 25565
-
-  # Bedrock/Geyser Port
-  # {integer}
-  bedrock: 19132
-
-# Operators
-# {list{string}}
-operators: []
-
-"""
-
-class World(Path, Dict):
-
-    _args: list[str]
+class World(Path):
 
     _safe: list[str]
     """Don't Delete these"""
@@ -79,6 +29,9 @@ class World(Path, Dict):
     Configure: Callable[[], None]
     """Configure the world"""
 
+    Start: Callable[[], None]
+    """Start the World"""
+
     Edition: Literal['Java', 'Bedrock']
     """ """
 
@@ -88,13 +41,6 @@ class World(Path, Dict):
     def __init__(self, name:str):
 
         super().__init__(f'E:/Minecraft/Worlds/{name}/')
-
-        config = self.child('config.yaml')
-
-        if not config.exists():
-            config.open('w').write(CONFIG_TEMPLATE)
-        
-        self._var = YAML(config)
 
     def _WebFiles_Base(self):
 
@@ -124,7 +70,7 @@ class World(Path, Dict):
 
         #============================================
 
-    def _Configure_Base(self):
+    def _Configure(self):
 
         #======================================================
         # GIT IGNORE
@@ -146,11 +92,10 @@ class World(Path, Dict):
 
                 yield child
 
-    def Start(self):
-        """Start the World"""
+    def _Start_Base(self, *args:str):
 
         process = Start(
-            args = self._args,
+            args = args,
             dir = self
         )
 
@@ -166,17 +111,15 @@ class Java(World):
 
     Edition = 'Java'
 
-    _args = [
-        'java', 
-        '-Xmx2G',
-        '-jar', 'fabric-server-launch.jar',
-        'nogui'
-    ]
-
     _safe = [
         'world/',
         'server.properties',
-        'config/Geyser-Fabric/config.yml'
+        'banned-ips.json',
+        'banned-players.json',
+        'ops.json',
+        'whitelist.json',
+        'config/Geyser-Fabric/config.yml',
+        'edition.ini'
     ]
     
     _GIT_IGNORE = """
@@ -185,13 +128,17 @@ class Java(World):
 
 # Unhide Main Configuration Files
 !server.properties
+!banned-ips.json
+!banned-players.json
+!ops.json
+!whitelist.json
+!edition.ini
 
 # Unhide World Save Data
 !world
 
 # Hide Certain Files in Save Data Folder
 world/icon.png
-world/level.dat_old
 world/session.lock
 
 # Unhide Geyser Configuration
@@ -245,20 +192,22 @@ world/session.lock
 
         yield from base
 
-    def Configure(self) -> None:
-            
-        super()._Configure_Base()
+    def Start(self):
 
-        #======================================================
-        # Agree to EULA
+        super()._Configure()
 
-        Log.VERB(f'Agreeing to EULA: {self}')
+        process = super()._Start_Base(
+            'java', 
+            '-Xmx2G',
+            '-jar', 'fabric-server-launch.jar',
+            'nogui'
+        )
 
-        with self.child('eula.txt').open('w') as file:
+        # Agree to the EULA
+        eula = Dict(INI(self.child('eula.txt')))
+        eula['eula'] = True
 
-            file.write('eula=true')
-
-        #======================================================
+        return process
 
 class Bedrock(World):
 
