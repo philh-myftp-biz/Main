@@ -24,7 +24,7 @@ args.Arg(
 #============================================================
 
 Tasks: Dict[SysTask] = Dict(PKL(
-    path = this.dir.child('/__pycache__/Tasks.pkl'),
+    path = this.child('/__pycache__/Tasks.pkl'),
     default = {}
 ))
 
@@ -41,6 +41,6 @@ def Worlds() -> Generator[Bedrock|Java]:
     else:
 
         #
-        for s in this.dir.child('/Worlds/').children():
+        for s in this.child('/Worlds/').children():
 
             yield AutoEdition(s.name())
