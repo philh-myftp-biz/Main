@@ -1,4 +1,4 @@
-from philh_myftp_biz.web import download, Driver
+from philh_myftp_biz.web import download, Driver, FirewallException
 from typing import Generator, Callable, Literal
 from philh_myftp_biz.file import temp, INI
 from philh_myftp_biz.process import Start
@@ -6,6 +6,7 @@ from philh_myftp_biz.json import Dict
 from philh_myftp_biz.text import hex
 from philh_myftp_biz.pc import Path
 from philh_myftp_biz import VERBOSE
+from re import search
 
 def AutoEdition(name: str) -> Generator[Java|Bedrock]:
     """ """
@@ -29,11 +30,14 @@ class World(Path):
     Configure: Callable[[], None]
     """Configure the world"""
 
-    Start: Callable[[], None]
+    Start: Callable[[], list[int]]
     """Start the World"""
 
     Edition: Literal['Java', 'Bedrock']
     """ """
+
+    Port: Callable[[], int]
+    """Get the Server Port"""
 
     _GIT_IGNORE: str
     """ """
@@ -78,6 +82,12 @@ class World(Path):
         gitignore = self.child('.gitignore')
 
         gitignore.open('w').write(self._GIT_IGNORE)
+
+        #======================================================
+        # FIREWALL
+
+        fe = FirewallException(f'Minecraft World: {self.name()}')
+        fe.set(self.Port())
 
         #======================================================
 
@@ -192,9 +202,21 @@ world/session.lock
 
         yield from base
 
-    def Start(self):
+    def Port(self):
 
-        super()._Configure()
+        props = self.child('server.properties')
+
+        while not props.exists():
+            pass
+
+        r = search(
+            pattern = r'\nserver-port=(.*)',
+            string = props.open().read()
+        )
+
+        return int(r.group(1))
+
+    def Start(self):
 
         process = super()._Start_Base(
             'java', 
@@ -206,6 +228,8 @@ world/session.lock
         # Agree to the EULA
         eula = Dict(INI(self.child('eula.txt')))
         eula['eula'] = True
+
+        super()._Configure()
 
         return process
 
