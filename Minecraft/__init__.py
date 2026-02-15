@@ -1,10 +1,9 @@
 from philh_myftp_biz.terminal import ParsedArgs
-from philh_myftp_biz.process import SysTask
+from World import Bedrock, Java, AutoEdition
 from philh_myftp_biz.modules import Module
 from philh_myftp_biz.json import Dict
-from philh_myftp_biz.file import PKL
+from philh_myftp_biz.file import JSON
 from typing import Generator
-from World import Bedrock, Java, AutoEdition
 
 #============================================================
 
@@ -23,9 +22,9 @@ args.Arg(
 
 #============================================================
 
-Tasks: Dict[SysTask] = Dict(PKL(
-    path = this.child('/__pycache__/Tasks.pkl'),
-    default = {}
+PIDs: Dict[int] = Dict(JSON(
+    path = this.child('/__pycache__/Tasks.json'),
+    default = {}    
 ))
 
 #============================================================

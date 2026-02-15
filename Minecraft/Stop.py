@@ -1,5 +1,8 @@
-from __init__ import Worlds, Tasks
+from philh_myftp_biz.process import SysTask
+from __init__ import Worlds, PIDs
 
 for w in Worlds():
 
-    Tasks[w.name()].stop()
+    task = SysTask(PIDs[w.name()])
+
+    task.stop()

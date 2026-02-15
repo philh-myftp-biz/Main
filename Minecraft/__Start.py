@@ -1,6 +1,6 @@
 from philh_myftp_biz.process import SubProcess
 from philh_myftp_biz.terminal import Log
-from __init__ import Worlds, Tasks
+from __init__ import Worlds, PIDs
 
 processes: list[SubProcess] = []
 
@@ -33,7 +33,7 @@ for world in Worlds():
 
     process = world.Start()
     
-    Tasks[world.name()] = process._task
+    PIDs[world.name()] = process._process.pid
 
     processes += [process]
 
@@ -43,4 +43,5 @@ for world in Worlds():
 
 # Wait for all subprocesses to complete
 for process in processes:
+    
     process.wait()
