@@ -73,10 +73,14 @@ class _Template:
                     # Append the magnet to the list
                     magnets += m
 
-        # Find the best remaining magnet
-        self.magnet = magnets.max(
-            lambda m: m.seeders
-        )
+        # Remove all magnets with 0 seeders
+        magnets.filter(lambda m: m.seeders > 0)
+
+        # Get the 3 magnets with the highest seeders
+        magnets = magnets.sorted(lambda m: m.seeders)[-3:]
+
+        # Select a random magnet from the top 3
+        self.magnet = magnets.random()
 
         # If a magnet has been found
         if self.magnet:
