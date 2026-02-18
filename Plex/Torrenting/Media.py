@@ -63,24 +63,23 @@ class _Template:
 
                 # If the title is valid
                 TITLE = self.validName(m.title)
+                SEEDERS = (m.seeders > 0)
 
                 Log.VERB(
                     f'Scanning Magnet: {m=}\n'+ \
-                    f'{TITLE:d} | {m.title=}'
+                    f'{TITLE:d} | {m.title=}\n'+ \
+                    f'{SEEDERS:d} | {m.seeders=}'
                 )
 
-                if TITLE:
+                if TITLE and SEEDERS:
                     # Append the magnet to the list
                     magnets += m
 
-        # Remove all magnets with 0 seeders
-        magnets.filter(lambda m: m.seeders > 0)
+        # Sort the magnets by seeders (High to Low)
+        magnets.sort(lambda m: -m.seeders)
 
-        # Get the 3 magnets with the highest seeders
-        magnets = magnets.sorted(lambda m: m.seeders)[-3:]
-
-        # Select a random magnet from the top 3
-        self.magnet = magnets.random()
+        # Select a random magnet from the top 5 magnets
+        self.magnet = magnets[:5].random()
 
         # If a magnet has been found
         if self.magnet:
