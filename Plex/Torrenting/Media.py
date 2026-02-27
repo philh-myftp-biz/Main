@@ -18,7 +18,7 @@ class PARAMETERS:
 
         self.name = name
 
-    def valid(self):
+    def valid(self) -> bool:
         
         outp = f'Validating: {self.name}'
 
@@ -32,10 +32,13 @@ class PARAMETERS:
     
     def TITLE(self,
         target: str, 
-        control: str
+        control: str|None
     ) -> None:
         
-        valid: bool = (similarity(target, control) > .65)
+        if control is None:
+            valid = True
+        else:
+            valid = (similarity(a=target, b=control) > .65)
 
         self.data += [{
             'name': 'TITLE',
@@ -147,7 +150,7 @@ class _Template:
     Parent Folder
     """
 
-    def start(self):
+    def start(self) -> None:
         """
         Search thepiratebay.org and start the download
         """
@@ -176,7 +179,7 @@ f"""Validating: {m=}
                     magnets += m
 
         # Select the most seeded magnet
-        self.magnet = magnets.max(lambda m: m.seeders)
+        self.magnet = magnets.max(func=lambda m: m.seeders)
 
         # If a magnet has been found
         if self.magnet:
@@ -212,13 +215,13 @@ f"""Validating: {m=}
         for p in self.dir.children():
 
             # If the file has a valid name
-            if self.validFile(p):
+            if self.validFile(path=p):
 
                 return True
             
         return False
 
-    def validFile(self, path:Path):
+    def validFile(self, path:Path) -> bool:
         """
         Check a file for the following conditions:
             - File is a video
@@ -347,20 +350,20 @@ class Season(_Template):
         show: 'Show',
         season: str,
         episodes: dict[str, api.omdb.Episode]
-    ):
+    ) -> None:
         
         # Store 'Show' OBJ
-        self.show = show
+        self.show: Show = show
 
         # Integer Function
         self.__int = int(season)
 
         # Destination File Directory
         self.dir = show.dir.child(f"/Season {self:02d}/")
-        """../Season {Season}/"""
+        """E:/Plex/Media/Shows/{Show}/Season {Season}/"""
 
         # Create the folder if it doesn't exist
-        mkdir(self.dir)
+        mkdir(path=self.dir)
 
         # List of TPB queries
         self.queries = [
@@ -372,7 +375,7 @@ class Season(_Template):
         # List of 'Episode' OBJs
         self.episodes = [Episode(self, i[1]) for i in episodes.items()]
 
-    def start(self):
+    def start(self) -> None:
 
         # Start the download
         super().start()
@@ -380,13 +383,18 @@ class Season(_Template):
         # If a magnet has been found
         if self.magnet:
 
-            # Iter through all downloading files
-            for f in self.magnet.files():
+            files: list[api.qBitTorrent.File] = list(self.magnet.files())
 
-                # Pause the file download
-                f.stop()
+            # If all files are enabled
+            if all(f.enabled() for f in files):
 
-    def exists(self):
+                # Iter through all downloading files
+                for f in files:
+
+                    # Pause the file download
+                    f.stop()
+
+    def exists(self) -> bool:
         
         # Iter through all episodes this season
         for episode in self.episodes:
@@ -441,23 +449,23 @@ class Episode(_Template):
     def __init__(self,
         season: 'Season',
         episode: api.omdb.Episode
-    ):
+    ) -> None:
 
         # Store 'Show' OBJ
-        self.show = season.show
+        self.show: Show = season.show
         
         # Store 'Season' OBJ
-        self.season = season
+        self.season: Season = season
 
         # Store Episode Title
-        self.Title = episode.Title
+        self.Title: str = episode.Title
 
         # Store Directory
         self.dir = season.dir
-        """../Season {Season}/"""
+        """E:/Plex/Media/Shows/{Show}/Season {Season}/"""
 
         # Integer Function
-        self.__int = episode.Number
+        self.__int: int = episode.Number
 
         # List of TPB queries
         self.queries = [
@@ -514,7 +522,7 @@ class Episode(_Template):
 
         params.TITLE(
             target = data['title'],
-            control = self.show.Title
+            control = None
         )
 
         params.SEASON(
