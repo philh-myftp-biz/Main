@@ -10,6 +10,9 @@ import Media
 # List of downloads
 queue: list[Media._Template] = []
 
+#
+qbit.randomize_port()
+
 # Clear the download queue
 qbit.clear(rm_files=False)
 
