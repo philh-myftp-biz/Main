@@ -8,7 +8,7 @@ import Media
 # ===============================================================
 
 # List of downloads
-queue: list[Media._Template] = []
+queue: list[Media.DOWNLOAD] = []
 
 #
 qbit.randomize_port()

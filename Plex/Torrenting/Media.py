@@ -14,7 +14,7 @@ class PARAMETERS:
 
     def __init__(self, name:str):
 
-        self.data: list[dict[Literal['name', 'valid', 'target', 'control']]] = []
+        self.data: list[dict[Literal['name', 'valid', 'target', 'control'], str]] = []
 
         self.name = name
 
@@ -33,9 +33,9 @@ class PARAMETERS:
     def TITLE(self,
         target: str, 
         control: str
-    ):
+    ) -> None:
         
-        valid = (similarity(target, control) > .65)
+        valid: bool = (similarity(target, control) > .65)
 
         self.data += [{
             'name': 'TITLE',
@@ -45,9 +45,10 @@ class PARAMETERS:
         }]
 
     def SEASON(self,
-        target: int|list[int], 
+        target: int|list[int]|None, 
         control: int
-    ):
+    ) -> None:
+        
         if isinstance(target, int):
             valid = (control == target)
 
@@ -426,13 +427,13 @@ class Season(_Template):
 
         return params.valid()
     
-    def __int__(self):
+    def __int__(self) -> int:
         return self.__int
 
-    def __format__(self, format_spec):
+    def __format__(self, format_spec:str) -> str:
         return f'{int(self):{format_spec}}'
     
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<Season "{self}" - "{self.show.Title}" @{loc(self)}>'
 
 class Episode(_Template):
@@ -465,7 +466,7 @@ class Episode(_Template):
             f'{self.show.Title} {self.Title}'
         ]
 
-    def start(self):
+    def start(self) -> None:
 
         # If this season is downloading as one magnet
         if self.season.magnet:
@@ -533,7 +534,7 @@ class Episode(_Template):
 
         return params.valid()
 
-    def paths(self):
+    def paths(self) -> tuple[Path, Path]:
 
         # The source file
         src = self.file.path
@@ -543,11 +544,13 @@ class Episode(_Template):
 
         return src, dst
     
-    def __int__(self):
+    def __int__(self) -> int:
         return self.__int
 
-    def __format__(self, format_spec):
+    def __format__(self, format_spec:str) -> str:
         return f'{int(self):{format_spec}}'
     
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<Episode "{self.season}x{self}" - "{self.show.Title}" @{loc(self)}>'
+
+type DOWNLOAD = Movie|Episode

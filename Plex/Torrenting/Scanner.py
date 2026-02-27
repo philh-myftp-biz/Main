@@ -5,7 +5,7 @@ import Media
 
 def ReadName(
     name: Literal['Title (Year)']
-) -> list[str, int]:
+) -> tuple[str, int]:
     """
     Get Title and Year from file/folder name
 
@@ -21,7 +21,7 @@ def ReadName(
 
     return Title, Year
 
-def Downloads() -> Generator[Media._Template]:
+def Downloads() -> Generator[Media.DOWNLOAD]:
     """
     Generate a list of Movie and Episode Downloads
     """
