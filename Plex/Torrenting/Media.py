@@ -1,64 +1,113 @@
 from philh_myftp_biz.text import similarity
 from philh_myftp_biz.web import Magnet, api
-from __init__ import this, tpb, omdb, args
 from philh_myftp_biz.pc import Path, mkdir
 from philh_myftp_biz.classOBJ import loc
 from philh_myftp_biz.terminal import Log
 from philh_myftp_biz.db import MimeType
 from philh_myftp_biz.array import List
 from philh_myftp_biz.json import Dict
-from typing import Callable
+from __init__ import this, tpb, omdb
+from typing import Callable, Literal
 import PTN
 
-class PARAMS:
+class PARAMETERS:
+
+    def __init__(self, name:str):
+
+        self.data: list[dict[Literal['name', 'valid', 'target', 'control']]] = []
+
+        self.name = name
+
+    def valid(self):
+        
+        outp = f'Validating: {self.name}'
+
+        for item in self.data:
+
+            outp += f'\n{item['name']}={item['valid']:d} | target={item['target']} | control={item['control']}'
+        
+        Log.VERB(outp)
+
+        return all(i['valid'] for i in self.data)
     
-    def TITLE(
+    def TITLE(self,
         target: str, 
         control: str
     ):
-        return (similarity(target, control) > .65)
+        
+        valid = (similarity(target, control) > .65)
 
-    def SEASON(
+        self.data += [{
+            'name': 'TITLE',
+            'valid': valid,
+            'target': target,
+            'control': control
+        }]
+
+    def SEASON(self,
         target: int|list[int], 
         control: int
     ):
         if isinstance(target, int):
-            return (control == target)
+            valid = (control == target)
 
         elif isinstance(target, list):
-            return (control in target)
+            valid = (control in target)
         
         else:
-            return False
+            valid = False
         
-    def YEAR(
-        target: int|None, 
+        self.data += [{
+            'name': 'SEASON',
+            'valid': valid,
+            'target': target,
+            'control': control
+        }]
+        
+    def YEAR(self,
+        target: int|list[int]|None, 
         control: int|list[int]
     ):
         if target is None:
-            return True
+            valid = True
+        
+        elif isinstance(target, list):
+            valid = (control in target)
         
         else:
         
             if isinstance(control, int):
-                control = [control]
+                MIN = control-1
+                MAX = control+1
+            else:
+                MIN = control[0]-1
+                MAX = control[-1]+1
 
-            for c in control:
+            valid = (MIN <= target <= MAX)
 
-                if abs(c - target) < 2:
-                    return True
-                
-            return False
-        
-    def EPISODE(
+        self.data += [{
+            'name': 'YEAR',
+            'valid': valid,
+            'target': target,
+            'control': control
+        }] 
+
+    def EPISODE(self,
         target: int|list[int]|None, 
         control: int|None
     ):
         if isinstance(target, list):
-            return (control in target)
+            valid = (control in target)
         
         else:
-            return (control == target)
+            valid = (control == target)
+
+        self.data += [{
+            'name': 'EPISODE',
+            'valid': valid,
+            'target': target,
+            'control': control
+        }]
 
 class _Template:
 
@@ -232,24 +281,20 @@ class Movie(_Template):
         # Parse the given name
         data: Dict[str] = Dict(PTN.parse(name))
 
-        TITLE = PARAMS.TITLE(
+        params = PARAMETERS(name)
+
+        params.TITLE(
             target = data['title'],
             control = self.Title
         )
 
         # Check if the year is either the same or missing
-        YEAR = PARAMS.YEAR(
+        params.YEAR(
             target = data['year'],
             control = self.Year
         )
-
-        Log.VERB(
-f"""Validating: {name=}
-{TITLE=:d} | in={data['title']} | own={self.Title}
-{ YEAR=:d} | in={data['year']} | own={self.Year}"""
-        )
         
-        return TITLE and YEAR
+        return params.valid()
 
     def paths(self):
 
@@ -313,17 +358,12 @@ class Season(_Template):
         self.dir = show.dir.child(f"/Season {self:02d}/")
         """../Season {Season}/"""
 
-        self.Years = [
-            show.Year, 
-            (show.Year + int(self))
-        ]
-
         # Create the folder if it doesn't exist
         mkdir(self.dir)
 
         # List of TPB queries
         self.queries = [
-            f'{self.show.Title} {self.Years[0]} Season {self:02d}',
+            f'{self.show.Title} {self.show.Year} Season {self:02d}',
             f'{self.show.Title} Season {self:02d}',
             f'{self.show.Title} s{self:02d}',
         ]
@@ -362,36 +402,29 @@ class Season(_Template):
         # Parse the given name
         data: Dict[str] = Dict(PTN.parse(name))
 
-        TITLE = PARAMS.TITLE(
+        params = PARAMETERS(name)
+
+        params.TITLE(
             target = data['title'],
             control = self.show.Title
         )
 
-        SEASON = PARAMS.SEASON(
+        params.SEASON(
             target = data['season'],
             control = int(self)
         )
 
-        EPISODE = PARAMS.EPISODE(
+        params.EPISODE(
             target = data['episode'],
             control = None
         )
 
-        # Check if the year is either the same or missing
-        YEAR = PARAMS.YEAR(
+        params.YEAR(
             target = data['year'],
-            control = self.Years
+            control = self.show.Year
         )
 
-        Log.VERB(
-f"""Validating: {name=}
-{  TITLE=:d} | in={data['title']} | own={self.show.Title}
-{ SEASON=:d} | in={data['season']} | own={int(self)}
-{EPISODE=:d} | in={data['episode']}
-{   YEAR=:d} | in={data['year']} | own={self.Years}"""
-        )
-
-        return all([TITLE, SEASON, EPISODE, YEAR])
+        return params.valid()
     
     def __int__(self):
         return self.__int
@@ -476,36 +509,29 @@ class Episode(_Template):
         # Parse the given name
         data: Dict[str] = Dict(PTN.parse(name))
 
-        TITLE = PARAMS.TITLE(
+        params = PARAMETERS(name)
+
+        params.TITLE(
             target = data['title'],
             control = self.show.Title
         )
 
-        SEASON = PARAMS.SEASON(
+        params.SEASON(
             target = data['season'],
             control = int(self.season)
         )
 
-        EPISODE = PARAMS.EPISODE(
+        params.EPISODE(
             target = data['episode'],
             control = int(self)
         )
 
-        # Check if the year is either the same or missing
-        YEAR = PARAMS.YEAR(
+        params.YEAR(
             target = data['year'],
-            control = self.season.Years
+            control = self.show.Year
         )
 
-        Log.VERB(
-f"""Validating: {name=}
-{  TITLE=:d} | in={data['title']} | own={self.show.Title}
-{ SEASON=:d} | in={data['season']} | own={int(self.season)}
-{EPISODE=:d} | in={data['episode']} | own={int(self)}
-{   YEAR=:d} | in={data['year']} | own={self.show.Year}"""
-        )
-
-        return all([TITLE, SEASON, EPISODE, YEAR])
+        return params.valid()
 
     def paths(self):
 
