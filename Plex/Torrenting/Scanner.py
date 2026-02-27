@@ -60,14 +60,6 @@ def Downloads() -> Generator[Media._Template]:
 
                     yield movie
 
-        # If the file name does not match the filter
-        else:
-
-            Log.VERB(
-                f'Skipping Movie\n'+ \
-                f'{p=}'
-            )
-
     #==========================================================
     # EPISODES
 
@@ -132,13 +124,5 @@ def Downloads() -> Generator[Media._Template]:
                             )
 
                             yield episode
-
-        # If the folder name does not match the filter
-        else:
-
-            Log.VERB(
-                f'Skipping Show\n'+ \
-                f'{ShowDir=}'
-            )
 
     #==========================================================
