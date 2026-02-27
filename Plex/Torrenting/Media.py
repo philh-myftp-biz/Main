@@ -10,6 +10,56 @@ from philh_myftp_biz.json import Dict
 from typing import Callable
 import PTN
 
+class PARAMS:
+    
+    def TITLE(
+        target: str, 
+        control: str
+    ):
+        return (similarity(target, control) > .65)
+
+    def SEASON(
+        target: int|list[int], 
+        control: int
+    ):
+        if isinstance(target, int):
+            return (control == target)
+
+        elif isinstance(target, list):
+            return (control in target)
+        
+        else:
+            return False
+        
+    def YEAR(
+        target: int|None, 
+        control: int|list[int]
+    ):
+        if target is None:
+            return True
+        
+        else:
+        
+            if isinstance(control, int):
+                control = [control]
+
+            for c in control:
+
+                if abs(c - target) < 2:
+                    return True
+                
+            return False
+        
+    def EPISODE(
+        target: int|list[int]|None, 
+        control: int|None
+    ):
+        if isinstance(target, list):
+            return (control in target)
+        
+        else:
+            return (control == target)
+
 class _Template:
 
     validName: Callable[[str], bool]
@@ -66,20 +116,17 @@ class _Template:
                 SEEDERS = (m.seeders > 0)
 
                 Log.VERB(
-                    f'Scanning Magnet: {m=}\n'+ \
-                    f'{TITLE:d} | {m.title=}\n'+ \
-                    f'{SEEDERS:d} | {m.seeders=}'
+f"""Validating: {m=}
+{  TITLE=:d} | in={m.title=}
+{SEEDERS=:d} | in={m.seeders}"""
                 )
 
                 if TITLE and SEEDERS:
                     # Append the magnet to the list
                     magnets += m
 
-        # Sort the magnets by seeders (High to Low)
-        magnets.sort(lambda m: -m.seeders)
-
-        # Select a random magnet from the top 5 magnets
-        self.magnet = magnets[:5].random()
+        # Select the most seeded magnet
+        self.magnet = magnets.max(lambda m: m.seeders)
 
         # If a magnet has been found
         if self.magnet:
@@ -90,12 +137,15 @@ class _Template:
                 f'{self.magnet.seeders=}'
             )
 
-            # Download the magnet
-            self.magnet.start()
+            # 
+            if not self.magnet.exists():
 
-            # Stop all files in the magnet
-            for file in self.magnet.files():
-                file.stop()
+                # Download the magnet
+                self.magnet.start()
+
+                # Stop all files in the magnet
+                for file in self.magnet.files():
+                    file.stop()
 
         # If a magnet has not been found
         else:
@@ -182,19 +232,24 @@ class Movie(_Template):
         # Parse the given name
         data: Dict[str] = Dict(PTN.parse(name))
 
-        # If the title is similar enough
-        TITLE = (similarity(self.Title, data['title']) > .65)
+        TITLE = PARAMS.TITLE(
+            target = data['title'],
+            control = self.Title
+        )
 
-        # If the year is the same
-        YEAR = (data['year'] == self.Year)
+        # Check if the year is either the same or missing
+        YEAR = PARAMS.YEAR(
+            target = data['year'],
+            control = self.Year
+        )
 
         Log.VERB(
-            f'Validating: {name=}\n'+ \
-            f'{TITLE:d} |{data['title']=} | {self.Title=}\n'+ \
-            f'{YEAR:d} | {data['year']=} | {self.Year=}'
+f"""Validating: {name=}
+{TITLE=:d} | in={data['title']} | own={self.Title}
+{ YEAR=:d} | in={data['year']} | own={self.Year}"""
         )
         
-        return (TITLE and YEAR)
+        return TITLE and YEAR
 
     def paths(self):
 
@@ -258,12 +313,17 @@ class Season(_Template):
         self.dir = show.dir.child(f"/Season {self:02d}/")
         """../Season {Season}/"""
 
+        self.Years = [
+            show.Year, 
+            (show.Year + int(self))
+        ]
+
         # Create the folder if it doesn't exist
         mkdir(self.dir)
 
         # List of TPB queries
         self.queries = [
-            f'{self.show.Title} {self.show.Year} Season {self:02d}',
+            f'{self.show.Title} {self.Years[0]} Season {self:02d}',
             f'{self.show.Title} Season {self:02d}',
             f'{self.show.Title} s{self:02d}',
         ]
@@ -302,27 +362,36 @@ class Season(_Template):
         # Parse the given name
         data: Dict[str] = Dict(PTN.parse(name))
 
-        # If the title is similar
-        TITLE = (similarity(data['title'], self.show.Title) > .65)
-
-        # If the file season is the same
-        SEASON = (data['season'] == int(self))
-
-        # If no episode # is found
-        EPISODE = (data['episode'] is None)
-
-        # Check if the year is either the same or missing
-        YEAR = ((data['year'] is None) or (data['year'] == self.show.Year))
-
-        Log.VERB(
-            f'Validating: {name=}\n'+ \
-            f'{TITLE:d} | {data['title']=} | {self.show.Title=}\n'+ \
-            f'{SEASON:d} | {data['season']=} | {int(self)=}\n'+ \
-            f'{EPISODE:d} | {data['episode']=}\n'+ \
-            f'{YEAR:d} | {data['year']=} | {self.show.Year=}'
+        TITLE = PARAMS.TITLE(
+            target = data['title'],
+            control = self.show.Title
         )
 
-        return (TITLE and SEASON and EPISODE and YEAR)
+        SEASON = PARAMS.SEASON(
+            target = data['season'],
+            control = int(self)
+        )
+
+        EPISODE = PARAMS.EPISODE(
+            target = data['episode'],
+            control = None
+        )
+
+        # Check if the year is either the same or missing
+        YEAR = PARAMS.YEAR(
+            target = data['year'],
+            control = self.Years
+        )
+
+        Log.VERB(
+f"""Validating: {name=}
+{  TITLE=:d} | in={data['title']} | own={self.show.Title}
+{ SEASON=:d} | in={data['season']} | own={int(self)}
+{EPISODE=:d} | in={data['episode']}
+{   YEAR=:d} | in={data['year']} | own={self.Years}"""
+        )
+
+        return all([TITLE, SEASON, EPISODE, YEAR])
     
     def __int__(self):
         return self.__int
@@ -407,32 +476,36 @@ class Episode(_Template):
         # Parse the given name
         data: Dict[str] = Dict(PTN.parse(name))
 
-        # If the title is either similar or missing
-        TITLE = (data['title'] is None) or (similarity(data['title'], self.show.Title) > .65)
-
-        # If the season is the same
-        SEASON = (data['season'] == int(self.season))
-
-        # If the name has multiple episode #s
-        if isinstance(data['episode'], list):
-            # If the 1st num is the same
-            EPISODE = (int(self) == data['episode'][0])
-        else:
-            # If the episode num is the same
-            EPISODE = (int(self) == data['episode'])
-
-        # Check if the year is either the same or missing
-        YEAR = ((data['year'] is None) or (data['year'] == self.show.Year))
-
-        Log.VERB(
-            f'Validating: {name=}\n'+ \
-            f'{TITLE:d} | {data['title']=} | {self.show.Title=}\n'+ \
-            f'{SEASON:d} | {data['season']=} | {int(self)=}\n'+ \
-            f'{EPISODE:d} | {data['episode']=}\n'+ \
-            f'{YEAR:d} | {data['year']=} | {self.show.Year=}'
+        TITLE = PARAMS.TITLE(
+            target = data['title'],
+            control = self.show.Title
         )
 
-        return (TITLE and SEASON and EPISODE and YEAR)
+        SEASON = PARAMS.SEASON(
+            target = data['season'],
+            control = int(self.season)
+        )
+
+        EPISODE = PARAMS.EPISODE(
+            target = data['episode'],
+            control = int(self)
+        )
+
+        # Check if the year is either the same or missing
+        YEAR = PARAMS.YEAR(
+            target = data['year'],
+            control = self.season.Years
+        )
+
+        Log.VERB(
+f"""Validating: {name=}
+{  TITLE=:d} | in={data['title']} | own={self.show.Title}
+{ SEASON=:d} | in={data['season']} | own={int(self.season)}
+{EPISODE=:d} | in={data['episode']} | own={int(self)}
+{   YEAR=:d} | in={data['year']} | own={self.show.Year}"""
+        )
+
+        return all([TITLE, SEASON, EPISODE, YEAR])
 
     def paths(self):
 
