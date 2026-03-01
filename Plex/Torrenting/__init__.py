@@ -52,7 +52,7 @@ args.Arg(
 
 driver = Driver(
     headless = (not args['verbose']),
-    fast_load = True
+    eager = True
 )
 
 #
