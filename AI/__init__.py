@@ -103,7 +103,7 @@ def PipeLine(model: str):
     pipePkl = PKL(pipeFile)
 
     # If the pipeline is pickled
-    if pipeFile.exists():
+    if pipeFile.exists:
 
         # Return the pickled pipeline
         pipeline = pipePkl.read()
