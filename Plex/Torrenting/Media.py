@@ -1,13 +1,13 @@
 from philh_myftp_biz.text import similarity
 from philh_myftp_biz.web import Magnet, api
-from philh_myftp_biz.pc import Path, mkdir
-from philh_myftp_biz.classOBJ import loc
+from philh_myftp_biz.classtools import loc
 from philh_myftp_biz.terminal import Log
 from philh_myftp_biz.db import MimeType
 from philh_myftp_biz.array import List
 from philh_myftp_biz.json import Dict
 from __init__ import this, tpb, omdb
 from typing import Callable, Literal
+from philh_myftp_biz.pc import Path
 import PTN
 
 class PARAMETERS:
@@ -363,7 +363,7 @@ class Season(_Template):
         """E:/Plex/Media/Shows/{Show}/Season {Season}/"""
 
         # Create the folder if it doesn't exist
-        mkdir(path=self.dir)
+        self.dir.mkdir()
 
         # List of TPB queries
         self.queries = [
