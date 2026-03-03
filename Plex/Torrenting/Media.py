@@ -213,7 +213,7 @@ f"""Validating: {m=}
         """
 
         # Iter through all items in the folder
-        for p in self.dir.children():
+        for p in self.dir.children:
 
             # If the file has a valid name
             if self.validFile(path=p):
@@ -234,7 +234,7 @@ f"""Validating: {m=}
         TYPE = (MimeType.Path(path) in ['video', 'ignore'])
 
         # If the name of the file is valid
-        NAME = self.validName(path.name())
+        NAME = self.validName(path.name)
 
         return (TYPE and NAME)
     
@@ -308,7 +308,7 @@ class Movie(_Template):
         src = self.file.path
 
         # The destination file path
-        dst = this.child(f"/Media/Movies/{self.Title} ({self.Year}).{src.ext()}")
+        dst = this.child(f"/Media/Movies/{self.Title} ({self.Year}).{src.ext}")
 
         return src, dst
 
@@ -552,7 +552,7 @@ class Episode(_Template):
         src = self.file.path
         
         # The destination file path
-        dst = self.dir.child(f'/Season {self.season:02d} Episode {self:02d}.{src.ext()}')
+        dst = self.dir.child(f'/Season {self.season:02d} Episode {self:02d}.{src.ext}')
 
         return src, dst
     

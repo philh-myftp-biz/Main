@@ -30,15 +30,15 @@ def Downloads() -> Generator[Media.DOWNLOAD]:
     # MOVIES
 
     # Iter through all child directories of 'E:/Plex/Media/Movies/'
-    for p in this.child('/Media/Movies/').children():
+    for p in this.child('/Media/Movies/').children:
 
         # If the file name matches the filter
-        if args['filter'] in p.name().lower():
+        if args['filter'] in p.name.lower():
 
             # Check if the file ends with '.todo'
-            if p.ext() == 'todo':
+            if p.ext == 'todo':
 
-                movie = Media.Movie(*ReadName(p.name()), p)
+                movie = Media.Movie(*ReadName(p.name), p)
 
                 # If the movie is already downloaded
                 if movie.exists:
@@ -64,13 +64,13 @@ def Downloads() -> Generator[Media.DOWNLOAD]:
     # EPISODES
 
     # Iter through all child directories of 'E:/Plex/Media/Shows/'
-    for ShowDir in this.child('/Media/Shows').children():
+    for ShowDir in this.child('/Media/Shows').children:
 
         # If the folder name matches the filter
-        if args['filter'] in ShowDir.name().lower():
+        if args['filter'] in ShowDir.name.lower():
 
             # Get Show from the filename 
-            show = Media.Show(*ReadName(ShowDir.name()))
+            show = Media.Show(*ReadName(ShowDir.name))
 
             Log.VERB(
                 f'Scanning Show\n'+ \

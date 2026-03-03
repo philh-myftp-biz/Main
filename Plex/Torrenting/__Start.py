@@ -126,7 +126,7 @@ while len(queue) > 0:
             queue.remove(d)
 
         # If the magnet is errored
-        elif d.magnet.errored():
+        elif d.magnet.errored:
 
             # Start the download
             d.magnet.start()

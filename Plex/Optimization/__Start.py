@@ -18,7 +18,7 @@ pbar = tqdm(
 )
 
 # Iter through descendants of 'E:/Plex/Media/'
-for src in this.child('/Media/Shows/The Walking Dead (2010)/Season 07').descendants():
+for src in this.child('/Media/Shows/The Walking Dead (2010)/Season 07').descendants:
 
     # If the path is a video file
     if (MimeType.Path(src) == 'video'):
