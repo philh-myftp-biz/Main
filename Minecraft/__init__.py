@@ -40,10 +40,10 @@ def Worlds() -> Generator[Bedrock|Java]:
     else:
 
         #
-        for s in this.child('/Worlds/').children():
+        for s in this.child('/Worlds/').children:
 
             try:
-                yield AutoEdition(s.name())
+                yield AutoEdition(s.name)
             
             except KeyError, TypeError:
                 pass

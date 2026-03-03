@@ -65,7 +65,7 @@ class World(Path):
 
         for name, url in files.items():
 
-            tmp = temp(hex.encode(self.name()))
+            tmp = temp(hex.encode(self.name))
 
             download(url, tmp, False)
 
@@ -86,7 +86,7 @@ class World(Path):
         #======================================================
         # FIREWALL
 
-        fe = FirewallException(f'Minecraft World: {self.name()}')
+        fe = FirewallException(f'Minecraft World: {self.name}')
         fe.set(self.Port())
 
         #======================================================
@@ -95,7 +95,7 @@ class World(Path):
         """All generated/expendable files in the world folder"""
 
         #
-        for child in self.descendants():
+        for child in self.descendants:
 
             # If the child is not related to any of the safe files
             if not any([self.child(f).isrelated(child) for f in self._safe]):
@@ -115,7 +115,7 @@ class World(Path):
         return process
 
     def __repr__(self):
-        return f"World('{self.name()}')"
+        return f"World('{self.name}')"
 
 class Java(World):
 
@@ -206,7 +206,7 @@ world/session.lock
 
         props = self.child('server.properties')
 
-        while not props.exists():
+        while not props.exists:
             pass
 
         r = search(
