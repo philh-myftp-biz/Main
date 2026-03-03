@@ -41,7 +41,7 @@ def Downloads() -> Generator[Media.DOWNLOAD]:
                 movie = Media.Movie(*ReadName(p.name()), p)
 
                 # If the movie is already downloaded
-                if movie.exists():
+                if movie.exists:
 
                     Log.VERB(
                         f'Movie Exists\n'+ \
@@ -82,13 +82,9 @@ def Downloads() -> Generator[Media.DOWNLOAD]:
             for season in show.seasons:
 
                 # If the season is already completely downloaded
-                if season.exists():
+                if season.exists:
 
-                    Log.VERB(
-                        f'Show Exists\n'+ \
-                        f'{show=}\n'+ \
-                        f'{season=}'
-                    )
+                    Log.VERB(f'Show Exists\n{show=}\n{season=}')
 
                 # If the season is missing episodes
                 else:
@@ -97,14 +93,14 @@ def Downloads() -> Generator[Media.DOWNLOAD]:
                     try:
                         season.start()
                         
-                    except TimeoutError:    
+                    except TimeoutError:
                         Log.FAIL('', exc_info=True)
 
                     # Iter through all episodes in the season
                     for episode in season.episodes:
 
                         # If the episode is already downloaded
-                        if episode.exists():
+                        if episode.exists:
 
                             Log.VERB(
                                 f'Episode Exists\n'+ \

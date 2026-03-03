@@ -120,12 +120,12 @@ class _Template:
     Check if a string has valid filename syntax
     """
 
-    magnet: Magnet = None
+    magnet: None|Magnet = None
     """
     Magnet Instance
     """
 
-    file: api.qBitTorrent.File = None
+    file: None|api.qBitTorrent.File = None
     """
     File Instance
     """
@@ -135,7 +135,7 @@ class _Template:
     List of queries to be used when searching thepiratebay.org 
     """
 
-    paths: Callable[[], tuple[Path, Path]]
+    paths: tuple[Path, Path]
     """
     Get the source and destination paths of the file
     """
@@ -191,13 +191,13 @@ f"""Validating: {m=}
             )
 
             # 
-            if not self.magnet.exists():
+            if not self.magnet.exists:
 
                 # Download the magnet
                 self.magnet.start()
 
                 # Stop all files in the magnet
-                for file in self.magnet.files():
+                for file in self.magnet.files:
                     file.stop()
 
         # If a magnet has not been found
@@ -206,6 +206,7 @@ f"""Validating: {m=}
             # Log magnet details
             Log.WARN(f'None Found: {self=}')
 
+    @property
     def exists(self) -> bool:
         """
         Check if the destination file already exists
@@ -270,7 +271,7 @@ class Movie(_Template):
         if self.magnet:
             
             # Iter through all files in the magnet
-            for f in self.magnet.files():
+            for f in self.magnet.files:
                 
                 # Check if the file is valid
                 if self.validFile(f.path):
@@ -300,6 +301,7 @@ class Movie(_Template):
         
         return params.valid()
 
+    @property
     def paths(self):
 
         # The source file
@@ -383,10 +385,10 @@ class Season(_Template):
         # If a magnet has been found
         if self.magnet:
 
-            files: list[api.qBitTorrent.File] = list(self.magnet.files())
+            files: list[api.qBitTorrent.File] = self.magnet.files
 
             # If all files are enabled
-            if all(f.enabled() for f in files):
+            if all(f.enabled for f in files):
 
                 # Iter through all downloading files
                 for f in files:
@@ -394,13 +396,14 @@ class Season(_Template):
                     # Pause the file download
                     f.stop()
 
+    @property
     def exists(self) -> bool:
         
         # Iter through all episodes this season
         for episode in self.episodes:
 
             # If the episode does not exist
-            if not episode.exists():
+            if not episode.exists:
                 
                 return False
             
@@ -480,7 +483,7 @@ class Episode(_Template):
         if self.season.magnet:
 
             # Iter through all files in the season download
-            for file in self.season.magnet.files():
+            for file in self.season.magnet.files:
 
                 # If the file is valid
                 if self.validFile(file.path):
@@ -503,7 +506,7 @@ class Episode(_Template):
             if self.magnet:
 
                 # Iter through all files in the magnet
-                for file in self.magnet.files():
+                for file in self.magnet.files:
 
                     # If the file is valid
                     if self.validFile(file.path):
@@ -542,6 +545,7 @@ class Episode(_Template):
 
         return params.valid()
 
+    @property
     def paths(self) -> tuple[Path, Path]:
 
         # The source file

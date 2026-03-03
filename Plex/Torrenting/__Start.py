@@ -104,12 +104,12 @@ while len(queue) > 0:
     for x, d in enumerate(queue):
 
         # If the download is finished
-        if d.file.finished():
+        if d.file.finished:
 
             Log.INFO(f'Download Complete: {d=}')
             
             # Get source and destination paths of file
-            src, dst = d.paths()
+            src, dst = d.paths
 
             # Move the source file to the destination path
             src.copy(dst)
