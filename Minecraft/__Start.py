@@ -31,7 +31,7 @@ for world in Worlds():
     #====================================================
     # START PROCESS
 
-    process = world.Start()
+    process = world.start()
     
     PIDs[world.name] = process._process.pid
 
