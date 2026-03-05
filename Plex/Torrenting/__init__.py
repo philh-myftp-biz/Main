@@ -1,8 +1,10 @@
+from philh_myftp_biz.api.torrent import thePirateBay, qBitTorrent
 from philh_myftp_biz.terminal import ParsedArgs
-from philh_myftp_biz.web import api, Driver
 from philh_myftp_biz.modules import Module
-from json.decoder import JSONDecodeError
+from philh_myftp_biz.api.omdb import Omdb
 from philh_myftp_biz.terminal import Log
+from json.decoder import JSONDecodeError
+from philh_myftp_biz.web import Driver
 from philh_myftp_biz.array import List
 from philh_myftp_biz.file import JSON
 from os import getpid
@@ -90,7 +92,7 @@ Log.VERB(
 )
 
 # Connect to the qbittorrent web interface on the 'Torrenting' Virtual Machine
-qbit = api.qBitTorrent(
+qbit = qBitTorrent(
     host = host,
     username = 'admin',
     password = 'Torrenting123!',
@@ -101,7 +103,7 @@ qbit = api.qBitTorrent(
 # thePirateBay
 
 # Connect to 'thepiratebay.org'
-tpb = api.thePirateBay(
+tpb = thePirateBay(
     url = 'thepiratebay11.com',
     driver = driver,
     qbit = qbit
@@ -111,6 +113,6 @@ tpb = api.thePirateBay(
 # omdb
 
 # Connect to 'omdbapi.com'
-omdb = api.omdb()
+omdb = Omdb()
 
 #==============================================
