@@ -1,5 +1,4 @@
 from philh_myftp_biz.text import similarity
-from philh_myftp_biz.web import Magnet, api
 from philh_myftp_biz.classtools import loc
 from philh_myftp_biz.terminal import Log
 from philh_myftp_biz.db import MimeType
@@ -9,6 +8,9 @@ from __init__ import this, tpb, omdb
 from typing import Callable, Literal
 from philh_myftp_biz.pc import Path
 import PTN
+
+from philh_myftp_biz.api.torrent import TorrentFile, Magnet
+from philh_myftp_biz.api.omdb import EpisodeData
 
 class PARAMETERS:
 
@@ -125,7 +127,7 @@ class _Template:
     Magnet Instance
     """
 
-    file: None|api.qBitTorrent.File = None
+    file: None|TorrentFile = None
     """
     File Instance
     """
@@ -351,7 +353,7 @@ class Season(_Template):
     def __init__(self,
         show: 'Show',
         season: str,
-        episodes: dict[str, api.omdb.Episode]
+        episodes: dict[str, EpisodeData]
     ) -> None:
         
         # Store 'Show' OBJ
@@ -385,7 +387,7 @@ class Season(_Template):
         # If a magnet has been found
         if self.magnet:
 
-            files: list[api.qBitTorrent.File] = self.magnet.files
+            files: list[TorrentFile] = self.magnet.files
 
             # If all files are enabled
             if all(f.enabled for f in files):
@@ -451,7 +453,7 @@ class Episode(_Template):
 
     def __init__(self,
         season: 'Season',
-        episode: api.omdb.Episode
+        episode: EpisodeData
     ) -> None:
 
         # Store 'Show' OBJ
