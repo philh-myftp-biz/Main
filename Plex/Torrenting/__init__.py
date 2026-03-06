@@ -58,7 +58,7 @@ driver = Driver(
 )
 
 #
-for pid in driver.Task.PIDs():
+for pid in driver.Task.PIDs:
     PIDstore += f'firefox-{pid}'
 
 #==============================================
