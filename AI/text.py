@@ -1,44 +1,45 @@
+from philh_myftp_biz.modules import Service
+from philh_myftp_biz.terminal import Log
 from __init__ import args, messages
 import ollama
 
+OllamaServ = Service('E:/AI/Ollama/')
+
 # ====================================================
-# INSTALL MODEL
+# MODEL
 
 args.Arg(
     name = 'model',
     default = 'llama3'
 )
 
-# Iter through installed models
-for model in ollama.list()['models']:
-    
-    # If model is selected
-    if model['model'] == args['model']:
-        
-        break
+if not OllamaServ.running:
 
-# If the model is not installed
-else:
+    OllamaServ.start()
 
-    # Download & install the model
-    ollama.pull(args['model'])
+Log.VERB(f'Pulling Model: {args['model']}')
+
+# Download & install the model
+ollama.pull(args['model'])
 
 # ====================================================
 # HANDLE RESPONSE
 
-response = ollama.chat(
-    model = 'llama3',
+Log.VERB(f'Sending Messages to Model')
+
+stream = ollama.chat(
+    model = args['model'],
     messages = messages,
     stream = True
 )
 
-content = ""
+content = ''
 
-for chunk in response:
+for chunk in stream:
 
-    if chunk.get('message'):
-
-        content += chunk['message']['content']
+    content += chunk['message']['content']
+    
+    Log.VERB(f'Response: {content}')
 
 messages.add_text(
     role = 'assistant', 
