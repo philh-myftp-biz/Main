@@ -1,12 +1,8 @@
-from diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion import StableDiffusionPipeline
 from philh_myftp_biz.terminal import ParsedArgs, cls
-from philh_myftp_biz.file import PKL, temp
 from philh_myftp_biz.modules import Module
 from philh_myftp_biz import json, HELP
 from typing import Literal, NoReturn
-from philh_myftp_biz.text import hex
 from philh_myftp_biz.pc import Path
-from torch import float16
 
 # ====================================================
 
@@ -78,48 +74,6 @@ class Messages(list[dict[Literal['kind', 'role', 'content'], str]]):
         if lmessage['role'] == 'user':
             
             return lmessage['content']
-
-# ====================================================
-
-def PipeLine(model: str) -> StableDiffusionPipeline:
-    
-    pipeFile = temp(
-        name = hex.encode(model),
-        ext = 'pkl',
-        id = '0'
-    )
-
-    # Wrap the pipeline file
-    pipePkl = PKL(pipeFile)
-
-    # If the pipeline is pickled
-    if pipeFile.exists:
-
-        # Return the pickled pipeline
-        pipeline = pipePkl.read()
-
-    # If the pipeline is not pickled
-    else:
-
-        # Load the pipeline
-        pipeline = StableDiffusionPipeline.from_pretrained(
-            pretrained_model_name_or_path = model,
-            torch_dtype = float16,
-            cache_dir = this.child('/StableDiffusion/data/').path,
-            safety_checker = None,
-            low_cpu_mem_usage = True
-        )
-
-        pipeline.enable_attention_slicing()
-
-        # Pickle the pipeline
-        pipePkl.save(pipeline)
-
-    # Move the pipeline to the GPU
-    pipeline.to("cuda")
-
-    # Return the pipeline
-    return pipeline # pyright: ignore[reportReturnType]
 
 # ====================================================
 # PARSE MESSAGES

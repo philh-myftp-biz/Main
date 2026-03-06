@@ -1,7 +1,10 @@
+from diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion import StableDiffusionPipeline
 from philh_myftp_biz.num import nearest_multiple
-from __init__ import args, PipeLine, messages
-from philh_myftp_biz.file import temp
+from __init__ import args, messages, this
+from philh_myftp_biz.file import temp, PKL
 from philh_myftp_biz.pc import Path
+from philh_myftp_biz.text import hex
+from torch import float16
 
 # ====================================================
 # PARSE INPUT
@@ -31,10 +34,42 @@ args.Arg(
 )
 
 # ====================================================
-# GENERATE IMAGE
+# PIPELINE
 
-# Initialize the pipeline
-pipeline = PipeLine(args['model'])
+pipePKL = PKL(temp(
+    name = hex.encode(args['model']),
+    ext = 'pkl',
+    id = '0'
+))
+
+# If the pipeline is pickled
+if pipePKL.path.exists:
+
+    # Return the pickled pipeline
+    pipeline: StableDiffusionPipeline = pipePKL.read()
+
+# If the pipeline is not pickled
+else:
+
+    # Load the pipeline
+    pipeline = StableDiffusionPipeline.from_pretrained(
+        pretrained_model_name_or_path = args['model'],
+        torch_dtype = float16,
+        cache_dir = this.child('/StableDiffusion/data/').path,
+        safety_checker = None,
+        low_cpu_mem_usage = True
+    )
+
+    pipeline.enable_attention_slicing()
+
+    # Pickle the pipeline
+    pipePKL.save(pipeline)
+
+# Move the pipeline to the GPU
+pipeline.to("cuda")
+
+# ====================================================
+# GENERATE IMAGE
 
 # Path for output image
 imgfile: Path = args['path']
