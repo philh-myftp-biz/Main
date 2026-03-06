@@ -8,10 +8,11 @@ from philh_myftp_biz.pc import Path
 from philh_myftp_biz import VERBOSE
 from re import search
 
-def AutoEdition(name: str) -> Generator[Java|Bedrock]:
-    """ """
+def AutoEdition(name: str) -> Java | Bedrock: # pyright: ignore[reportReturnType]
+    
+    edition: str = INI(World(name).child('edition.ini')).read()['edition']
 
-    match INI(World(name).child('edition.ini')).read()['edition']:
+    match edition: # pyright: ignore[reportMatchNotExhaustive]
 
         case 'Java':
             return Java(name)
@@ -52,7 +53,7 @@ class World(Path):
 
         driver = Driver(
             headless = (not VERBOSE),
-            fast_load = True
+            eager = True
         )
 
         files: dict[str, str] = {}
@@ -94,25 +95,19 @@ class World(Path):
     def GenFiles(self) -> Generator[Path]:
         """All generated/expendable files in the world folder"""
 
-        #
         for child in self.descendants:
 
             # If the child is not related to any of the safe files
-            if not any([self.child(f).isrelated(child) for f in self._safe]):
+            if not any([self.child(f).related_to(child) for f in self._safe]):
 
                 yield child
 
     def _Start_Base(self, *args:str):
 
-        process = Start(
+        return Start(
             args = args,
             dir = self
         )
-
-        while process._task is None:
-            pass
-
-        return process
 
     def __repr__(self):
         return f"World('{self.name}')"
