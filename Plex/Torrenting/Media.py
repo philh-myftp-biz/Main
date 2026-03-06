@@ -1,3 +1,6 @@
+from philh_myftp_biz.api.torrent import TorrentFile, Magnet
+from philh_myftp_biz.api.omdb import EpisodeData
+from functools import cached_property, cache
 from philh_myftp_biz.text import similarity
 from philh_myftp_biz.classtools import loc
 from philh_myftp_biz.terminal import Log
@@ -8,9 +11,6 @@ from __init__ import this, tpb, omdb
 from typing import Callable, Literal
 from philh_myftp_biz.pc import Path
 import PTN
-
-from philh_myftp_biz.api.torrent import TorrentFile, Magnet
-from philh_myftp_biz.api.omdb import EpisodeData
 
 class PARAMETERS:
 
@@ -118,39 +118,22 @@ class PARAMETERS:
 class _Template:
 
     validName: Callable[[str], bool]
-    """
-    Check if a string has valid filename syntax
-    """
+    """Check if a string has valid filename syntax"""
 
     magnet: None|Magnet = None
-    """
-    Magnet Instance
-    """
-
-    file: None|TorrentFile = None
-    """
-    File Instance
-    """
+    """Magnet Instance"""
 
     queries: list[str]
-    """
-    List of queries to be used when searching thepiratebay.org 
-    """
+    """List of queries for the pirate bay"""
 
     paths: tuple[Path, Path]
-    """
-    Get the source and destination paths of the file
-    """
+    """Get the source and destination paths of the file"""
 
     finish: Callable[[], None] = lambda s: None
-    """
-    Object-Specific tasks to run after the download is complete
-    """
+    """tasks to run after the download is complete"""
 
     dir: Path
-    """
-    Parent Folder
-    """
+    """Parent Folder"""
 
     def start(self) -> None:
         """
@@ -240,6 +223,24 @@ f"""Validating: {m=}
 
         return (TYPE and NAME)
     
+    @cached_property
+    def file(self) -> TorrentFile | None:
+        """File Instance"""
+        
+        if self.magnet:
+
+            files: list[TorrentFile] = list(filter(
+                lambda m: self.validFile(m.path),
+                self.magnet.files
+            ))
+
+            if len(files) > 0:
+
+                return max(
+                    files,
+                    key = lambda m: m.size
+                )
+
 class Movie(_Template):
 
     dir = this.child('/Media/Movies/')
@@ -264,25 +265,7 @@ class Movie(_Template):
             f'{title} {year}'
         ]
 
-    def start(self):
-
-        # Start the download
-        super().start()
-
-        # If a magnet was found
-        if self.magnet:
-            
-            # Iter through all files in the magnet
-            for f in self.magnet.files:
-                
-                # Check if the file is valid
-                if self.validFile(f.path):
-                    
-                    # Set the 'file' attr to the current file
-                    self.file = f
-                    
-                    break
-
+    @cache
     def validName(self, name:str) -> bool:
         
         # Parse the given name
@@ -330,7 +313,7 @@ class Show:
     def __init__(self,
         title: str,
         year: int             
-    ):
+    ) -> None:
 
         # Store title
         self.Title = title
@@ -379,25 +362,6 @@ class Season(_Template):
         # List of 'Episode' OBJs
         self.episodes = [Episode(self, i[1]) for i in episodes.items()]
 
-    def start(self) -> None:
-
-        # Start the download
-        super().start()
-
-        # If a magnet has been found
-        if self.magnet:
-
-            files: list[TorrentFile] = self.magnet.files
-
-            # If all files are enabled
-            if all(f.enabled for f in files):
-
-                # Iter through all downloading files
-                for f in files:
-
-                    # Pause the file download
-                    f.stop()
-
     @property
     def exists(self) -> bool:
         
@@ -411,6 +375,7 @@ class Season(_Template):
             
         return True
 
+    @cache
     def validName(self, name:str) -> bool:
 
         # Parse the given name
@@ -481,43 +446,18 @@ class Episode(_Template):
 
     def start(self) -> None:
 
-        # If this season is downloading as one magnet
-        if self.season.magnet:
+        self.magnet = self.season.magnet
 
-            # Iter through all files in the season download
-            for file in self.season.magnet.files:
-
-                # If the file is valid
-                if self.validFile(file.path):
-
-                    # Set this objects 'file' attr to the file
-                    self.file = file
-
-                    # Set this objects 'magnet' attr to the season magnet
-                    self.magnet = self.season.magnet
-
-                    break
-
-        # If no file was found
+        # If no file was found in the season magnet
         if self.file is None:
 
             # Start downloading the episode
             super().start()
 
-            # If a magnet has been found
-            if self.magnet:
+            # Reset cached file
+            del self.file
 
-                # Iter through all files in the magnet
-                for file in self.magnet.files:
-
-                    # If the file is valid
-                    if self.validFile(file.path):
-
-                        # Set this objects 'file' attr to the file
-                        self.file = file
-
-                        break
-
+    @cache
     def validName(self, name:str) -> bool:
 
         # Parse the given name
