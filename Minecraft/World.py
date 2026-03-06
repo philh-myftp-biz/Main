@@ -1,11 +1,11 @@
-from philh_myftp_biz.web import download, Driver, FirewallException
+from philh_myftp_biz.api.minecraft import ModrinthMod, FabricMC
+from philh_myftp_biz.web import download, FirewallException
 from typing import Generator, Callable, Literal
 from philh_myftp_biz.file import temp, INI
 from philh_myftp_biz.process import Start
 from philh_myftp_biz.json import Dict
 from philh_myftp_biz.text import hex
 from philh_myftp_biz.pc import Path
-from philh_myftp_biz import VERBOSE
 from re import search
 
 def AutoEdition(name: str) -> Java | Bedrock: # pyright: ignore[reportReturnType]
@@ -51,18 +51,11 @@ class World(Path):
 
         #============================================
 
-        driver = Driver(
-            headless = (not VERBOSE),
-            eager = True
-        )
-
         files: dict[str, str] = {}
 
-        yield driver, files
+        yield files
 
         #============================================
-
-        driver.close()
 
         for name, url in files.items():
 
@@ -157,12 +150,9 @@ world/session.lock
 
     def WebFiles(self):
         
-        #========================================================================
-        # INIT
+        base = self._WebFiles_Base()
 
-        base = super()._WebFiles_Base()
-        
-        driver, files = next(base)
+        files = next(base)
 
         #========================================================================
         # Geyser
@@ -172,26 +162,17 @@ world/session.lock
         #========================================================================
         # Fabric Server
 
-        # Get Fabric Server Launcher
-        driver.open('https://fabricmc.net/use/server/')
-
-        files['fabric-server-launch.jar'] = driver.element('xpath', '/html/body/main/div/article/div/div[1]/main/div[1]/div[4]/a')[0].get_attribute('href')
+        files['fabric-server-launch.jar'] = FabricMC().serverURL
 
         #========================================================================
         # JAVA - Floodgate
 
-        # Open the download page for the latest version
-        driver.open("https://modrinth.com/mod/floodgate/versions?l=fabric&c=release")
-
-        files['mods/Floodgate.jar'] = driver.element('xpath', "/html/body/div[1]/div[4]/main/div[5]/div[6]/div[3]/section/div[2]/div[3]/div[2]/div[1]/a")[0].get_attribute('href')
+        files['mods/Floodgate.jar'] = ModrinthMod('floodgate').url
 
         #========================================================================
         # JAVA - Fabric API
 
-        # Open the download page for the latest version
-        driver.open("https://modrinth.com/mod/fabric-api/versions?c=release")
-
-        files['mods/Fabric API.jar'] = driver.element('xpath', "/html/body/div[1]/div[4]/main/div[5]/div[6]/div[3]/section/div[2]/div[3]/div[2]/div[1]/a")[0].get_attribute('href')
+        files['mods/Fabric API.jar'] = ModrinthMod('fabric-api').url
 
         #========================================================================
 
@@ -211,7 +192,7 @@ world/session.lock
 
         return int(r.group(1))
 
-    def Start(self):
+    def start(self):
 
         process = super()._Start_Base(
             'java', 
