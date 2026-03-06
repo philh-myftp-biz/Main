@@ -1,7 +1,7 @@
+from philh_myftp_biz.num import nearest_multiple
 from __init__ import args, PipeLine, messages
 from philh_myftp_biz.file import temp
 from philh_myftp_biz.pc import Path
-from philh_myftp_biz.num import nearest_multiple
 
 # ====================================================
 # PARSE INPUT
@@ -50,7 +50,10 @@ prompt = pipeline(
 prompt.images[0].save(str(imgfile))
 
 # Upload the image to the messages object
-messages.add_file('assistant', imgfile)
+messages.add_file(
+    role = 'assistant', 
+    path = imgfile
+)
 
 # ====================================================
 

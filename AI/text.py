@@ -14,6 +14,7 @@ for model in ollama.list()['models']:
     
     # If model is selected
     if model['model'] == args['model']:
+        
         break
 
 # If the model is not installed
@@ -27,21 +28,23 @@ else:
 
 response = ollama.chat(
     model = 'llama3',
-    messages = list(messages),
+    messages = messages,
     stream = True
 )
 
-rcontent = ""
+content = ""
 
 for chunk in response:
 
     if chunk.get('message'):
 
-        rcontent += chunk['message']['content']
+        content += chunk['message']['content']
 
-messages.add_text('assistant', rcontent)
+messages.add_text(
+    role = 'assistant', 
+    content = content
+)
 
 # ====================================================
-# HANDLE OUTPUT
 
 messages.output()

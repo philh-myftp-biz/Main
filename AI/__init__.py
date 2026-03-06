@@ -1,9 +1,12 @@
+from diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion import StableDiffusionPipeline
 from philh_myftp_biz.terminal import ParsedArgs, cls
-from philh_myftp_biz.pc import Path, mkdir
+from philh_myftp_biz.file import PKL, temp
 from philh_myftp_biz.modules import Module
-from typing import Literal, Iterator
-from philh_myftp_biz import json
-from sys import argv
+from philh_myftp_biz import json, HELP
+from typing import Literal, NoReturn
+from philh_myftp_biz.text import hex
+from philh_myftp_biz.pc import Path
+from torch import float16
 
 # ====================================================
 
@@ -23,81 +26,68 @@ args.Arg(
     name = 'prompt'
 )
 
-
-
 # ====================================================
-# DIRECTORIES
 
-#
-class d:
-
-    pipelines = this.dir.child('/__pycache__/Pipelines/')
-    mkdir(pipelines)
-
-    #
-    models = this.dir.child('/StableDiffusion/data/')
-    mkdir(models)
-
-# ====================================================
-# CLASSES + FUNCTIONS
-
-class Messages:
-
-    type roleHint = Literal['user', 'assistant']
+class Messages(list[dict[Literal['kind', 'role', 'content'], str]]):
 
     def __init__(self,
         messages: list[dict[str, str]] = []
-    ):
-        self.__messages = messages
+    ) -> None:
+        
+        super().__init__()
+
+        self += messages
 
     def add_text(self,
-        role: roleHint,
+        role: Literal['user', 'assistant'],
         content: str
     ) -> None:
-        self.__messages += [{
+        self += [{
             'kind': 'text',
             'role': role,
             'content': content
         }]
 
     def add_file(self,
-        role: roleHint,
+        role: Literal['user', 'assistant'],
         path: Path
-    ):
-        self.__messages += [{
+    ) -> None:
+        self += [{
             'kind': 'file',
             'role': role,
             'content': str(path)
         }]
-
-    def __iter__(self) -> Iterator[dict[str, str]]:
-        return iter(self.__messages)
     
-    def output(self):
+    def output(self) -> NoReturn:
         
         # Clear the Terminal Window
         cls()
 
+        data = json.dumps(self)
+
         # Print the messagees
-        print(self.__messages)
+        print(data)
 
         # Stop the execution
         exit()
 
     def prompt(self) -> None | str:
 
-        lmessage = self.__messages[-1]
+        lmessage = self[-1]
 
         if lmessage['role'] == 'user':
+            
             return lmessage['content']
 
-def PipeLine(model: str):
-    from diffusers import StableDiffusionPipeline
-    from philh_myftp_biz.file import PKL
-    import torch
+# ====================================================
+
+def PipeLine(model: str) -> StableDiffusionPipeline:
     
-    #
-    pipeFile = d.pipelines.child(model.replace('/', '__') + '.pkl')
+    pipeFile = temp(
+        name = hex.encode(model),
+        ext = 'pkl',
+        id = '0'
+    )
 
     # Wrap the pipeline file
     pipePkl = PKL(pipeFile)
@@ -114,11 +104,13 @@ def PipeLine(model: str):
         # Load the pipeline
         pipeline = StableDiffusionPipeline.from_pretrained(
             pretrained_model_name_or_path = model,
-            torch_dtype = torch.float16,
-            cache_dir = str(d.models),
+            torch_dtype = float16,
+            cache_dir = this.child('/StableDiffusion/data/').path,
             safety_checker = None,
             low_cpu_mem_usage = True
         )
+
+        pipeline.enable_attention_slicing()
 
         # Pickle the pipeline
         pipePkl.save(pipeline)
@@ -127,13 +119,13 @@ def PipeLine(model: str):
     pipeline.to("cuda")
 
     # Return the pipeline
-    return pipeline
+    return pipeline # pyright: ignore[reportReturnType]
 
 # ====================================================
 # PARSE MESSAGES
 
 # Do nothing if '-h' is passed
-if '-h' in argv:
+if HELP:
     messages = None
 
 elif args['messages']:
