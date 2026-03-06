@@ -16,6 +16,3 @@
 
 # HTTPS Certificate
 /cert.pfx
-
-# VS Code Configuration Files
-**/.vscode/

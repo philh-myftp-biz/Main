@@ -1,0 +1,10 @@
+{
+    "files.exclude": {
+        "Media/": true,
+        "Plex Media Server/": true
+    },
+    "search.exclude": {
+        "Media/": true,
+        "Plex Media Server/": true
+    }
+}
