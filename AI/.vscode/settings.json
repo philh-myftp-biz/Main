@@ -1,0 +1,10 @@
+{
+    "files.exclude": {
+        "Ollama/data": true,
+        "StableDiffusion/data": true
+    },
+    "search.exclude": {
+        "Ollama/data": true,
+        "StableDiffusion/data": true
+    }
+}
