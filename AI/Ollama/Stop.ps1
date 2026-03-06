@@ -2,8 +2,8 @@
 # Iter through all processes
 Get-Process | ForEach-Object -Process {
 
-    # if the process is 'ollama'
-    if ($_.ProcessName -eq 'ollama') {
+    # if the process name starts with 'ollama'
+    if ($_.ProcessName -like 'ollama*') {
       
         # Print the process to the console
         $_
