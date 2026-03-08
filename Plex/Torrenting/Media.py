@@ -135,6 +135,8 @@ class _Template:
     dir: Path
     """Parent Folder"""
 
+    _int: int
+
     def start(self) -> None:
         """
         Search thepiratebay.org and start the download
@@ -193,9 +195,7 @@ f"""Validating: {m=}
 
     @property
     def exists(self) -> bool:
-        """
-        Check if the destination file already exists
-        """
+        """Check if the destination file already exists"""
 
         # Iter through all items in the folder
         for p in self.dir.children:
@@ -240,6 +240,9 @@ f"""Validating: {m=}
                     files,
                     key = lambda m: m.size
                 )
+
+    def __int__(self) -> int:
+        return self._int
 
 class Movie(_Template):
 
@@ -343,7 +346,7 @@ class Season(_Template):
         self.show: Show = show
 
         # Integer Function
-        self.__int = int(season)
+        self._int = int(season)
 
         # Destination File Directory
         self.dir = show.dir.child(f"/Season {self:02d}/")
@@ -405,9 +408,6 @@ class Season(_Template):
 
         return params.valid()
     
-    def __int__(self) -> int:
-        return self.__int
-
     def __format__(self, format_spec:str) -> str:
         return f'{int(self):{format_spec}}'
     
@@ -435,13 +435,12 @@ class Episode(_Template):
         """E:/Plex/Media/Shows/{Show}/Season {Season}/"""
 
         # Integer Function
-        self.__int: int = episode.Number
+        self._int = episode.Number
 
         # List of TPB queries
         self.queries = [
             f'{self.show.Title} s{season:02d}e{self:02d}',
-            f'{self.show.Title} {season:02d}x{self:02d}',
-            f'{self.show.Title} {self.Title}'
+            f'{self.show.Title} {season:02d}x{self:02d}'
         ]
 
     def start(self) -> None:
@@ -498,9 +497,6 @@ class Episode(_Template):
 
         return src, dst
     
-    def __int__(self) -> int:
-        return self.__int
-
     def __format__(self, format_spec:str) -> str:
         return f'{int(self):{format_spec}}'
     
