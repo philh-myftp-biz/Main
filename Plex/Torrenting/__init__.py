@@ -34,7 +34,7 @@ args.Arg(
     name = 'filter',
     default = '',
     desc = 'Only download items whose title contains this',
-    handler = lambda x: x.lower()
+    handler = lambda x: x.split('|')
 )
 
 args.Arg(

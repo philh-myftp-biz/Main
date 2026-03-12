@@ -1,4 +1,6 @@
+from philh_myftp_biz.text import contains
 from philh_myftp_biz.terminal import Log
+
 from typing import Generator, Literal
 from . import this, args, Media
 
@@ -29,33 +31,33 @@ def Downloads() -> Generator[Media.DOWNLOAD]:
     # Iter through all child directories of 'E:/Plex/Media/Movies/'
     for p in this.child('/Media/Movies/').children:
 
+        FILTER = contains.any(p.name, args['filter'])
+        TODO = (p.ext == 'todo')
+
         # If the file name matches the filter
-        if args['filter'] in p.name.lower():
+        if FILTER and TODO:
 
-            # Check if the file ends with '.todo'
-            if p.ext == 'todo':
+            movie = Media.Movie(*ReadName(p.name), p)
 
-                movie = Media.Movie(*ReadName(p.name), p)
+            # If the movie is already downloaded
+            if movie.exists:
 
-                # If the movie is already downloaded
-                if movie.exists:
+                Log.VERB(
+                    f'Movie Exists\n'+ \
+                    f'{movie.Title=}\n'+ \
+                    f'{movie.Year=}'
+                )
 
-                    Log.VERB(
-                        f'Movie Exists\n'+ \
-                        f'{movie.Title=}\n'+ \
-                        f'{movie.Year=}'
-                    )
+            # If the movie is missing
+            else:
 
-                # If the movie is missing
-                else:
+                Log.VERB(
+                    f'Movie Missing\n'+ \
+                    f'{movie.Title=}\n'+ \
+                    f'{movie.Year=}'
+                )
 
-                    Log.VERB(
-                        f'Movie Missing\n'+ \
-                        f'{movie.Title=}\n'+ \
-                        f'{movie.Year=}'
-                    )
-
-                    yield movie
+                yield movie
 
     #==========================================================
     # EPISODES
@@ -64,7 +66,7 @@ def Downloads() -> Generator[Media.DOWNLOAD]:
     for ShowDir in this.child('/Media/Shows').children:
 
         # If the folder name matches the filter
-        if args['filter'] in ShowDir.name.lower():
+        if contains.any(ShowDir.name, args['filter']):
 
             # Get Show from the filename 
             show = Media.Show(*ReadName(ShowDir.name))
