@@ -1,28 +1,32 @@
+from functools import cached_property, cache
+from typing import Callable, Literal
+import PTN
+
+from . import this, tpb, omdb
+
 from philh_myftp_biz.api.torrent import TorrentFile, Magnet
 from philh_myftp_biz.api.omdb import EpisodeData
-from functools import cached_property, cache
 from philh_myftp_biz.text import similarity
 from philh_myftp_biz.classtools import loc
 from philh_myftp_biz.terminal import Log
 from philh_myftp_biz.db import MimeType
 from philh_myftp_biz.array import List
 from philh_myftp_biz.json import Dict
-from __init__ import this, tpb, omdb
-from typing import Callable, Literal
 from philh_myftp_biz.pc import Path
-import PTN
 
 class PARAMETERS:
 
+    data: list[dict[Literal['name', 'valid', 'target', 'control'], str]]
+
     def __init__(self, name:str):
 
-        self.data: list[dict[Literal['name', 'valid', 'target', 'control'], str]] = []
+        self.data = []
 
-        self.name = name
+        self.name: str = name
 
     def valid(self) -> bool:
         
-        outp = f'Validating: {self.name}'
+        outp: str = f'Validating: {self.name}'
 
         for item in self.data:
 
@@ -101,7 +105,7 @@ class PARAMETERS:
     def EPISODE(self,
         target: int|list[int]|None, 
         control: int|None
-    ):
+    ) -> None:
         if isinstance(target, list):
             valid = (control in target)
         
@@ -138,9 +142,7 @@ class _Template:
     _int: int
 
     def start(self) -> None:
-        """
-        Search thepiratebay.org and start the download
-        """
+        """Search thepiratebay.org and start the download"""
 
         # List of magnets
         magnets: List[Magnet] = List()
@@ -162,7 +164,6 @@ f"""Validating: {m=}
                 )
 
                 if TITLE and SEEDERS:
-                    # Append the magnet to the list
                     magnets += m
 
         # Select the most seeded magnet
@@ -184,14 +185,7 @@ f"""Validating: {m=}
                 self.magnet.start()
 
                 # Stop all files in the magnet
-                for file in self.magnet.files:
-                    file.stop()
-
-        # If a magnet has not been found
-        else:
-
-            # Log magnet details
-            Log.WARN(f'None Found: {self=}')
+                [f.stop() for f in self.magnet.files]
 
     @property
     def exists(self) -> bool:

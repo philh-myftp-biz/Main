@@ -1,16 +1,18 @@
-from __init__ import qbit, VM, driver, args, PIDstore
+
 from philh_myftp_biz.terminal import Log
-from Scanner import Downloads
+
+from . import qbit, VM, driver, args, PIDstore, Media
+
+from .Scanner import Downloads
+
 from time import sleep
 from os import getpid
-import Media
 
 # ===============================================================
 
 # List of downloads
 queue: list[Media.DOWNLOAD] = []
 
-#
 qbit.randomize_port()
 
 # Clear the download queue
@@ -19,7 +21,6 @@ qbit.clear(rm_files=False)
 # ===============================================================
 # FIND MAGNETS
 
-# Initialize the download generator
 downloads = Downloads()
 
 while True:
@@ -46,7 +47,7 @@ while True:
         # If no valid file has been found
         else:
 
-            Log.WARN(f'File Failed to Download: {d=}')
+            Log.WARN(f'Magnet Not Found: {d=}')
     
     # Continue the loop if the download has timed out
     except TimeoutError:
@@ -59,7 +60,8 @@ while True:
     # Break the loop if the generator is exhausted
     except StopIteration:
 
-        # Break the loop
+        Log.WARN('All Items Scanned')
+
         break
 
     #
@@ -67,7 +69,6 @@ while True:
 
         Log.CRIT('', exc_info=True)
 
-        # Break the loop
         break
 
     # Break the loop if the queue limit has been reached
@@ -79,10 +80,8 @@ while True:
 
 # ===============================================================
 
-#
 PIDstore.save([f'python-{getpid()}'])
 
-# Close the WebDriver
 driver.close()
 
 Log.INFO(f'Waiting for downloads: {len(queue)=}')

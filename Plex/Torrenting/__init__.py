@@ -1,31 +1,33 @@
+
 from philh_myftp_biz.api.torrent import thePirateBay, qBitTorrent
 from philh_myftp_biz.terminal import ParsedArgs
 from philh_myftp_biz.modules import Module
 from philh_myftp_biz.api.omdb import Omdb
 from philh_myftp_biz.terminal import Log
-from json.decoder import JSONDecodeError
 from philh_myftp_biz.web import Driver
 from philh_myftp_biz.array import List
 from philh_myftp_biz.file import JSON
+
+from json.decoder import JSONDecodeError
 from os import getpid
 
 #==============================================
-# Plex Module
+# Modules
 
-# Declare the 'Plex' module
-this = Module('E:/Plex')
+this = Module('E:/Plex/')
+
+VM = Module('E:/Virtual Machines/')
 
 #==============================================
 # PID
 
-#
 PIDstore: List[str] = List(JSON(this.child('/Torrenting/__pycache__/PID.json')))
 
-# Clear the PID store
 PIDstore.save([f'python-{getpid()}'])
 
 #==============================================
 # Parse commandline arguements
+
 args = ParsedArgs()
 
 args.Arg(
@@ -64,13 +66,11 @@ for pid in driver.Task.PIDs:
 #==============================================
 # qBitTorrent
 
-# Declare the 'Virtual Machines' module
-VM = Module('E:/Virtual Machines')
-
-# # Start the Virtual Machine
+# Start the Virtual Machine
 VM.runH('Start', 'Torrenting')
 
-host = None
+
+host: str|None = None
 
 # Loop until an IP address has been found
 while host is None:
@@ -102,7 +102,6 @@ qbit = qBitTorrent(
 #==============================================
 # thePirateBay
 
-# Connect to 'thepiratebay.org'
 tpb = thePirateBay(
     url = 'thepiratebay11.com',
     driver = driver,
@@ -112,7 +111,6 @@ tpb = thePirateBay(
 #==============================================
 # omdb
 
-# Connect to 'omdbapi.com'
 omdb = Omdb()
 
 #==============================================

@@ -1,7 +1,6 @@
 from philh_myftp_biz.terminal import Log
 from typing import Generator, Literal
-from __init__ import this, args
-import Media
+from . import this, args, Media
 
 def ReadName(
     name: Literal['Title (Year)']
@@ -22,9 +21,7 @@ def ReadName(
     return Title, Year
 
 def Downloads() -> Generator[Media.DOWNLOAD]:
-    """
-    Generate a list of Movie and Episode Downloads
-    """
+    """Generate a list of Movie and Episode Downloads"""
 
     #==========================================================
     # MOVIES
@@ -52,7 +49,7 @@ def Downloads() -> Generator[Media.DOWNLOAD]:
                 # If the movie is missing
                 else:
 
-                    Log.WARN(
+                    Log.VERB(
                         f'Movie Missing\n'+ \
                         f'{movie.Title=}\n'+ \
                         f'{movie.Year=}'
@@ -112,7 +109,7 @@ def Downloads() -> Generator[Media.DOWNLOAD]:
                         # If the episode is missing
                         else:
 
-                            Log.WARN(
+                            Log.VERB(
                                 f'Episode Missing\n'+ \
                                 f'{show=}\n'+ \
                                 f'{season=}\n'+ \
