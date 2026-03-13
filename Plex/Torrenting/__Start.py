@@ -96,7 +96,12 @@ while len(queue) > 0:
 
     # Clear queue items that have nothing selected
     qbit.clear(
-        filter_func = lambda t: not any((f.priority > 0) for f in t.files)
+        func = lambda t: not any((f.priority > 0) for f in t.files)
+    )
+
+    # Sort queue by seeders (most seeded first)
+    qbit.sort(
+        func = lambda t: t.num_complete
     )
 
     # Iter through the download queue
@@ -126,7 +131,7 @@ while len(queue) > 0:
                 # Remove the download from the list
                 queue.remove(d)
 
-            except FileNotFoundError:
+            except FileNotFoundError, OSError:
                 Log.CRIT('', exc_info=True)
 
         # If the magnet is errored
