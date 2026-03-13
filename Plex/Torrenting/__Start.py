@@ -105,24 +105,29 @@ while len(queue) > 0:
         # If the download is finished
         if d.file.finished:
 
-            Log.INFO(f'Download Complete: {d=}')
-            
-            # Get source and destination paths of file
-            src, dst = d.paths
+            try:
 
-            # Move the source file to the destination path
-            src.copy(dst)
+                Log.INFO(f'Download Complete: {d=}')
+                
+                # Get source and destination paths of file
+                src, dst = d.paths
 
-            Log.INFO(f'Copy Complete: {d=}')
+                # Move the source file to the destination path
+                src.copy(dst)
 
-            # Run any media-specific final commands for the download
-            d.finish()
+                Log.INFO(f'Copy Complete: {d=}')
 
-            # Stop downloading the file
-            d.file.stop()
+                # Run any media-specific final commands for the download
+                d.finish()
 
-            # Remove the download from the list
-            queue.remove(d)
+                # Stop downloading the file
+                d.file.stop()
+
+                # Remove the download from the list
+                queue.remove(d)
+
+            except FileNotFoundError:
+                Log.CRIT('', exc_info=True)
 
         # If the magnet is errored
         elif d.magnet.errored:
