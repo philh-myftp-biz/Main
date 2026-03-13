@@ -5,7 +5,5 @@ watch_files: []
 
 packages: [
   'git+https://github.com/MineFartS/parse-torrent-title',
-  'ffmpeg-progress-yield',
-  '--only-binary=numpy opencv-python',
-  'pymediainfo'
+  'git+https://github.com/MineFartS/qbittorrent-api'
 ]
