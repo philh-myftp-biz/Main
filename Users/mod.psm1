@@ -1,4 +1,4 @@
-
+Import-Module 'E:/Virtual Machines/mod.psm1' -Function Repair-VirtualMachine
 function Repair-User {
 
     param(
@@ -135,13 +135,9 @@ function Repair-User {
             ."E:/Virtual Machines/Create.ps1" `
                 -Name "User-$Username" `
                 | Out-Null
+        } else {
+            Repair-VirtualMachine -Name "User-$Username"
         }
-
-        Grant-VMConnectAccess `
-            -VMName "User-$Username" `
-            -UserName $Username `
-            -ErrorAction SilentlyContinue `
-            | Out-Null
 
     }
 
