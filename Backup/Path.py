@@ -5,20 +5,17 @@ from . import ftp
 
 class PathPair:
 
-    local: Path
-    remote: FTPPath
-
     def __init__(self,
         path: Path|FTPPath
     ) -> None:
 
         if isinstance(path, Path):
 
-            self.local = Path
+            self.local = path
 
             _path = str(path).replace('E:/', '/E/', 1)
             
-            self.remote = FTPPath(_path)
+            self.remote = ftp.Path(_path)
 
         elif isinstance(path, FTPPath):
 
@@ -28,40 +25,60 @@ class PathPair:
             
             self.local = Path(_path)
 
-    @property
-    def is_synced(self) -> bool:
-        if self.local.exists:
-            return (self.local.size != self.remote.size)
-        else:
-            return False
+    def __str__(self) -> str:
+        return f'\nlocal={self.local}\nremote={self.remote}'
 
-    def sync(self) -> None:
-        self.remote.download(self.local)
+class Scanner():
 
-def _raw_scanner() -> Generator[FTPPath]:
+    @staticmethod
+    def _remote() -> Generator[FTPPath]:
 
-    # E:/Plex/WinTV/
-    yield from ftp.Path('/E/Plex/WinTV/').descendants
+        # E:/Plex/WinTV/
+        yield from ftp.Path('/E/Plex/WinTV/').descendants
 
-    # E:/Website/Root/
-    for path in ftp.Path('/E/Website/Root/').descendants:
-        if path.seg() != 'index.json':
-            yield path
+        # E:/Website/Root/
+        for path in ftp.Path('/E/Website/Root/').descendants:
+            if path.seg() != 'index.json':
+                yield path
 
-    # E:/Virtual Machines/
-    for path in ftp.Path('/E/Virtual Machines/').descendants:
-        if path.ext() in ['vhdx', 'iso']:
-            yield path
+        # E:/Virtual Machines/
+        for path in ftp.Path('/E/Virtual Machines/').descendants:
+            if path.ext() in ['vhdx', 'iso']:
+                yield path
 
-    # E:/Users/philh/
-    for path in ftp.Path('/E/Users/philh/').children:
-        if path.name != 'Administrator':
-            yield from path.descendants
+        # E:/Users/philh/
+        for path in ftp.Path('/E/Users/philh/').children:
+            if path.name != 'Administrator':
+                yield from path.descendants
 
-def scanner() -> Generator[PathPair]:
-    
-    for path in _raw_scanner():
+    @staticmethod
+    def remote() -> Generator[PathPair]:
+        
+        for path in Scanner._remote():
+                
+            if path.is_file:
+                
+                yield PathPair(path)
+
+    @staticmethod
+    def local() -> Generator[PathPair]:
+
+        # E:/Virtual Machines/
+        for path in Path('E:/').children:
+
+            if path.name == 'Backup':
+                continue
+
+            for d in path.descendants:
             
-        if path.is_file:
-            
-            yield PathPair(path)
+                if d.is_dir:
+                    pass
+
+                elif '/$RECYCLE.BIN/' in d.path:
+                    pass
+
+                elif '/.git/' in d.path:
+                    pass
+
+                else:
+                    yield PathPair(d)
