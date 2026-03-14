@@ -1,12 +1,12 @@
 
-Import-Module "$PSScriptRoot\mod.psm1" -Function Repair-User
-
-param(
+param (
     [string] $Username,
     [string] $FirstName,
     [string] $LastName,
     [securestring] $Password
 )
+
+Import-Module "$PSScriptRoot\mod.psm1" -Function Repair-User
 
 #=====================================================================================================
 
