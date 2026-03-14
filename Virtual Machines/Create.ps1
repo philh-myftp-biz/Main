@@ -14,6 +14,7 @@ $Root = "E:\Virtual Machines"
 New-Item `
     -Path "$Root\Hyper-V\$Name" `
     -ItemType Directory `
+    -ErrorAction SilentlyContinue `
     -Verbose
 
 #
