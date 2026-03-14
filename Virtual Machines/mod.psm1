@@ -50,7 +50,7 @@ function Repair-VirtualMachine {
     }
 
     # If a username was found
-    if ($null -ne $Username) {
+    if ($Username) {
 
         # Grant Remote Desktop access to the user
         Grant-VMConnectAccess `
