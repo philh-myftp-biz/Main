@@ -3,7 +3,7 @@
 Set Shell = WScript.CreateObject("WScript.Shell")
 
 ' CD to the script directory
-Shell.CurrentDirectory = "E:\Users\Backup\"
+Shell.CurrentDirectory = "E:\Users\"
 
 ' Run the command
-Shell.run "python __Start.py", 0, 0
+Shell.run "python -m Backup.__Start", 0, 0

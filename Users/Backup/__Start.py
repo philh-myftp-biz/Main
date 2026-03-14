@@ -1,21 +1,11 @@
-from philh_myftp_biz.pc import script_dir, cache_dir
-from philh_myftp_biz.remotepc.ftp import FTP
-from philh_myftp_biz.file import YAML
-from os import getpid
+from . import get_paths
 
-# Store PID
-with cache_dir().child('PID.txt').open('w') as f:
-    f.write(str(getpid()))
+for src, dst in get_paths():
 
-# Read configuration
-config = YAML(script_dir().child('config.yaml')).read()
+    print()
+    print(f'{src=}')
+    print(f'{dst=}')
+    
+    if (not dst.exists) or (src.size != dst.size):
 
-# Connect to the FTP server
-ftp = FTP(
-    host = 'philh.myftp.biz',
-    username = 'Administrator',
-    password = config['password']
-)
-
-# Change to the remote directory
-ftp.cd('/')
+        src.download(dst)
