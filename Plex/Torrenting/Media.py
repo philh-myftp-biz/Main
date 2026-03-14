@@ -24,6 +24,7 @@ class PARAMETERS:
 
         self.name: str = name
 
+    @property
     def valid(self) -> bool:
         
         outp: str = f'Validating: {self.name}'
@@ -281,7 +282,7 @@ class Movie(_Template):
             control = self.Year
         )
         
-        return params.valid()
+        return params.valid
 
     @property
     def paths(self):
@@ -400,7 +401,7 @@ class Season(_Template):
             control = self.show.Year
         )
 
-        return params.valid()
+        return params.valid
     
     def __format__(self, format_spec:str) -> str:
         return f'{int(self):{format_spec}}'
@@ -478,7 +479,7 @@ class Episode(_Template):
             control = self.show.Year
         )
 
-        return params.valid()
+        return params.valid
 
     @property
     def paths(self) -> tuple[Path, Path]:
