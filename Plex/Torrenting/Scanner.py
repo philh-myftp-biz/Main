@@ -4,6 +4,13 @@ from philh_myftp_biz.terminal import Log
 from typing import Generator, Literal
 from . import this, args, Media
 
+def _FILTER(name:str):
+
+    if args['filter'] == '':
+        return True
+    else:
+        return contains.any(name, args['filter'])
+
 def ReadName(
     name: Literal['Title (Year)']
 ) -> tuple[str, int]:
@@ -31,7 +38,7 @@ def Downloads() -> Generator[Media.DOWNLOAD]:
     # Iter through all child directories of 'E:/Plex/Media/Movies/'
     for p in this.child('/Media/Movies/').children:
 
-        FILTER = contains.any(p.name, args['filter'])
+        FILTER = _FILTER(p.name)
         TODO = (p.ext == 'todo')
 
         # If the file name matches the filter
@@ -66,7 +73,7 @@ def Downloads() -> Generator[Media.DOWNLOAD]:
     for ShowDir in this.child('/Media/Shows').children:
 
         # If the folder name matches the filter
-        if contains.any(ShowDir.name, args['filter']):
+        if _FILTER(ShowDir.name):
 
             # Get Show from the filename 
             show = Media.Show(*ReadName(ShowDir.name))
