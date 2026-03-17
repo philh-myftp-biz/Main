@@ -3,7 +3,7 @@ param (
     [string] $Username,
     [string] $FirstName,
     [string] $LastName,
-    [securestring] $Password
+    [String] $Password
 )
 
 Import-Module "$PSScriptRoot\mod.psm1" -Function Repair-User
@@ -40,7 +40,7 @@ if ($null -ne $Password) {
 
     Set-ADAccountPassword `
         -Identity $Username `
-        -NewPassword $Password `
+        -NewPassword (ConvertTo-SecureString -String $Password -AsPlainText -Force) `
         -Verbose
 
     Enable-ADAccount `
