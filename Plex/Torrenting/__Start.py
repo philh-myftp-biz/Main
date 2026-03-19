@@ -105,7 +105,7 @@ while len(queue) > 0:
     )
 
     # Iter through the download queue
-    for x, d in enumerate(queue):
+    for d in queue:
 
         # If the download is finished
         if d.file.finished:
@@ -132,7 +132,7 @@ while len(queue) > 0:
                 queue.remove(d)
 
             except FileNotFoundError, OSError:
-                Log.CRIT('', exc_info=True)
+                d.magnet.recheck()
 
         # If the magnet is errored
         elif d.magnet.errored:
