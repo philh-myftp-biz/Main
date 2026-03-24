@@ -8,6 +8,8 @@ from .Scanner import Downloads
 from time import sleep
 from os import getpid
 
+# TODO Fix download queue iteration glitch
+
 # ===============================================================
 
 # List of downloads
