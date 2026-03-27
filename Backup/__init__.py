@@ -1,7 +1,7 @@
 
 # Force Verbose Mode
 import sys
-sys.argv += '-v'
+sys.argv += ['-v']
 
 from philh_myftp_biz.pc import script_dir, cache_dir
 from philh_myftp_biz.remotepc.ftp import FTP
