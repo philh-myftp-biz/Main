@@ -43,7 +43,7 @@ class Scanner():
 
         # E:/Virtual Machines/
         for path in ftp.Path('/E/Virtual Machines/').descendants:
-            if path.ext() in ['vhdx', 'iso']:
+            if path.ext in ['vhdx', 'iso']:
                 yield path
 
         # E:/Users/philh/
