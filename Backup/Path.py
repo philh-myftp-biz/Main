@@ -41,11 +41,6 @@ class Scanner():
             if path.seg() != 'index.json':
                 yield path
 
-        # E:/Virtual Machines/
-        for path in ftp.Path('/E/Virtual Machines/').descendants:
-            if path.ext in ['vhdx', 'iso']:
-                yield path
-
         # E:/Users/philh/
         for path in ftp.Path('/E/Users/philh/').children:
             if path.name != 'Administrator':
