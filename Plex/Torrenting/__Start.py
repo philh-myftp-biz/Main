@@ -98,12 +98,12 @@ while len(queue) > 0:
 
     # Clear queue items that have nothing selected
     qbit.clear(
-        func = lambda t: not any((f.priority > 0) for f in t.files)
+        func = lambda t: (len(t.selected_files) == 0)
     )
 
     # Sort queue by seeders (most seeded first)
     qbit.sort(
-        func = lambda t: t.num_complete
+        func = lambda t: t.seeders
     )
 
     # Iter through the download queue
