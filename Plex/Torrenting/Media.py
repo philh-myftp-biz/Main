@@ -352,9 +352,10 @@ class Season(_Template):
 
         # List of TPB queries
         self.queries = [
-            f'{self.show.Title} {self.show.Year} Season {self:02d}',
-            f'{self.show.Title} Season {self:02d}',
+            f'{self.show.Title} {self.show.Year} Season {self}',
+            f'{self.show.Title} Season {self}',
             f'{self.show.Title} s{self:02d}',
+            f'{self.show.Title} s{self}',
         ]
 
         # List of 'Episode' OBJs
@@ -435,7 +436,8 @@ class Episode(_Template):
         # List of TPB queries
         self.queries = [
             f'{self.show.Title} s{season:02d}e{self:02d}',
-            f'{self.show.Title} {season:02d}x{self:02d}'
+            f'{self.show.Title} {season:02d}x{self:02d}',
+            f'{self.show.Title} {season}{self:02d}'
         ]
 
     def start(self) -> None:
