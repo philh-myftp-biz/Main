@@ -2,12 +2,13 @@
 # Cache
 **/__pycache__/
 
+**/__pylogs__/
+
 # Plex Media
 /Media/
 
 # Lockfile
 /__lock__.ig
-
 
 #==============================================================
 # Add Databases
