@@ -1,14 +1,9 @@
-
-from philh_myftp_biz.terminal import Log
-
+from philh_myftp_biz.api.omdb import MediaNotFoundError
 from . import qbit, VM, driver, args, PIDstore, Media
-
+from philh_myftp_biz.terminal import Log
 from .Scanner import Downloads
-
 from time import sleep
 from os import getpid
-
-# TODO Fix download queue iteration glitch
 
 # ===============================================================
 
@@ -52,7 +47,7 @@ while True:
             Log.WARN(f'Magnet Not Found: {d=}')
     
     # Continue the loop if the download has timed out
-    except TimeoutError:
+    except TimeoutError, MediaNotFoundError:
 
         Log.FAIL('', exc_info=True)
 
