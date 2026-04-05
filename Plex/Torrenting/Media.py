@@ -1,5 +1,5 @@
-from philh_myftp_biz.api.torrent import TorrentFile, Magnet
-from philh_myftp_biz.api.omdb import EpisodeData
+from philh_myftp_biz.web.torrent import TorrentFile, Magnet
+from philh_myftp_biz.web.omdb import EpisodeData
 from functools import cached_property, cache
 from philh_myftp_biz.text import similarity
 from philh_myftp_biz.classtools import loc

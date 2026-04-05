@@ -1,4 +1,4 @@
-from philh_myftp_biz.api.omdb import MediaNotFoundError
+from philh_myftp_biz.web.omdb import MediaNotFoundError
 from . import qbit, VM, driver, args, PIDstore, Media
 from philh_myftp_biz.terminal import Log
 from .Scanner import Downloads
