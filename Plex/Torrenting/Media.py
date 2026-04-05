@@ -31,6 +31,8 @@ class WEIGHTS(dict[str, Any]):
             valid &= _valid
 
             logm += f'\n{key}={_valid:d} | {target=} | {control=}'
+
+        logm += f'\n{valid=}'
  
         Log.VERB(logm)
 
@@ -117,17 +119,9 @@ class _Template:
     def start(self) -> None:
         """Search thepiratebay.org and start the download"""
 
-        print()
-
         magnets = tpb.search(*self.queries)
 
-        print(f'{len(magnets)=}')
-
-        magnets.filter(lambda m: self.valid(m.title))
-
-        print(f'{len(magnets)=}')
-
-        exit()
+        magnets.filter(lambda m: self.valid(m.name))
 
         # Select the most seeded magnet
         self.magnet = magnets.max(func=lambda m: m.seeders)
