@@ -44,7 +44,7 @@ while True:
         # If no valid file has been found
         else:
 
-            Log.WARN(f'Magnet Not Found: {d=}')
+            Log.VERB(f'Magnet Not Found: {d=}')
     
     # Continue the loop if the download has timed out
     except TimeoutError, MediaNotFoundError:

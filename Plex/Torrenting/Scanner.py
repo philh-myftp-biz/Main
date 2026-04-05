@@ -49,20 +49,12 @@ def Downloads() -> Generator[Media.DOWNLOAD]:
             # If the movie is already downloaded
             if movie.exists:
 
-                Log.VERB(
-                    f'Movie Exists\n'+ \
-                    f'{movie.Title=}\n'+ \
-                    f'{movie.Year=}'
-                )
+                Log.INFO(f'Movie Exists\n{movie.Title=}\n{movie.Year=}')
 
             # If the movie is missing
             else:
 
-                Log.VERB(
-                    f'Movie Missing\n'+ \
-                    f'{movie.Title=}\n'+ \
-                    f'{movie.Year=}'
-                )
+                Log.WARN(f'Movie Missing\n{movie.Title=}\n{movie.Year=}')
 
                 yield movie
 
@@ -70,7 +62,7 @@ def Downloads() -> Generator[Media.DOWNLOAD]:
     # EPISODES
 
     # Iter through all child directories of 'E:/Plex/Media/Shows/'
-    for ShowDir in this.child('/Media/Shows').children:
+    for ShowDir in this.child('/Media/Shows/').children:
 
         # If the folder name matches the filter
         if _FILTER(ShowDir.name):
@@ -78,11 +70,7 @@ def Downloads() -> Generator[Media.DOWNLOAD]:
             # Get Show from the filename 
             show = Media.Show(*ReadName(ShowDir.name))
 
-            Log.VERB(
-                f'Scanning Show\n'+ \
-                f'{ShowDir=}\n'+ \
-                f'{show=}'
-            )
+            Log.VERB(f'Scanning Show\n{show=}\n{ShowDir=}')
 
             # Iter through all seasons in the show
             for season in show.seasons:
@@ -90,7 +78,7 @@ def Downloads() -> Generator[Media.DOWNLOAD]:
                 # If the season is already completely downloaded
                 if season.exists:
 
-                    Log.VERB(f'Show Exists\n{show=}\n{season=}')
+                    Log.INFO(f'Season Exists\n{show=}\n{season=}')
 
                 # If the season is missing episodes
                 else:
@@ -108,22 +96,12 @@ def Downloads() -> Generator[Media.DOWNLOAD]:
                         # If the episode is already downloaded
                         if episode.exists:
 
-                            Log.VERB(
-                                f'Episode Exists\n'+ \
-                                f'{show=}\n'+ \
-                                f'{season=}\n'+ \
-                                f'{episode=}'
-                            )
+                            Log.INFO(f'Episode Exists\n{show=}\n{season=}\n{episode=}')
 
                         # If the episode is missing
                         else:
 
-                            Log.VERB(
-                                f'Episode Missing\n'+ \
-                                f'{show=}\n'+ \
-                                f'{season=}\n'+ \
-                                f'{episode=}'
-                            )
+                            Log.WARN(f'Episode Missing\n{show=}\n{season=}\n{episode=}')
 
                             yield episode
 
