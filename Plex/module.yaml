@@ -3,7 +3,4 @@ enabled: true
 
 watch_files: []
 
-packages: [
-  'git+https://github.com/MineFartS/parse-torrent-title',
-  'git+https://github.com/MineFartS/qbittorrent-api'
-]
+packages: []
