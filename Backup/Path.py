@@ -1,4 +1,4 @@
-from philh_myftp_biz.remotepc.ftp import FTPPath
+from philh_myftp_biz.web.ftp import FTPPath
 from philh_myftp_biz.pc import Path
 from typing import Generator
 from . import ftp
