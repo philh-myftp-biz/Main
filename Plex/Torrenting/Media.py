@@ -4,7 +4,6 @@ from philh_myftp_biz.text import similarity
 from philh_myftp_biz.classtools import loc
 from philh_myftp_biz.terminal import Log
 from philh_myftp_biz.db import MimeType
-from philh_myftp_biz.array import List
 from philh_myftp_biz.json import Dict
 from typing import Callable, Literal
 from philh_myftp_biz.pc import Path
@@ -13,7 +12,7 @@ from . import this, tpb, omdb
 from functools import cache
 import PTN
 
-class PARAMETERS:
+class WEIGHTS:
 
     data: list[dict[Literal['name', 'valid', 'target', 'control'], str]]
 
@@ -255,7 +254,7 @@ class Movie(_Template):
         # Parse the given name
         data: Dict[str] = Dict(PTN.parse(name))
 
-        params = PARAMETERS(name)
+        params = WEIGHTS(name)
 
         params.TITLE(
             target = data['title'],
@@ -365,7 +364,7 @@ class Season(_Template):
         # Parse the given name
         data: Dict[str] = Dict(PTN.parse(name))
 
-        params = PARAMETERS(name)
+        params = WEIGHTS(name)
 
         params.TITLE(
             target = data['title'],
@@ -441,7 +440,7 @@ class Episode(_Template):
         # Parse the given name
         data: Dict[str] = Dict(PTN.parse(name))
 
-        params = PARAMETERS(name)
+        params = WEIGHTS(name)
 
         params.TITLE(
             target = data['title'],
