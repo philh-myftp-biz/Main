@@ -1,6 +1,5 @@
 from philh_myftp_biz.web.torrent import TorrentFile, Magnet
 from philh_myftp_biz.web.omdb import EpisodeData
-from functools import cached_property, cache
 from philh_myftp_biz.text import similarity
 from philh_myftp_biz.classtools import loc
 from philh_myftp_biz.terminal import Log
@@ -11,6 +10,7 @@ from philh_myftp_biz.pc import Path
 from dataclasses import dataclass
 from . import this, tpb, omdb
 from typing import Callable
+from functools import cache
 import PTN
 
 @dataclass
@@ -159,7 +159,7 @@ class _Template:
 
         return (TYPE and NAME)
     
-    @cached_property
+    @property
     def file(self) -> TorrentFile | None:
         """File Instance"""
         
@@ -293,7 +293,6 @@ class Season(_Template):
 
         # List of TPB queries
         self.queries = [
-            f'{self.show.Title} {self.show.Year} Season {self}',
             f'{self.show.Title} Season {self}',
             f'{self.show.Title} s{self:02d}',
             f'{self.show.Title} s{self}',
@@ -390,9 +389,6 @@ class Episode(_Template):
 
             # Start downloading the episode
             super().start()
-
-            # Reset cached file
-            del self.file
 
     @cache
     def validName(self, name:str) -> bool:
