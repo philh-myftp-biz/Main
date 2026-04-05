@@ -1,87 +1,75 @@
-from philh_myftp_biz.web.torrent import TorrentFile, Magnet
+from philh_myftp_biz.web.torrent import TorrentFile, Magnet, NameParser
 from philh_myftp_biz.web.omdb import EpisodeData
 from philh_myftp_biz.text import similarity
 from philh_myftp_biz.classtools import loc
 from philh_myftp_biz.terminal import Log
 from philh_myftp_biz.db import MimeType
-from philh_myftp_biz.json import Dict
-from typing import Callable, Literal
+from typing import Callable, Any
 from philh_myftp_biz.pc import Path
 from philh_myftp_biz import VERBOSE
 from . import this, tpb, omdb
-from functools import cache
-import PTN
 
-class WEIGHTS:
+class WEIGHTS(dict[str, Any]):
 
-    data: list[dict[Literal['name', 'valid', 'target', 'control'], str]]
+    def parse(self, name: str):
 
-    def __init__(self, name:str):
+        parse = NameParser(name)
 
-        self.data = []
+        logm: str = f'Validating: {name}'
 
-        self.name: str = name
+        valid = True
 
-    @property
-    def valid(self) -> bool:
-        
-        outp: str = f'Validating: {self.name}'
+        for key, control in self.items():
 
-        for item in self.data:
+            target = getattr(parse, key.lower())
 
-            outp += f'\n{item['name']}={item['valid']:d} | target={item['target']} | control={item['control']}'
-        
-        Log.VERB(outp)
+            _valid = getattr(self, key)(
+                target = target,
+                control = control
+            )
 
-        return all(i['valid'] for i in self.data)
-    
+            valid &= _valid
+
+            logm += f'\n{key}={_valid:d} | {target=} | {control=}'
+ 
+        Log.VERB(logm)
+
+        return valid
+
     def TITLE(self,
         target: str, 
         control: str|None
-    ) -> None:
+    ) -> bool:
         
         if control is None:
-            valid = True
+            return True
         else:
-            valid = (similarity(a=target, b=control) > .65)
-
-        self.data += [{
-            'name': 'TITLE',
-            'valid': valid,
-            'target': target,
-            'control': control
-        }]
+            return (similarity(a=target, b=control) > .65)
 
     def SEASON(self,
         target: int|list[int]|None, 
         control: int
-    ) -> None:
+    ) -> bool:
         
         if isinstance(target, int):
-            valid = (control == target)
+            return (control == target)
 
         elif isinstance(target, list):
-            valid = (control in target)
+            return (control in target)
         
         else:
-            valid = False
-        
-        self.data += [{
-            'name': 'SEASON',
-            'valid': valid,
-            'target': target,
-            'control': control
-        }]
+            return False
         
     def YEAR(self,
         target: int|list[int]|None, 
         control: int|list[int]
-    ):
+    ) -> bool:
+        
         if target is None:
-            valid = True
+            return True
         
         elif isinstance(target, list):
-            valid = (control in target)
+            return (control in target)
         
         else:
         
@@ -92,36 +80,22 @@ class WEIGHTS:
                 MIN = control[0]-1
                 MAX = control[-1]+1
 
-            valid = (MIN <= target <= MAX)
-
-        self.data += [{
-            'name': 'YEAR',
-            'valid': valid,
-            'target': target,
-            'control': control
-        }] 
+            return (MIN <= target <= MAX)
 
     def EPISODE(self,
         target: int|list[int]|None, 
         control: int|None
-    ) -> None:
+    ) -> bool:
+        
         if isinstance(target, list):
-            valid = (control in target)
+            return (control in target)
         
         else:
-            valid = (control == target)
-
-        self.data += [{
-            'name': 'EPISODE',
-            'valid': valid,
-            'target': target,
-            'control': control
-        }]
+            return (control == target)
 
 class _Template:
 
-    validName: Callable[[str], bool]
-    """Check if a string has valid filename syntax"""
+    weights: WEIGHTS
 
     magnet: None|Magnet = None
     """Magnet Instance"""
@@ -143,9 +117,17 @@ class _Template:
     def start(self) -> None:
         """Search thepiratebay.org and start the download"""
 
-        magnets = List(tpb.search(*self.queries))
+        print()
 
-        magnets.filter(lambda m: self.validName(m.title))
+        magnets = tpb.search(*self.queries)
+
+        print(f'{len(magnets)=}')
+
+        magnets.filter(lambda m: self.valid(m.title))
+
+        print(f'{len(magnets)=}')
+
+        exit()
 
         # Select the most seeded magnet
         self.magnet = magnets.max(func=lambda m: m.seeders)
@@ -177,7 +159,7 @@ class _Template:
         for p in self.dir.children:
 
             # If the file has a valid name
-            if self.validFile(path=p):
+            if self.valid(p):
 
                 VERBOSE.resume()
 
@@ -187,21 +169,22 @@ class _Template:
             
         return False
 
-    def validFile(self, path:Path) -> bool:
-        """
-        Check a file for the following conditions:
-            - File is a video
-            - File does not end with '.todo'
-            - Name is valid
-        """
+    def valid(self,
+        item: str | Path
+    ) -> bool:
+        
+        if isinstance(item, str):
+            return self.weights.parse(item)
+        
+        else:
 
-        # If the mimetype of the file is 'video' or 'ignore'
-        TYPE = (MimeType.Path(path) in ['video', 'ignore'])
+            # If the mimetype of the file is 'video' or 'ignore'
+            TYPE = (MimeType.Path(item) in ['video', 'ignore'])
 
-        # If the name of the file is valid
-        NAME = self.validName(path.name)
+            # If the name of the file is valid
+            NAME = self.weights.parse(item.name)
 
-        return (TYPE and NAME)
+            return (TYPE and NAME)
     
     @property
     def file(self) -> TorrentFile | None:
@@ -210,7 +193,7 @@ class _Template:
         if self.magnet:
 
             files: list[TorrentFile] = list(filter(
-                lambda m: self.validFile(m.path),
+                lambda m: self.valid(m.path),
                 self.magnet.files
             ))
 
@@ -248,26 +231,9 @@ class Movie(_Template):
             f'{title} {year}'
         ]
 
-    @cache
-    def validName(self, name:str) -> bool:
-        
-        # Parse the given name
-        data: Dict[str] = Dict(PTN.parse(name))
-
-        params = WEIGHTS(name)
-
-        params.TITLE(
-            target = data['title'],
-            control = self.Title
-        )
-
-        # Check if the year is either the same or missing
-        params.YEAR(
-            target = data['year'],
-            control = self.Year
-        )
-        
-        return params.valid
+        self.weights = WEIGHTS()
+        self.weights['TITLE'] = self.Title
+        self.weights['YEAR'] = self.Year
 
     @property
     def paths(self):
@@ -345,6 +311,12 @@ class Season(_Template):
         # List of 'Episode' OBJs
         self.episodes = [Episode(self, i[1]) for i in episodes.items()]
 
+        self.weights = WEIGHTS()
+        self.weights['TITLE'] = self.show.Title
+        self.weights['SEASON'] = int(self)
+        self.weights['EPISODE'] = None
+        self.weights['YEAR'] = self.show.Year
+
     @property
     def exists(self) -> bool:
         
@@ -357,36 +329,6 @@ class Season(_Template):
                 return False
             
         return True
-
-    @cache
-    def validName(self, name:str) -> bool:
-
-        # Parse the given name
-        data: Dict[str] = Dict(PTN.parse(name))
-
-        params = WEIGHTS(name)
-
-        params.TITLE(
-            target = data['title'],
-            control = self.show.Title
-        )
-
-        params.SEASON(
-            target = data['season'],
-            control = int(self)
-        )
-
-        params.EPISODE(
-            target = data['episode'],
-            control = None
-        )
-
-        params.YEAR(
-            target = data['year'],
-            control = self.show.Year
-        )
-
-        return params.valid
     
     def __format__(self, format_spec:str) -> str:
         return f'{int(self):{format_spec}}'
@@ -424,6 +366,12 @@ class Episode(_Template):
             f'{self.show.Title} {season}{self:02d}'
         ]
 
+        self.weights = WEIGHTS()
+        self.weights['TITLE'] = None
+        self.weights['YEAR'] = self.show.Year
+        self.weights['SEASON'] = int(self.season)
+        self.weights['EPISODE'] = int(self)
+
     def start(self) -> None:
 
         self.magnet = self.season.magnet
@@ -433,36 +381,6 @@ class Episode(_Template):
 
             # Start downloading the episode
             super().start()
-
-    @cache
-    def validName(self, name:str) -> bool:
-
-        # Parse the given name
-        data: Dict[str] = Dict(PTN.parse(name))
-
-        params = WEIGHTS(name)
-
-        params.TITLE(
-            target = data['title'],
-            control = None
-        )
-
-        params.SEASON(
-            target = data['season'],
-            control = int(self.season)
-        )
-
-        params.EPISODE(
-            target = data['episode'],
-            control = int(self)
-        )
-
-        params.YEAR(
-            target = data['year'],
-            control = self.show.Year
-        )
-
-        return params.valid
 
     @property
     def paths(self) -> tuple[Path, Path]:
