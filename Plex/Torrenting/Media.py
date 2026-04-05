@@ -6,26 +6,51 @@ from philh_myftp_biz.terminal import Log
 from philh_myftp_biz.db import MimeType
 from philh_myftp_biz.array import List
 from philh_myftp_biz.json import Dict
+from typing import Callable, Literal
 from philh_myftp_biz.pc import Path
-from dataclasses import dataclass
 from . import this, tpb, omdb
-from typing import Callable
 from functools import cache
 import PTN
 
-@dataclass
 class PARAMETERS:
 
-    name: str
+    data: list[dict[Literal['name', 'valid', 'target', 'control'], str]]
 
-    valid = True
+    def __init__(self, name:str):
+
+        self.data = []
+
+        self.name: str = name
+
+    @property
+    def valid(self) -> bool:
+        
+        outp: str = f'Validating: {self.name}'
+
+        for item in self.data:
+
+            outp += f'\n{item['name']}={item['valid']:d} | target={item['target']} | control={item['control']}'
+        
+        Log.VERB(outp)
+
+        return all(i['valid'] for i in self.data)
     
     def TITLE(self,
         target: str, 
         control: str|None
     ) -> None:
         
-        self.valid &= (similarity(a=target, b=control) > .65)
+        if control is None:
+            valid = True
+        else:
+            valid = (similarity(a=target, b=control) > .65)
+
+        self.data += [{
+            'name': 'TITLE',
+            'valid': valid,
+            'target': target,
+            'control': control
+        }]
 
     def SEASON(self,
         target: int|list[int]|None, 
@@ -33,24 +58,30 @@ class PARAMETERS:
     ) -> None:
         
         if isinstance(target, int):
-            self.valid &= (control == target)
+            valid = (control == target)
 
         elif isinstance(target, list):
-            self.valid &= (control in target)
+            valid = (control in target)
         
         else:
-            self.valid = False
+            valid = False
+        
+        self.data += [{
+            'name': 'SEASON',
+            'valid': valid,
+            'target': target,
+            'control': control
+        }]
         
     def YEAR(self,
         target: int|list[int]|None, 
         control: int|list[int]
-    ) -> None:
-        
+    ):
         if target is None:
-            pass
+            valid = True
         
         elif isinstance(target, list):
-            self.valid &= (control in target)
+            valid = (control in target)
         
         else:
         
@@ -61,18 +92,31 @@ class PARAMETERS:
                 MIN = control[0]-1
                 MAX = control[-1]+1
 
-            self.valid &= (MIN <= target <= MAX)
+            valid = (MIN <= target <= MAX)
+
+        self.data += [{
+            'name': 'YEAR',
+            'valid': valid,
+            'target': target,
+            'control': control
+        }] 
 
     def EPISODE(self,
         target: int|list[int]|None, 
         control: int|None
     ) -> None:
-        
         if isinstance(target, list):
-            self.valid &= (control in target)
+            valid = (control in target)
         
         else:
-            self.valid &= (control == target)
+            valid = (control == target)
+
+        self.data += [{
+            'name': 'EPISODE',
+            'valid': valid,
+            'target': target,
+            'control': control
+        }]
 
 class _Template:
 
@@ -102,12 +146,24 @@ class _Template:
         # List of magnets
         magnets: List[Magnet] = List()
 
-        # Iter through all magnets found with the query
-        for m in tpb.search(*self.queries):
+        # Iter through the search queries
+        for query in self.queries:
 
-            if self.validName(m.title):
+            # Iter through all magnets found with the query
+            for m in tpb.search(query):
 
-                magnets += m
+                # If the title is valid
+                TITLE = self.validName(m.title)
+                SEEDERS = (m.seeders > 0)
+
+                Log.VERB(
+f"""Validating: {m=}
+{  TITLE=:d} | in={m.title=}
+{SEEDERS=:d} | in={m.seeders}"""
+                )
+
+                if TITLE and SEEDERS:
+                    magnets += m
 
         # Select the most seeded magnet
         self.magnet = magnets.max(func=lambda m: m.seeders)
@@ -121,6 +177,7 @@ class _Template:
                 f'{self.magnet.seeders=}'
             )
 
+            # 
             if not self.magnet.exists:
 
                 # Download the magnet
