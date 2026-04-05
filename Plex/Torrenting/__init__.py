@@ -103,7 +103,6 @@ qbit = qBitTorrent(
 # thePirateBay
 
 tpb = thePirateBay(
-    url = 'thepiratebay11.com',
     driver = driver,
     qbit = qbit
 )
