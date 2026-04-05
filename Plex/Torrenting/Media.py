@@ -8,6 +8,7 @@ from philh_myftp_biz.array import List
 from philh_myftp_biz.json import Dict
 from typing import Callable, Literal
 from philh_myftp_biz.pc import Path
+from philh_myftp_biz import VERBOSE
 from . import this, tpb, omdb
 from functools import cache
 import PTN
@@ -143,27 +144,9 @@ class _Template:
     def start(self) -> None:
         """Search thepiratebay.org and start the download"""
 
-        # List of magnets
-        magnets: List[Magnet] = List()
+        magnets = List(tpb.search(*self.queries))
 
-        # Iter through the search queries
-        for query in self.queries:
-
-            # Iter through all magnets found with the query
-            for m in tpb.search(query):
-
-                # If the title is valid
-                TITLE = self.validName(m.title)
-                SEEDERS = (m.seeders > 0)
-
-                Log.VERB(
-f"""Validating: {m=}
-{  TITLE=:d} | in={m.title=}
-{SEEDERS=:d} | in={m.seeders}"""
-                )
-
-                if TITLE and SEEDERS:
-                    magnets += m
+        magnets.filter(lambda m: self.validName(m.title))
 
         # Select the most seeded magnet
         self.magnet = magnets.max(func=lambda m: m.seeders)
@@ -177,7 +160,6 @@ f"""Validating: {m=}
                 f'{self.magnet.seeders=}'
             )
 
-            # 
             if not self.magnet.exists:
 
                 # Download the magnet
@@ -190,13 +172,19 @@ f"""Validating: {m=}
     def exists(self) -> bool:
         """Check if the destination file already exists"""
 
+        VERBOSE.pause()
+
         # Iter through all items in the folder
         for p in self.dir.children:
 
             # If the file has a valid name
             if self.validFile(path=p):
 
+                VERBOSE.resume()
+
                 return True
+            
+        VERBOSE.resume()
             
         return False
 
