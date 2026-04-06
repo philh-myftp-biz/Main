@@ -11,7 +11,7 @@ $Users | ForEach-Object -Process {
         Username = $_.SamAccountName.ToLower()
     }
 
-    if (@('krbtgt', 'guest') -notcontains $Name['Username']) {
+    if (@('krbtgt', 'guest', 'administrator') -notcontains $Name['Username']) {
         $Names += $Name
     }
 }
