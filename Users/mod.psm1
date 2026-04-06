@@ -37,6 +37,13 @@ function Repair-User {
             -Value Hidden `
             > $null
 
+        
+        New-Item `
+            -ItemType Directory `
+            -Path "$Dir\Website" `
+            -ErrorAction SilentlyContinue `
+            | Out-Null
+
         #=====================================================================================================
 
         # Create a blank ACL object
@@ -69,75 +76,21 @@ function Repair-User {
             -AclObject $Acl
 
         #=====================================================================================================
-
-        New-SmbShare `
-            -Name "User-$Username" `
-            -Path $Dir `
-            -ErrorAction SilentlyContinue `
-            | Out-Null
-
-        Revoke-SmbShareAccess `
-            -Name "User-$Username" `
-            -AccountName "Everyone" `
-            -Force > $null
-
-        Grant-SmbShareAccess `
-            -Name "User-$Username" `
-            -AccountName $Username `
-            -AccessRight Full `
-            -Force > $null
         
-        Grant-SmbShareAccess `
-            -Name "User-$Username" `
-            -AccountName "Administrators" `
-            -AccessRight Full `
-            -Force > $null
+        # TODO fix, takes too long
 
-        #=====================================================================================================
-
-        New-Item `
-            -ItemType Directory `
-            -Path "$Dir\Website" `
-            -ErrorAction SilentlyContinue `
-            | Out-Null
-
-        New-Item `
-            -ItemType Junction `
-            -Target "$Dir\Website" `
-            -Path "E:\Website\Root\Server\FTP\User Web Shares\$Username" `
-            -ErrorAction SilentlyContinue `
-            | Out-Null
-
-        $Acl = Get-Acl -Path "$Dir\Website"
-
-        # Create new access rule for 'FullControl' permissions, inheriting to subfolders and files
-        $Acl.AddAccessRule((New-Object System.Security.AccessControl.FileSystemAccessRule(
-            "IIS_IUSRS",
-            "Read",
-            "ContainerInherit,ObjectInherit",
-            "None",
-            "Allow"
-        )))
-
-        # Apply the updated ACL
-        Set-Acl `
-            -Path "$Dir\Website" `
-            -AclObject $Acl
-
-        #=====================================================================================================
-        
-        $VM = Get-VM `
-            -Name "User-$Username" `
-            -ErrorAction SilentlyContinue
+        #$VM = Get-VM `
+        #    -Name "User-$Username" `
+        #    -ErrorAction SilentlyContinue
 
         # If the vm does not exist
-        if ($null -eq $VM) {
-            ."E:/Virtual Machines/Create.ps1" `
-                -Name "User-$Username" `
-                | Out-Null
-        } else {
-            Repair-VirtualMachine -Name "User-$Username"
-        }
+        #if ($null -eq $VM) {
+        #    ."E:/Virtual Machines/Create.ps1" `
+        #        -Name "User-$Username" `
+        #        | Out-Null
+        #} else {
+        #    Repair-VirtualMachine -Name "User-$Username"
+        #}
 
     }
 
