@@ -1,15 +1,20 @@
 
 $Names = @()
 
-Get-ADUser -Filter * -SearchBase "CN=Users, DC=philh, DC=local" `
-    | Where-Object UserPrincipalName `
-    | ForEach-Object -Process {
-        $Names += @{
-            FirstName = $_.GivenName
-            LastName = $_.Surname
-            Username = $_.SamAccountName.ToLower()
-        }
+$Users = Get-ADUser -Filter * -SearchBase "CN=Users, DC=philh, DC=local"
+
+$Users | ForEach-Object -Process {
+
+    $Name = @{
+        FirstName = $_.GivenName
+        LastName = $_.Surname
+        Username = $_.SamAccountName.ToLower()
     }
+
+    if (@('krbtgt', 'guest') -notcontains $Name['Username']) {
+        $Names += $Name
+    }
+}
 
 $Names `
     | ConvertTo-Json `
