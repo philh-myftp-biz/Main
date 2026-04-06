@@ -1,12 +1,12 @@
 
 param(
     [string] $Username,
-    [securestring] $Password
+    [string] $Password
 )
 
 Set-ADAccountPassword `
     -Identity $Username `
-    -NewPassword $Password `
+    -NewPassword (ConvertTo-SecureString -String $Password -AsPlainText -Force) `
     -Reset
 
 Enable-ADAccount `
