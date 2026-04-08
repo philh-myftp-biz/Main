@@ -5,7 +5,7 @@ Set Shell = WScript.CreateObject("WScript.Shell")
 ' CD to the script directory
 Shell.CurrentDirectory = "E:/Plex/"
 
-CMD = "python -m Torrenting.__Start"
+CMD = "python -m Torrenting"
 
 ' Append all arguments to the command string
 For i = 0 To WScript.Arguments.Count - 1
