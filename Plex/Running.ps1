@@ -1,16 +1,8 @@
 
-# Store the current progress preference
-$OriginalProgressPreference = $ProgressPreference 
+$proc = Get-Process -Name 'Plex Media Server'
 
-# Set the progress preference to 'SilentlyContinue' to hide progress
-$ProgressPreference = 'SilentlyContinue'
-
-# Test the port
-Test-NetConnection `
-    -ComputerName localhost `
-    -Port 32400 `
-    -InformationLevel Quiet `
-    | ConvertTo-Json | Write-Host
-
-# Restore the original progress preference setting
-$ProgressPreference = $OriginalProgressPreference 
+if ($null -eq $proc) {
+    Write-Host 'false'
+} else {
+    Write-Host 'true'
+}
