@@ -2,7 +2,7 @@ from philh_myftp_biz.modules import Repo
 from philh_myftp_biz.terminal import Log
 from philh_myftp_biz.time import now
 
-repo = Repo('E:/Minecraft/Worlds')
+repo = Repo('E:/Minecraft/Worlds/')
 
 Log.INFO('Tracking Files')
 repo.add(A=True)

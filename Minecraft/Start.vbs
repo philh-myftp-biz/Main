@@ -2,12 +2,11 @@
 ' Create a new Shell Object
 Set Shell = WScript.CreateObject("WScript.Shell")
 
-' CD to the script directory
-Shell.CurrentDirectory = UCase(Left(Wscript.ScriptFullName, Len(Wscript.ScriptFullName) - Len(Wscript.ScriptName) - 1))
+Shell.CurrentDirectory = "E:\"
 
-Dim CMD, arg, quotedArg
+Dim CMD, arg
 
-CMD = "python __Start.py "
+CMD = "python -m Minecraft._Start.py "
 
 ' Build the arguments string
 For Each arg In WScript.Arguments

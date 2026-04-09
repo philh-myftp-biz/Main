@@ -1,53 +1,25 @@
-from philh_myftp_biz.api.minecraft import ModrinthMod, FabricMC
-from philh_myftp_biz.web import download, FirewallException
-from typing import Generator, Callable, Literal
-from philh_myftp_biz.file import temp, INI
+from philh_myftp_biz.web.minecraft import ModrinthMod, FabricMC
+from philh_myftp_biz.web import FirewallException, URL
 from philh_myftp_biz.process import Start
+from philh_myftp_biz.terminal import Log
 from philh_myftp_biz.json import Dict
-from philh_myftp_biz.text import hex
+from philh_myftp_biz.file import INI
 from philh_myftp_biz.pc import Path
+from . import this, args, PIDs
+from typing import Callable
 from re import search
-
-def AutoEdition(name: str) -> Java | Bedrock: # pyright: ignore[reportReturnType]
-    
-    edition: str = INI(World(name).child('edition.ini')).read()['edition']
-
-    match edition: # pyright: ignore[reportMatchNotExhaustive]
-
-        case 'Java':
-            return Java(name)
-        
-        case 'Bedrock':
-            return Bedrock(name)
 
 class World(Path):
 
-    _safe: list[str]
-    """Don't Delete these"""
-
-    WebFiles: Callable[[], Generator[tuple[Path, Path]]]
-    """Get a list of downloaded files to copy"""
-
-    Configure: Callable[[], None]
-    """Configure the world"""
-
-    Start: Callable[[], list[int]]
-    """Start the World"""
-
-    Edition: Literal['Java', 'Bedrock']
-    """ """
-
-    Port: Callable[[], int]
+    port: Callable[[], int]
     """Get the Server Port"""
 
     _GIT_IGNORE: str
-    """ """
 
     def __init__(self, name:str):
-
         super().__init__(f'E:/Minecraft/Worlds/{name}/')
 
-    def _WebFiles_Base(self):
+    def _update(self):
 
         #============================================
 
@@ -59,67 +31,43 @@ class World(Path):
 
         for name, url in files.items():
 
-            tmp = temp(hex.encode(self.name))
+            dst = self.child(name)
 
-            download(url, tmp, False)
-
-            # SRC, DST
-            yield tmp, self.child(name)
+            URL(url).cache(dst)
 
         #============================================
 
-    def _Configure(self):
+    def _start(self, *args:str):
+        
+        #======================================================
+
+        process = Start(args, dir=self)
+
+        PIDs[self.name] = process._process.pid
 
         #======================================================
         # GIT IGNORE
 
         gitignore = self.child('.gitignore')
 
-        gitignore.open('w').write(self._GIT_IGNORE)
+        with gitignore.open('w') as f:
+            f.write(self._GIT_IGNORE)
 
         #======================================================
         # FIREWALL
 
         fe = FirewallException(f'Minecraft World: {self.name}')
-        fe.set(self.Port())
+        fe.set(self.port)
 
         #======================================================
 
-    def GenFiles(self) -> Generator[Path]:
-        """All generated/expendable files in the world folder"""
-
-        for child in self.descendants:
-
-            # If the child is not related to any of the safe files
-            if not any([self.child(f).related_to(child) for f in self._safe]):
-
-                yield child
-
-    def _Start_Base(self, *args:str):
-
-        return Start(
-            args = args,
-            dir = self
-        )
+        yield process
 
     def __repr__(self):
         return f"World('{self.name}')"
 
 class Java(World):
 
-    Edition = 'Java'
-
-    _safe = [
-        'world/',
-        'server.properties',
-        'banned-ips.json',
-        'banned-players.json',
-        'ops.json',
-        'whitelist.json',
-        'config/Geyser-Fabric/config.yml',
-        'edition.ini'
-    ]
-    
     _GIT_IGNORE = """
 # Hide Everything
 /*
@@ -148,11 +96,11 @@ world/session.lock
 
 """
 
-    def WebFiles(self):
+    def update(self):
         
-        base = self._WebFiles_Base()
+        base = super()._update()
 
-        files = next(base)
+        files: dict[str, str] = next(base)
 
         #========================================================================
         # Geyser
@@ -176,9 +124,10 @@ world/session.lock
 
         #========================================================================
 
-        yield from base
+        next(base, None)
 
-    def Port(self):
+    @property
+    def port(self) -> int:
 
         props = self.child('server.properties')
 
@@ -192,9 +141,9 @@ world/session.lock
 
         return int(r.group(1))
 
-    def start(self):
+    def start(self) -> Start:
 
-        process = super()._Start_Base(
+        base = super()._start(
             'java', 
             '-Xmx2G',
             '-jar', 'fabric-server-launch.jar',
@@ -205,12 +154,48 @@ world/session.lock
         eula = Dict(INI(self.child('eula.txt')))
         eula['eula'] = True
 
-        super()._Configure()
-
-        return process
+        return next(base) # pyright: ignore[reportReturnType]
 
 class Bedrock(World):
+    ... # TODO
 
-    Edition = 'Bedrock'
+#================================================================================================
 
-    # TODO
+class _Worlds(list[Java|Bedrock]):
+
+    def __iadd__(self, name:str):
+
+        Log.INFO(f"Selected World: {name}")
+
+        edition_ini = INI(Path(f'E:/Minecraft/Worlds/{name}/edition.ini'))
+
+        match edition_ini.read()['edition']: # pyright: ignore[reportMatchNotExhaustive]
+
+            case 'Java':
+                world = Java(name)
+            
+            case 'Bedrock':
+                world = Bedrock(name)
+
+        super().__iadd__([world]) # pyright: ignore[reportPossiblyUnboundVariable]
+
+        return self
+
+Worlds = _Worlds()
+
+#================================================================================================
+
+# If a specific world is given
+if args['world']:
+
+    Worlds += args['world']
+
+else:
+
+    for s in this.child('/Worlds/').children:
+
+        if s.seg()[0] != '.':
+
+            Worlds += s.name
+
+#================================================================================================
