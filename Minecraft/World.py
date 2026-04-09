@@ -11,37 +11,28 @@ from re import search
 
 class World(Path):
 
-    port: Callable[[], int]
-    """Get the Server Port"""
+    port: int
+    GIT_IGNORE: str
+    args: list[str]
+    files: dict[str, str]
+    configure: Callable
 
-    _GIT_IGNORE: str
-
-    def __init__(self, name:str):
+    def __init__(self, name:str) -> None:
         super().__init__(f'E:/Minecraft/Worlds/{name}/')
 
-    def _update(self):
+    def start(self) -> Start:
 
-        #============================================
+        #======================================================
 
-        files: dict[str, str] = {}
-
-        yield files
-
-        #============================================
-
-        for name, url in files.items():
+        for name, url in self.files.items():
 
             dst = self.child(name)
 
             URL(url).cache(dst)
 
-        #============================================
-
-    def _start(self, *args:str):
-        
         #======================================================
 
-        process = Start(args, dir=self)
+        process = Start(self.args, dir=self)
 
         PIDs[self.name] = process._process.pid
 
@@ -51,7 +42,7 @@ class World(Path):
         gitignore = self.child('.gitignore')
 
         with gitignore.open('w') as f:
-            f.write(self._GIT_IGNORE)
+            f.write(self.GIT_IGNORE)
 
         #======================================================
         # FIREWALL
@@ -61,14 +52,13 @@ class World(Path):
 
         #======================================================
 
-        yield process
+        self.configure()
 
-    def __repr__(self):
-        return f"World('{self.name}')"
+        return process
 
 class Java(World):
 
-    _GIT_IGNORE = """
+    GIT_IGNORE = """
 # Hide Everything
 /*
 
@@ -96,11 +86,17 @@ world/session.lock
 
 """
 
-    def update(self):
-        
-        base = super()._update()
+    args = [
+        'java', 
+        '-Xmx2G',
+        '-jar', 'fabric-server-launch.jar',
+        'nogui'
+    ]
 
-        files: dict[str, str] = next(base)
+    @property
+    def files(self):
+
+        files: dict[str, str] = {}
 
         #========================================================================
         # Geyser
@@ -124,7 +120,7 @@ world/session.lock
 
         #========================================================================
 
-        next(base, None)
+        return files
 
     @property
     def port(self) -> int:
@@ -141,20 +137,10 @@ world/session.lock
 
         return int(r.group(1))
 
-    def start(self) -> Start:
-
-        base = super()._start(
-            'java', 
-            '-Xmx2G',
-            '-jar', 'fabric-server-launch.jar',
-            'nogui'
-        )
-
+    def configure(self):
         # Agree to the EULA
         eula = Dict(INI(self.child('eula.txt')))
         eula['eula'] = True
-
-        return next(base) # pyright: ignore[reportReturnType]
 
 class Bedrock(World):
     ... # TODO
