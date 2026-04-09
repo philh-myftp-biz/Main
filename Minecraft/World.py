@@ -14,7 +14,7 @@ class World(Path):
     port: int
     GIT_IGNORE: str
     args: list[str]
-    files: dict[str, str]
+    files: dict[str, None|str]
     configure: Callable
 
     def __init__(self, name:str) -> None:
@@ -25,6 +25,9 @@ class World(Path):
         #======================================================
 
         for name, url in self.files.items():
+
+            if url is None:
+                Log.WARN(f'Mod Not Found: {name}')
 
             dst = self.child(name)
 
