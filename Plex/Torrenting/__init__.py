@@ -4,7 +4,7 @@ from philh_myftp_biz.terminal import ParsedArgs
 from philh_myftp_biz.modules import Module
 from philh_myftp_biz.web.omdb import Omdb
 from philh_myftp_biz.terminal import Log
-from philh_myftp_biz.web import Driver
+from philh_myftp_biz.web.driver import Driver
 from philh_myftp_biz.array import List
 from philh_myftp_biz.file import JSON
 
