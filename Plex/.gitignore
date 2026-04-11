@@ -10,21 +10,8 @@
 # Lockfile
 /__lock__.ig
 
-#==============================================================
-# Add Databases
-
-!/Plex Media Server
-/Plex Media Server/*
-
-!/Plex Media Server/Plug-in Support
-/Plex Media Server/Plug-in Support/*
-
-!/Plex Media Server/Plug-in Support/Databases/
-/Plex Media Server/Plug-in Support/Databases/*
-
-!/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db
-
-#==============================================================
+# PMS Files
+/Plex Media Server/
 
 # WinTV Activation Code
 /WinTV/Activation Code.txt
