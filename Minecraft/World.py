@@ -1,5 +1,6 @@
 from philh_myftp_biz.web.minecraft import ModrinthMod, FabricMC
 from philh_myftp_biz.web import FirewallException, URL
+from philh_myftp_biz.classtools import singleton
 from philh_myftp_biz.process import Start
 from philh_myftp_biz.terminal import Log
 from philh_myftp_biz.json import Dict
@@ -150,7 +151,8 @@ class Bedrock(World):
 
 #================================================================================================
 
-class _Worlds(list[Java|Bedrock]):
+@singleton
+class Worlds(list[Java|Bedrock]):
 
     def __iadd__(self, name:str):
 
@@ -169,8 +171,6 @@ class _Worlds(list[Java|Bedrock]):
         super().__iadd__([world]) # pyright: ignore[reportPossiblyUnboundVariable]
 
         return self
-
-Worlds = _Worlds()
 
 #================================================================================================
 
