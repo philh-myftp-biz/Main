@@ -1,12 +1,12 @@
 from philh_myftp_biz.web.torrent import TorrentFile, Magnet, NameParser
 from philh_myftp_biz.web.omdb import EpisodeData
+from philh_myftp_biz.classtools import loc, attr
 from philh_myftp_biz.text import similarity
-from philh_myftp_biz.classtools import loc
 from philh_myftp_biz.terminal import Log
 from philh_myftp_biz.db import MimeType
-from typing import Callable, Any
 from philh_myftp_biz.pc import Path
 from philh_myftp_biz import VERBOSE
+from typing import Callable, Any
 from . import this, tpb, omdb
 
 class WEIGHTS(dict[str, Any]):
@@ -100,7 +100,6 @@ class _Template:
     weights: WEIGHTS
 
     magnet: None|Magnet = None
-    """Magnet Instance"""
 
     queries: list[str]
     """List of queries for the pirate bay"""
@@ -113,8 +112,6 @@ class _Template:
 
     dir: Path
     """Parent Folder"""
-
-    _int: int
 
     def start(self) -> None:
         """Search thepiratebay.org and start the download"""
@@ -198,9 +195,6 @@ class _Template:
                     key = lambda m: m.size
                 )
 
-    def __int__(self) -> int:
-        return self._int
-
 class Movie(_Template):
 
     dir = this.child('/Media/Movies/')
@@ -209,16 +203,12 @@ class Movie(_Template):
         title: str,
         year: int,
         todo: Path = None
-    ):
+    ) -> None:
         
         self.Title = title
-        """Movie Title"""
-
         self.Year = year
-        """Release Year"""
-        
+
         self.__todo = todo
-        """Placeholder File"""
 
         self.queries = [
             title,
@@ -258,20 +248,16 @@ class Show:
         year: int             
     ) -> None:
 
-        # Store title
         self.Title = title
-        
-        # Store year 
         self.Year = year
 
-        # Show Root Directory
         self.dir = this.child(f"/Media/Shows/{title} ({year})/")
         """../Media/Shows/{Title} ({Year})/"""
 
         # List of 'Season' OBJs
         self.seasons = [Season(self, *i) for i in omdb.show(title, year).Seasons.items()]
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<Show "{self.Title}" @{loc(self)}>'
 
 class Season(_Template):
@@ -282,11 +268,9 @@ class Season(_Template):
         episodes: dict[str, EpisodeData]
     ) -> None:
         
-        # Store 'Show' OBJ
         self.show: Show = show
 
-        # Integer Function
-        self._int = int(season)
+        attr(self, '__int__').set(lambda s: int(season))
 
         # Destination File Directory
         self.dir = show.dir.child(f"/Season {self:02d}/")
@@ -337,21 +321,15 @@ class Episode(_Template):
         episode: EpisodeData
     ) -> None:
 
-        # Store 'Show' OBJ
         self.show: Show = season.show
-        
-        # Store 'Season' OBJ
         self.season: Season = season
-
-        # Store Episode Title
         self.Title: str = episode.Title
 
-        # Store Directory
         self.dir = season.dir
         """E:/Plex/Media/Shows/{Show}/Season {Season}/"""
 
         # Integer Function
-        self._int = episode.Number
+        attr(self, '__int__').set(lambda s: episode.Number)
 
         # List of TPB queries
         self.queries = [
