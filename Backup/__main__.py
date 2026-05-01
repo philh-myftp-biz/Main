@@ -1,5 +1,3 @@
-
-
 from .Path import Scanner
 from philh_myftp_biz.terminal import cls
 
@@ -13,7 +11,6 @@ for p in Scanner.local():
         print(p)
 
     
-
 cls()
 
 for p in Scanner.remote():
