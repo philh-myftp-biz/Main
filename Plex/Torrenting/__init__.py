@@ -1,12 +1,13 @@
 
 from philh_myftp_biz.web.torrent import thePirateBay, qBitTorrent
 from philh_myftp_biz.terminal import ParsedArgs
+from philh_myftp_biz.web.driver import Driver
 from philh_myftp_biz.modules import Module
 from philh_myftp_biz.web.omdb import Omdb
 from philh_myftp_biz.terminal import Log
-from philh_myftp_biz.web.driver import Driver
 from philh_myftp_biz.array import List
 from philh_myftp_biz.file import JSON
+from philh_myftp_biz import VERBOSE
 
 from json.decoder import JSONDecodeError
 from os import getpid
@@ -59,7 +60,6 @@ driver = Driver(
     eager = True
 )
 
-#
 for pid in driver.Task.PIDs:
     PIDstore += f'firefox-{pid}'
 
@@ -68,7 +68,6 @@ for pid in driver.Task.PIDs:
 
 # Start the Virtual Machine
 VM.runH('Start', 'Torrenting')
-
 
 host: str|None = None
 
@@ -80,10 +79,14 @@ while host is None:
         f"name='Torrenting'"
     )
 
+    VERBOSE.pause()
+
     try:
         host = VM.cap('IP', 'Torrenting')
     except JSONDecodeError:
         pass
+
+    VERBOSE.resume()
 
 Log.VERB(
     f'Discovering VM\n'+ \
