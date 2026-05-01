@@ -1,15 +1,16 @@
+from philh_myftp_biz.terminal import ParsedArgs
 from philh_myftp_biz.text import contains
 from philh_myftp_biz.terminal import Log
 
 from typing import Generator, Literal
-from . import this, args, Media
+from . import this, Media
 
 def _FILTER(name:str):
 
-    if args['filter'] == '':
+    if ParsedArgs['filter'] == '':
         return True
     else:
-        return contains.any(name, args['filter'])
+        return contains.any(name, ParsedArgs['filter'])
 
 def ReadName(
     name: Literal['Title (Year)']

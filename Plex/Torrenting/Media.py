@@ -1,5 +1,5 @@
-from philh_myftp_biz.web.torrent import TorrentFile, Magnet, NameParser
-from philh_myftp_biz.web.omdb import EpisodeData
+from philh_myftp_biz.web.torrent import TorrentFile, Magnet, NameParser, thePirateBay
+from philh_myftp_biz.web.omdb import EpisodeData, Omdb
 from philh_myftp_biz.classtools import loc, attr
 from philh_myftp_biz.text import similarity
 from philh_myftp_biz.terminal import Log
@@ -7,7 +7,7 @@ from philh_myftp_biz.db import MimeType
 from philh_myftp_biz.pc import Path
 from philh_myftp_biz import VERBOSE
 from typing import Callable, Any
-from . import this, tpb, omdb
+from . import this
 
 class WEIGHTS(dict[str, Any]):
 
@@ -116,7 +116,7 @@ class _Template:
     def start(self) -> None:
         """Search thepiratebay.org and start the download"""
 
-        magnets = tpb.search(*self.queries)
+        magnets = thePirateBay.search(*self.queries)
 
         magnets.filter(lambda m: self.valid(m.name))
 
@@ -255,7 +255,7 @@ class Show:
         """../Media/Shows/{Title} ({Year})/"""
 
         # List of 'Season' OBJs
-        self.seasons = [Season(self, *i) for i in omdb.show(title, year).Seasons.items()]
+        self.seasons = [Season(self, *i) for i in Omdb.show(title, year).Seasons.items()]
 
     def __repr__(self) -> str:
         return f'<Show "{self.Title}" @{loc(self)}>'

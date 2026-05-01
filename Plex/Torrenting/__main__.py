@@ -1,5 +1,6 @@
 from philh_myftp_biz.web.omdb import MediaNotFoundError
-from . import qbit, VM, driver, args, PIDstore, Media
+from . import qbit, VM, driver, PIDstore, Media
+from philh_myftp_biz.terminal import ParsedArgs
 from philh_myftp_biz.terminal import Log
 from .Scanner import Downloads
 from time import sleep
@@ -72,7 +73,7 @@ while True:
         break
 
     # Break the loop if the queue limit has been reached
-    if len(queue) >= args['limit']:
+    if len(queue) >= ParsedArgs['limit']:
 
         Log.WARN('Download Limit Reached')
 
