@@ -17,13 +17,11 @@ New-Item `
     -ErrorAction SilentlyContinue `
     -Verbose
 
-#
-Copy-Item `
-    -Path "$Root\Hyper-V\Template.vhdx" `
-    -Destination "$Root\Hyper-V\$Name\Hard Drive.vhdx" `
-    -Verbose
+New-VHD `
+    -Path "$Root\Hyper-V\$Name\Hard Drive.vhdx"
+    -ParentPath "$Root\Template\Tiny11\Hard Drive.vhdx" `
+    -Differencing
 
-#
 Repair-VirtualMachine -Name $Name
 
 #=====================================================================================================
