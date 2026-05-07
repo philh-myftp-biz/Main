@@ -1,23 +1,26 @@
-from .Path import Scanner
-from philh_myftp_biz.terminal import cls
+from . import Scan, PathPair
 
-for p in Scanner.local():
+paths = []
+        
+for path in Scan():
+        
+    if not path.is_file:
+        continue
+        
+    pp = PathPair(path)
 
-    if not p.remote.exists:
+    if pp in paths:
+        continue
+            
+    elif not pp.remote.exists:
 
-        p.local.delete()
+        paths += [pp]
+        pp.local.delete()
+
+    elif (not pp.local.exists) or (pp.local.size != pp.remote.size):
+
+        paths += [pp]
+        pp.remote.download(pp.local)
 
     else:
-        print(p)
-
-    
-cls()
-
-for p in Scanner.remote():
-
-    if (not p.local.exists) or (p.local.size != p.remote.size):
-
-        p.remote.download(p.local)
-
-    else:
-        print(p)
+        print(pp)
