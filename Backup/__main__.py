@@ -1,26 +1,29 @@
+from philh_myftp_biz.terminal import Log
 from . import Scan, PathPair
 
-paths = []
+scanner = Scan()
+
+while True:
+
+    try:
+
+        path = next(scanner)
         
-for path in Scan():
-        
-    if not path.is_file:
-        continue
-        
-    pp = PathPair(path)
+        pp = PathPair(path)
 
-    if pp in paths:
-        continue
-            
-    elif not pp.remote.exists:
+        if path.is_dir:
+            continue
+                
+        elif not pp.remote.exists:
 
-        paths += [pp]
-        pp.local.delete()
+            pp.local.delete()
 
-    elif (not pp.local.exists) or (pp.local.size != pp.remote.size):
+        elif (not pp.local.exists) or (pp.local.size != pp.remote.size):
 
-        paths += [pp]
-        pp.remote.download(pp.local)
+            pp.remote.download(pp.local)
 
-    else:
-        print(pp)
+        else:
+            print(pp)
+
+    except ConnectionAbortedError:
+        Log.WARN('', exc_info=True)
