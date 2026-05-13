@@ -90,7 +90,7 @@ class WEIGHTS(dict[str, Any]):
     ) -> bool:
         
         if isinstance(target, list):
-            return (control in target)
+            return (control == target[0])
         
         else:
             return (control == target)
