@@ -5,7 +5,8 @@
 **/__pylogs__/
 
 # Plex Media
-/Media/
+/Media/*
+!/Media/purge.py
 
 # Lockfile
 /__lock__.ig
