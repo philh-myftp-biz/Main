@@ -1,0 +1,5 @@
+
+[submodule "Worlds"]
+	path = Worlds
+	url = https://github.com/MineFartS/Server-Minecraft-Worlds
+    ignore = all
