@@ -18,9 +18,5 @@ Certificates/
 *.zip
 *.exe
 
-# Videos
-*.mp4
-*.mov
-
 # Misc
 *.psd
