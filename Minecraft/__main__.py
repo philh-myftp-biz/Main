@@ -1,7 +1,7 @@
 from .World import Worlds
-from . import args
+from philh_myftp_biz.terminal import Args
 
-if args['force']:
+if Args['force']:
     processes = [w._start() for w in Worlds]
 else:
     processes = [w.start() for w in Worlds]

@@ -1,11 +1,12 @@
 from philh_myftp_biz.web import FirewallException
 from philh_myftp_biz.functools import singleton
 from philh_myftp_biz.process import Start
-from . import this, args, Tasks, java_exe
+from philh_myftp_biz.terminal import Args
 from philh_myftp_biz.terminal import Log
 from philh_myftp_biz.json import Dict
 from philh_myftp_biz.file import INI
 from philh_myftp_biz.pc import Path
+from . import this, Tasks, java_exe
 from re import search
 
 class World(Path):
@@ -16,12 +17,10 @@ class World(Path):
     def _start(self):
         
         process = Start(
-            args = [
-                java_exe, 
-                '-Xmx2G',
-                '-jar', 'fabric-server-launch.jar',
-                'nogui'
-            ],
+            java_exe, 
+            '-Xmx2G',
+            '-jar', 'fabric-server-launch.jar',
+            'nogui',
             dir = self
         )
 
@@ -35,7 +34,10 @@ class World(Path):
         #======================================================
 
         for name, url in files.items():
-            url.cache(self.child(name))
+            url.download(
+                path = self.child(name),
+                force = False
+            )
 
         #======================================================
 
@@ -109,8 +111,8 @@ class Worlds(list[World]):
     def __init__(self) -> None:
         super().__init__()
 
-        if args['world']:
-            self += args['world']
+        if Args['world']:
+            self += Args['world']
 
         else:
             for s in this.child('/Worlds/').children:
