@@ -9,10 +9,12 @@ from philh_myftp_biz.pc import Path
 from . import this, Tasks, java_exe
 from re import search
 
-class World(Path):
+class World:
 
     def __init__(self, name:str) -> None:
-        super().__init__(f'E:/Minecraft/Worlds/{name}/')
+        self.path = Path(f'E:/Minecraft/Worlds/{name}/')
+        self.name = self.path.name
+        self.child = self.path.child
 
     def _start(self):
         
@@ -21,7 +23,7 @@ class World(Path):
             '-Xmx2G',
             '-jar', 'fabric-server-launch.jar',
             'nogui',
-            dir = self
+            dir = self.path
         )
 
         Tasks[self.name] = process
