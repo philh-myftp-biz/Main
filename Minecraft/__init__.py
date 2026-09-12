@@ -1,4 +1,3 @@
-from philh_myftp_biz.process import SubProcess
 from philh_myftp_biz.modules import Module
 from philh_myftp_biz.terminal import Args
 from philh_myftp_biz.json import Dict
@@ -26,6 +25,6 @@ Args.Flag(
 
 #============================================================
 
-Tasks: Dict[SubProcess] = this.child('/__pycache__/Tasks.pkl').PKL.Dict
+PIDs: Dict[int] = this.child('/__pycache__/PIDS.json').JSON.Dict
 
 #============================================================

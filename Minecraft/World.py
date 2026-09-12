@@ -1,3 +1,4 @@
+from philh_myftp_biz.process.SysTask import SysTask
 from philh_myftp_biz.web import FirewallException
 from philh_myftp_biz.functools import singleton
 from philh_myftp_biz.process import Start
@@ -6,7 +7,7 @@ from philh_myftp_biz.terminal import Log
 from philh_myftp_biz.json import Dict
 from philh_myftp_biz.file import INI
 from philh_myftp_biz.pc import Path
-from . import this, Tasks, java_exe
+from . import this, PIDs, java_exe
 from re import search
 
 class World:
@@ -15,6 +16,10 @@ class World:
         self.path = Path(f'E:/Minecraft/Worlds/{name}/')
         self.name = self.path.name
         self.child = self.path.child
+
+    @property
+    def task(self) -> SysTask:
+        return SysTask(PIDs[self.name])
 
     def _start(self):
         
@@ -26,7 +31,7 @@ class World:
             dir = self.path
         )
 
-        Tasks[self.name] = process
+        PIDs[self.name] = process._process.pid
 
         return process
 
