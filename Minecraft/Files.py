@@ -10,6 +10,16 @@ files: dict[str, URL] = {}
 files['mods/Geyser.jar'] = ModrinthMod('geyser', version).url
 
 #========================================================================
+# Get Off My Lawn ReServed
+
+files['mods/goml.jar'] = ModrinthMod('goml-reserved', version).url
+
+#========================================================================
+# Polymer
+
+files['mods/Polymer.jar'] = ModrinthMod('polymer', version).url
+
+#========================================================================
 # Fabric Server
 
 files['fabric-server-launch.jar'] = FabricMC(version).server_jar
