@@ -13,7 +13,7 @@
 [submodule "AI/Ollama/.app"]
 	path = AI/Ollama/.app
 	url = https://github.com/MineFartS/Ollama-Embed
-    branch = embed
+	branch = embed
     ignore = all
 
 [submodule "AI/.venv"]
