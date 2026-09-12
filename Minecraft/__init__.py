@@ -1,15 +1,10 @@
-from philh_myftp_biz.modules import Module
 from philh_myftp_biz.terminal import Args
 from philh_myftp_biz.json import Dict
+from philh_myftp_biz.pc import Path
 
 version = "26.1"
 
-#============================================================
-
-# Minecraft Module
-this = Module('E:/Minecraft/')
-
-java_exe = this.child('/.java/bin/java.exe')
+this = Path('E:/Minecraft/')
 
 #============================================================
 

@@ -1,7 +1,4 @@
-from philh_myftp_biz.terminal import cls, set_package
-
-set_package('E:/Minecraft')
-
+from philh_myftp_biz.terminal import cls
 from .World import Worlds
 
 for w in Worlds:

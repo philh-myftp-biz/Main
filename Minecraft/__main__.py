@@ -1,12 +1,10 @@
-from .World import Worlds
 from philh_myftp_biz.terminal import Args
+from .World import Worlds
 
 if Args['force']:
-    processes = [w._start() for w in Worlds]
-else:
-    processes = [w.start() for w in Worlds]
+    [w.install() for w in Worlds]
 
-# Wait for all subprocesses to complete
-for process in processes:
-    
-    process.wait()
+[w.start() for w in Worlds]
+
+[w.task.wait() for w in Worlds]
+

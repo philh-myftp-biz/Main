@@ -1,60 +1,11 @@
 from philh_myftp_biz.process.SysTask import SysTask
 from philh_myftp_biz.web import FirewallException
-from philh_myftp_biz.functools import singleton
-from philh_myftp_biz.process import Start
 from philh_myftp_biz.terminal import Args
-from philh_myftp_biz.terminal import Log
-from philh_myftp_biz.json import Dict
-from philh_myftp_biz.file import INI
+from philh_myftp_biz.process import Start
 from philh_myftp_biz.pc import Path
-from . import this, PIDs, java_exe
-from re import search
+from . import this, PIDs
 
-class World:
-
-    def __init__(self, name:str) -> None:
-        self.path = Path(f'E:/Minecraft/Worlds/{name}/')
-        self.name = self.path.name
-        self.child = self.path.child
-
-    @property
-    def task(self) -> SysTask:
-        return SysTask(PIDs[self.name])
-
-    def _start(self):
-        
-        process = Start(
-            java_exe, 
-            '-Xmx2G',
-            '-jar', 'fabric-server-launch.jar',
-            'nogui',
-            dir = self.path
-        )
-
-        PIDs[self.name] = process._process.pid
-
-        return process
-
-    def start(self) -> Start:
-        from .Files import files
-
-        #======================================================
-
-        for name, url in files.items():
-            url.download(
-                path = self.child(name),
-                force = False
-            )
-
-        #======================================================
-
-        process = self._start()
-
-        #======================================================
-        # GIT IGNORE
-
-        with self.child('.gitignore').open('w') as f:
-            f.write("""
+_README = """
 # Hide Everything
 /*
 
@@ -80,65 +31,68 @@ world/session.lock
 /config/Geyser-Fabric/*
 !/config/Geyser-Fabric/config.yml
 
-""")
+"""
 
-        #======================================================
-        # EULA
+class World:
 
-        eula = Dict(INI(self.child('eula.txt')))
-        eula['eula'] = True
+    def __init__(self, name:str) -> None:
 
-        #======================================================
-        # FIREWALL
+        self.name = name
+        self.path = this.child(f'/Worlds/{name}/')
 
-        fe = FirewallException(f'Minecraft World: {self.name}')
-        fe.set(self.port)
+        self.firewall_exception = FirewallException(f'Minecraft World: {self.name}')
 
-        #======================================================
+        self.gitignore = self.path.child('.gitignore').TXT
+
+        self.eula = self.path.child('eula.txt').INI.Dict
+
+        self.props = self.path.child('server.properties').INI.Dict
+
+    @property
+    def task(self) -> SysTask:
+        return SysTask(PIDs[self.name])
+
+    def start(self):
+        
+        process = Start(
+            'E:/Minecraft/.java/bin/java.exe',
+            '-Xmx2G',
+            '-jar', 'fabric-server-launch.jar',
+            'nogui',
+            dir = self.path
+        )
+
+        PIDs[self.name] = process._process.pid
 
         return process
 
-    @property
-    def port(self) -> int:
+    def install(self) -> None:
+        from .Files import files
 
-        props = self.child('server.properties')
+        for name, url in files.items():
+            url.download(
+                path = self.path.child(name),
+                force = False
+            )
 
-        r = search(
-            pattern = r'\nserver-port=(.*)',
-            string = props.open().read()
-        )
+        self.gitignore.save(_README)
 
-        return int(r.group(1))
+        self.eula['eula'] = True
+
+        self.firewall_exception.set( self.props['server-port'] )
 
 #================================================================================================
 
-@singleton
-class Worlds(list[World]):
+def _Worlds():
 
-    def __init__(self) -> None:
-        super().__init__()
+    if Args['world']:
+        yield World(name=Args['world'])
+        return
 
-        if Args['world']:
-            self += Args['world']
+    for s in Path('E:/Minecraft/Worlds/').children:
+        if s.is_dir:
+            yield World(name=s.name)
 
-        else:
-            for s in this.child('/Worlds/').children:
-                if s.is_dir:
-
-                    self += s.name
-
-    def __iadd__(self, name:str):
-
-        super().__iadd__([World(name)])
-
-        return self
-    
-    def __iter__(self):
-
-        _iter = super().__iter__()
-
-        for w in _iter:
-            Log.INFO(f"Selected World: {w.name}")
-            yield w
+Worlds = list(_Worlds())
 
 #================================================================================================
