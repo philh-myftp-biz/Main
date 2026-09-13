@@ -3,7 +3,7 @@ from philh_myftp_biz.modules import Repo
 from philh_myftp_biz.json import Dict
 from philh_myftp_biz.pc import Path
 
-version = "26.1"
+version = "26.2"
 
 this = Path('E:/Minecraft/')
 
