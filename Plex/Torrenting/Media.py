@@ -6,6 +6,7 @@ from typing import Callable, Iterable
 from philh_myftp_biz.web import Omdb
 from philh_myftp_biz.pc import Path
 from philh_myftp_biz import VERBOSE
+from sys import maxsize
 
 try:
     from .weights import Weights
@@ -15,7 +16,7 @@ except ImportError:
 #================================================
 
 overrides = [
-    Torrent(name=name, url=url)
+    Torrent(name=name, url=url, seeders=maxsize)
     for name, url in
     Path('E:/Plex/Torrenting/Overrides.json').JSON.Dict.items()
 ]
@@ -55,7 +56,10 @@ class MediaItem:
         if self.magnet is not None:
             return
 
-        magnets = get_magnets()
+        magnets = sorted(
+            get_magnets(),
+            key = lambda m: -m.seeders
+        )
 
         if do_filter:
             magnets = filter(self.weights, magnets)
