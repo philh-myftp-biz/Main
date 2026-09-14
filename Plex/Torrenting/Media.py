@@ -2,10 +2,9 @@ from philh_myftp_biz.web.torrent import Torrent, TorrentFile, thePirateBay
 from philh_myftp_biz.functools import loc, attr, cached_property
 from philh_myftp_biz.web.torrent import qBitTorrent as qbit
 from philh_myftp_biz.web.torrent.models import EpisodeData
-from typing import Callable, Iterable
 from philh_myftp_biz.web import Omdb
 from philh_myftp_biz.pc import Path
-from philh_myftp_biz import VERBOSE
+from typing import Callable
 from sys import maxsize
 
 try:
@@ -39,7 +38,6 @@ class MediaItem:
 
     weights: Weights
     torrent: None|Torrent = None
-    file: None|TorrentFile = None
 
     @property
     def exists(self) -> bool:
@@ -48,52 +46,46 @@ class MediaItem:
             (self.weights(p) and p.size>0) for p in self.dir.children
         )
 
-    def _start(self, 
-        do_filter: bool, 
-        get_magnets: Callable[..., Iterable[Torrent]]
-    ) -> None:
+    @cached_property
+    def file(self) -> None | TorrentFile:
+        if self.torrent is None: return
+        
+        files: list[TorrentFile] = filter(
+            lambda f: self.weights(f) and f.path.type=='video',
+            self.torrent.files
+        )
 
-        if self.torrent is not None:
+        return max(
+            files,
+            key = lambda f: f.size,
+            default = None
+        )
+
+    def start(self, i:int=0) -> None:
+
+        del self.file
+        if self.file: 
+            self.file.start()
             return
+        
+        torrents: list[Torrent]
+        match i:
+            case 0: torrents = overrides
+            case 1: torrents = qbit.queue.read()
+            case 2: torrents = thePirateBay.search(*self.queries)
+            case 3: return
 
         torrents = sorted(
-            get_magnets(),
+            filter(self.weights, torrents),
             key = lambda m: -m.seeders
         )
 
-        if do_filter:
-            torrents = filter(self.weights, torrents)
+        for self.torrent in torrents:
+            self.torrent.start(stop_files=True)
+            del self.file
+            if self.file: break
 
-        for mag in torrents:
-
-            if not mag.exists:
-                try:
-                    mag.start()
-                    VERBOSE.pause()
-                    [f.stop() for f in mag.files]
-                except TimeoutError:
-                    mag.stop()
-                    continue
-                finally:
-                    VERBOSE.resume()
-
-            self.torrent = mag
-
-            files: list[TorrentFile] = list(filter(
-                lambda f: self.weights(f) and f.path.type=='video',
-                self.torrent.files
-            ))
-
-            if len(files) > 0:
-                self.file = max(files, key=lambda f: f.size)
-                self.file.start()
-
-            break
-    
-    def start(self) -> None:
-        self._start( True, qbit.queue.read )
-        self._start( True, lambda: overrides )
-        self._start( True, lambda: thePirateBay.search(*self.queries) )
+        MediaItem.start(self, i=i+1)
 
 class Movie(MediaItem):
 
@@ -247,10 +239,7 @@ class Episode(MediaItem):
         )
 
     def start(self) -> None:
-
-        if self.season.torrent:
-            self._start(False, lambda: [self.season.torrent])
-
+        self.torrent = self.season.torrent
         super().start()
 
     @cached_property
