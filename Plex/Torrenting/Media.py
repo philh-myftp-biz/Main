@@ -38,7 +38,7 @@ class MediaItem:
     """Parent Folder"""
 
     weights: Weights
-    magnet: None|Torrent = None
+    torrent: None|Torrent = None
     file: None|TorrentFile = None
 
     @property
@@ -53,18 +53,18 @@ class MediaItem:
         get_magnets: Callable[..., Iterable[Torrent]]
     ) -> None:
 
-        if self.magnet is not None:
+        if self.torrent is not None:
             return
 
-        magnets = sorted(
+        torrents = sorted(
             get_magnets(),
             key = lambda m: -m.seeders
         )
 
         if do_filter:
-            magnets = filter(self.weights, magnets)
+            torrents = filter(self.weights, torrents)
 
-        for mag in magnets:
+        for mag in torrents:
 
             if not mag.exists:
                 try:
@@ -77,11 +77,11 @@ class MediaItem:
                 finally:
                     VERBOSE.resume()
 
-            self.magnet = mag
+            self.torrent = mag
 
             files: list[TorrentFile] = list(filter(
                 lambda f: self.weights(f) and f.path.type=='video',
-                self.magnet.files
+                self.torrent.files
             ))
 
             if len(files) > 0:
@@ -248,8 +248,8 @@ class Episode(MediaItem):
 
     def start(self) -> None:
 
-        if self.season.magnet:
-            self._start(False, lambda: [self.season.magnet])
+        if self.season.torrent:
+            self._start(False, lambda: [self.season.torrent])
 
         super().start()
 
