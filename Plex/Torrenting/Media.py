@@ -116,7 +116,7 @@ class Movie(MediaItem):
 
         self.weights = Weights(
             TITLE = [self.Title],
-            YEAR = [self.Year-1, self.Year, self.Year+1],
+            YEAR = self.Year,
             UPLOADED = self.omdb.Released
         )
 
