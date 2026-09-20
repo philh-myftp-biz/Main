@@ -1,0 +1,923 @@
+<!doctype html>
+	<!--[if !IE]>
+	<html class="no-js non-ie" lang="en-US"> <![endif]-->
+	<!--[if IE 7 ]>
+	<html class="no-js ie7" lang="en-US"> <![endif]-->
+	<!--[if IE 8 ]>
+	<html class="no-js ie8" lang="en-US"> <![endif]-->
+	<!--[if IE 9 ]>
+	<html class="no-js ie9" lang="en-US"> <![endif]-->
+	<!--[if gt IE 9]><!-->
+<html class="no-js" lang="en-US"> <!--<![endif]-->
+
+<!-- Mirrored from https://vmallet.com/2020/07/gosund-wp3-smart-plug-teardown-and-schematic/?replytocom=274 by HTTrack Website Copier/3.x [XR&CO], Sun, 20 Sep 2026 19:29:18 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="profile" href="../../../../external.html?link=http://gmpg.org/xfn/11">
+<link rel="pingback" href="../../../../external.html?link=https://vmallet.com/xmlrpc.php">
+
+<title>Gosund WP3 Smart Plug: teardown and schematic &#8211; Vincent Mallet</title>
+<meta name='robots' content='max-image-preview:large, noindex, follow' />
+<link rel='dns-prefetch' href='../../../../external.html?link=http://fonts.googleapis.com/' />
+<link rel="alternate" type="application/rss+xml" title="Vincent Mallet &raquo; Feed" href="../../../../external.html?link=https://vmallet.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Vincent Mallet &raquo; Comments Feed" href="../../../../external.html?link=https://vmallet.com/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Vincent Mallet &raquo; Gosund WP3 Smart Plug: teardown and schematic Comments Feed" href="feed/index.html" />
+<link rel="alternate" title="oEmbed (JSON)" type="application/json+oembed" href="../../../../external.html?link=https://vmallet.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fvmallet.com%2F2020%2F07%2Fgosund-wp3-smart-plug-teardown-and-schematic%2F" />
+<link rel="alternate" title="oEmbed (XML)" type="text/xml+oembed" href="../../../../external.html?link=https://vmallet.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fvmallet.com%2F2020%2F07%2Fgosund-wp3-smart-plug-teardown-and-schematic%2F&amp;format=xml" />
+		<!-- This site uses the Google Analytics by MonsterInsights plugin v8.28.0 - Using Analytics tracking - https://www.monsterinsights.com/ -->
+		<!-- Note: MonsterInsights is not currently configured on this site. The site owner needs to authenticate with Google Analytics in the MonsterInsights settings panel. -->
+					<!-- No tracking code set -->
+				<!-- / Google Analytics by MonsterInsights -->
+		<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+<style id="wp-emoji-styles-inline-css">
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+/*# sourceURL=wp-emoji-styles-inline-css */
+</style>
+<style id="wp-block-library-inline-css">
+:root{--wp-block-synced-color:#7a00df;--wp-block-synced-color--rgb:122,0,223;--wp-bound-block-color:var(--wp-block-synced-color);--wp-editor-canvas-background:#ddd;--wp-admin-theme-color:#007cba;--wp-admin-theme-color--rgb:0,124,186;--wp-admin-theme-color-darker-10:#006ba1;--wp-admin-theme-color-darker-10--rgb:0,107,160.5;--wp-admin-theme-color-darker-20:#005a87;--wp-admin-theme-color-darker-20--rgb:0,90,135;--wp-admin-border-width-focus:2px}@media (min-resolution:192dpi){:root{--wp-admin-border-width-focus:1.5px}}.wp-element-button{cursor:pointer}:root .has-very-light-gray-background-color{background-color:#eee}:root .has-very-dark-gray-background-color{background-color:#313131}:root .has-very-light-gray-color{color:#eee}:root .has-very-dark-gray-color{color:#313131}:root .has-vivid-green-cyan-to-vivid-cyan-blue-gradient-background{background:linear-gradient(135deg,#00d084,#0693e3)}:root .has-purple-crush-gradient-background{background:linear-gradient(135deg,#34e2e4,#4721fb 50%,#ab1dfe)}:root .has-hazy-dawn-gradient-background{background:linear-gradient(135deg,#faaca8,#dad0ec)}:root .has-subdued-olive-gradient-background{background:linear-gradient(135deg,#fafae1,#67a671)}:root .has-atomic-cream-gradient-background{background:linear-gradient(135deg,#fdd79a,#004a59)}:root .has-nightshade-gradient-background{background:linear-gradient(135deg,#330968,#31cdcf)}:root .has-midnight-gradient-background{background:linear-gradient(135deg,#020381,#2874fc)}:root{--wp--preset--font-size--normal:16px;--wp--preset--font-size--huge:42px}.has-regular-font-size{font-size:1em}.has-larger-font-size{font-size:2.625em}.has-normal-font-size{font-size:var(--wp--preset--font-size--normal)}.has-huge-font-size{font-size:var(--wp--preset--font-size--huge)}:root .has-text-align-center{text-align:center}:root .has-text-align-left{text-align:left}:root .has-text-align-right{text-align:right}.has-fit-text{white-space:nowrap!important}#end-resizable-editor-section{display:none}.aligncenter{clear:both}.items-justified-left{justify-content:flex-start}.items-justified-center{justify-content:center}.items-justified-right{justify-content:flex-end}.items-justified-space-between{justify-content:space-between}.screen-reader-text{word-wrap:normal!important;border:0;clip-path:inset(50%);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}.screen-reader-text:focus{background-color:#ddd;clip-path:none;color:#444;display:block;font-size:1em;height:auto;left:5px;line-height:normal;padding:15px 23px 14px;text-decoration:none;top:5px;width:auto;z-index:100000}html :where(.has-border-color){border-style:solid}html :where([style*=border-color]){border-style:solid}html :where([style*=border-top-color]){border-top-style:solid}html :where([style*=border-right-color]){border-right-style:solid}html :where([style*=border-bottom-color]){border-bottom-style:solid}html :where([style*=border-left-color]){border-left-style:solid}html :where([style*=border-width]){border-style:solid}html :where([style*=border-top-width]){border-top-style:solid}html :where([style*=border-right-width]){border-right-style:solid}html :where([style*=border-bottom-width]){border-bottom-style:solid}html :where([style*=border-left-width]){border-left-style:solid}html :where(img[class*=wp-image-]){height:auto;max-width:100%}:where(figure){margin:0 0 1em}html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:var(--wp-admin--admin-bar--height,0px)}@media screen and (max-width:600px){html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:0px}}
+
+/*# sourceURL=/wp-includes/css/dist/block-library/common.min.css */
+</style>
+<style id="wp-block-heading-inline-css">
+h1:where(.wp-block-heading).has-background,h2:where(.wp-block-heading).has-background,h3:where(.wp-block-heading).has-background,h4:where(.wp-block-heading).has-background,h5:where(.wp-block-heading).has-background,h6:where(.wp-block-heading).has-background{padding:1.25em 2.375em}h1.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h1.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h2.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h2.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h3.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h3.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h4.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h4.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h5.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h5.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h6.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h6.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]){rotate:180deg}
+/*# sourceURL=https://vmallet.com/wp-includes/blocks/heading/style.min.css */
+</style>
+<style id="wp-block-image-inline-css">
+.wp-block-image>a,.wp-block-image>figure>a{display:inline-block}.wp-block-image img{box-sizing:border-box;height:auto;max-width:100%;vertical-align:bottom}@media not (prefers-reduced-motion){.wp-block-image img.hide{visibility:hidden}.wp-block-image img.show{animation:show-content-image .4s}}.wp-block-image[style*=border-radius] img,.wp-block-image[style*=border-radius]>a{border-radius:inherit}.wp-block-image.has-custom-border img{box-sizing:border-box}.wp-block-image.aligncenter{text-align:center}.wp-block-image.alignfull>a,.wp-block-image.alignwide>a{width:100%}.wp-block-image.alignfull img,.wp-block-image.alignwide img{height:auto;width:100%}.wp-block-image .aligncenter,.wp-block-image .alignleft,.wp-block-image .alignright,.wp-block-image.aligncenter,.wp-block-image.alignleft,.wp-block-image.alignright{display:table}.wp-block-image .aligncenter>figcaption,.wp-block-image .alignleft>figcaption,.wp-block-image .alignright>figcaption,.wp-block-image.aligncenter>figcaption,.wp-block-image.alignleft>figcaption,.wp-block-image.alignright>figcaption{caption-side:bottom;display:table-caption}.wp-block-image .alignleft{float:left;margin:.5em 1em .5em 0}.wp-block-image .alignright{float:right;margin:.5em 0 .5em 1em}.wp-block-image .aligncenter{margin-left:auto;margin-right:auto}.wp-block-image :where(figcaption){margin-bottom:1em;margin-top:.5em}.wp-block-image.is-style-circle-mask img{border-radius:9999px}@supports ((-webkit-mask-image:none) or (mask-image:none)) or (-webkit-mask-image:none){.wp-block-image.is-style-circle-mask img{border-radius:0;-webkit-mask-image:url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="../../../../external.html?link=http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50"/></svg>');mask-image:url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="../../../../external.html?link=http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50"/></svg>');mask-mode:alpha;-webkit-mask-position:center;mask-position:center;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:contain;mask-size:contain}}:root :where(.wp-block-image.is-style-rounded img,.wp-block-image .is-style-rounded img){border-radius:9999px}.wp-block-image figure{margin:0}.wp-lightbox-container{display:flex;flex-direction:column;position:relative}.wp-lightbox-container img{cursor:zoom-in}.wp-lightbox-container img:hover+button{opacity:1}.wp-lightbox-container button{align-items:center;backdrop-filter:blur(16px) saturate(180%);background-color:#5a5a5a40;border:none;border-radius:4px;cursor:zoom-in;display:flex;height:20px;justify-content:center;opacity:0;padding:0;position:absolute;right:16px;text-align:center;top:16px;width:20px;z-index:100}@media not (prefers-reduced-motion){.wp-lightbox-container button{transition:opacity .2s ease}}.wp-lightbox-container button:focus-visible{outline:3px auto #5a5a5a40;outline:3px auto -webkit-focus-ring-color;outline-offset:3px}.wp-lightbox-container button:hover{cursor:pointer;opacity:1}.wp-lightbox-container button:focus{opacity:1}.wp-lightbox-container button:focus,.wp-lightbox-container button:hover,.wp-lightbox-container button:not(:hover):not(:active):not(.has-background){background-color:#5a5a5a40;border:none}.wp-lightbox-overlay{box-sizing:border-box;cursor:zoom-out;height:100vh;left:0;overflow:hidden;position:fixed;top:0;visibility:hidden;width:100%;z-index:100000}.wp-lightbox-overlay .wp-lightbox-close-button{align-items:center;cursor:pointer;display:flex;font-family:inherit;gap:8px;justify-content:center;line-height:1;min-height:40px;min-width:40px;padding:0 4px;position:absolute;right:calc(env(safe-area-inset-right) + 16px);top:calc(env(safe-area-inset-top) + 16px);z-index:5000000}.wp-lightbox-overlay .wp-lightbox-close-button:focus,.wp-lightbox-overlay .wp-lightbox-close-button:hover,.wp-lightbox-overlay .wp-lightbox-close-button:not(:hover):not(:active):not(.has-background){background:none;border:none}.wp-lightbox-overlay .wp-lightbox-close-button:has(.wp-lightbox-close-text:not([hidden])) .wp-lightbox-close-icon svg{height:1em;width:1em}.wp-lightbox-overlay .wp-lightbox-close-icon svg{display:block}.wp-lightbox-overlay .wp-lightbox-navigation-button-next,.wp-lightbox-overlay .wp-lightbox-navigation-button-prev{align-items:center;bottom:16px;cursor:pointer;display:flex;font-family:inherit;gap:4px;justify-content:center;line-height:1;min-height:40px;min-width:40px;padding:0 8px;position:absolute;z-index:2000002}.wp-lightbox-overlay .wp-lightbox-navigation-button-next[hidden],.wp-lightbox-overlay .wp-lightbox-navigation-button-prev[hidden]{display:none}@media (min-width:960px){.wp-lightbox-overlay .wp-lightbox-navigation-button-next,.wp-lightbox-overlay .wp-lightbox-navigation-button-prev{bottom:50%;transform:translateY(-50%)}}.wp-lightbox-overlay .wp-lightbox-navigation-button-next:focus,.wp-lightbox-overlay .wp-lightbox-navigation-button-next:hover,.wp-lightbox-overlay .wp-lightbox-navigation-button-next:not(:hover):not(:active):not(.has-background),.wp-lightbox-overlay .wp-lightbox-navigation-button-prev:focus,.wp-lightbox-overlay .wp-lightbox-navigation-button-prev:hover,.wp-lightbox-overlay .wp-lightbox-navigation-button-prev:not(:hover):not(:active):not(.has-background){background:none;border:none;padding:0 8px}.wp-lightbox-overlay .wp-lightbox-navigation-button-next:has(.wp-lightbox-navigation-text:not([hidden])) .wp-lightbox-navigation-icon svg,.wp-lightbox-overlay .wp-lightbox-navigation-button-prev:has(.wp-lightbox-navigation-text:not([hidden])) .wp-lightbox-navigation-icon svg{display:block;height:1.5em;width:1.5em}.wp-lightbox-overlay .wp-lightbox-navigation-button-prev{left:calc(env(safe-area-inset-left) + 16px)}.wp-lightbox-overlay .wp-lightbox-navigation-button-next{right:calc(env(safe-area-inset-right) + 16px)}.wp-lightbox-overlay .wp-lightbox-navigation-icon svg{vertical-align:middle}.wp-lightbox-overlay .lightbox-image-container{height:var(--wp--lightbox-container-height);left:50%;overflow:hidden;position:absolute;top:50%;transform:translate(-50%,-50%);transform-origin:top left;width:var(--wp--lightbox-container-width);z-index:2000001}.wp-lightbox-overlay .wp-block-image{align-items:center;box-sizing:border-box;display:flex;height:100%;justify-content:center;margin:0;position:relative;transform-origin:0 0;width:100%;z-index:3000000}.wp-lightbox-overlay .wp-block-image img{height:var(--wp--lightbox-image-height);min-height:var(--wp--lightbox-image-height);min-width:var(--wp--lightbox-image-width);width:var(--wp--lightbox-image-width)}.wp-lightbox-overlay .wp-block-image figcaption{display:none}.wp-lightbox-overlay button{background:none;border:none}.wp-lightbox-overlay .scrim{background-color:#fff;height:100%;opacity:.9;position:absolute;width:100%;z-index:2000000}.wp-lightbox-overlay.active{visibility:visible}@media not (prefers-reduced-motion){.wp-lightbox-overlay.active{animation:turn-on-visibility .25s both}.wp-lightbox-overlay.active img{animation:turn-on-visibility .35s both}.wp-lightbox-overlay.show-closing-animation:not(.active){animation:turn-off-visibility .35s both}.wp-lightbox-overlay.show-closing-animation:not(.active) img{animation:turn-off-visibility .25s both}.wp-lightbox-overlay.zoom.active{animation:none;opacity:1;visibility:visible}.wp-lightbox-overlay.zoom.active .lightbox-image-container{animation:lightbox-zoom-in .4s}.wp-lightbox-overlay.zoom.active .lightbox-image-container img{animation:none}.wp-lightbox-overlay.zoom.active .scrim{animation:turn-on-visibility .4s forwards}.wp-lightbox-overlay.zoom.show-closing-animation:not(.active){animation:none}.wp-lightbox-overlay.zoom.show-closing-animation:not(.active) .lightbox-image-container{animation:lightbox-zoom-out .4s}.wp-lightbox-overlay.zoom.show-closing-animation:not(.active) .lightbox-image-container img{animation:none}.wp-lightbox-overlay.zoom.show-closing-animation:not(.active) .scrim{animation:turn-off-visibility .4s forwards}}@keyframes show-content-image{0%{visibility:hidden}99%{visibility:hidden}to{visibility:visible}}@keyframes turn-on-visibility{0%{opacity:0}to{opacity:1}}@keyframes turn-off-visibility{0%{opacity:1;visibility:visible}99%{opacity:0;visibility:visible}to{opacity:0;visibility:hidden}}@keyframes lightbox-zoom-in{0%{transform:translate(calc((-100vw + var(--wp--lightbox-scrollbar-width))/2 + var(--wp--lightbox-initial-left-position)),calc(-50vh + var(--wp--lightbox-initial-top-position))) scale(var(--wp--lightbox-scale))}to{transform:translate(-50%,-50%) scale(1)}}@keyframes lightbox-zoom-out{0%{transform:translate(-50%,-50%) scale(1);visibility:visible}99%{visibility:visible}to{transform:translate(calc((-100vw + var(--wp--lightbox-scrollbar-width))/2 + var(--wp--lightbox-initial-left-position)),calc(-50vh + var(--wp--lightbox-initial-top-position))) scale(var(--wp--lightbox-scale));visibility:hidden}}
+/*# sourceURL=https://vmallet.com/wp-includes/blocks/image/style.min.css */
+</style>
+<style id="wp-block-list-inline-css">
+ol,ul{box-sizing:border-box}:root :where(.wp-block-list.has-background){padding:1.25em 2.375em}
+/*# sourceURL=https://vmallet.com/wp-includes/blocks/list/style.min.css */
+</style>
+<style id="wp-block-paragraph-inline-css">
+.is-small-text{font-size:.875em}.is-regular-text{font-size:1em}.is-large-text{font-size:2.25em}.is-larger-text{font-size:3em}.has-drop-cap:not(:focus):first-letter{float:left;font-size:8.4em;font-style:normal;font-weight:100;line-height:.68;margin:.05em .1em 0 0;text-transform:uppercase}body.rtl .has-drop-cap:not(:focus):first-letter{float:none;margin-left:.1em}p.has-drop-cap.has-background{overflow:hidden}:root :where(p.has-background){padding:1.25em 2.375em}:where(p.has-text-color:not(.has-link-color)) a{color:inherit}p.has-text-align-left[style*="writing-mode:vertical-lr"],p.has-text-align-right[style*="writing-mode:vertical-rl"]{rotate:180deg}
+/*# sourceURL=https://vmallet.com/wp-includes/blocks/paragraph/style.min.css */
+</style>
+
+<style id="classic-theme-styles-inline-css">
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+/*# sourceURL=/wp-includes/css/classic-themes.min.css */
+</style>
+
+<style id="global-styles-inline-css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(body) { margin: 0; }:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}body{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}:root :where(.wp-element-button, .wp-block-button__link){background-color: #32373c;border-width: 0;color: #fff;font-family: inherit;font-size: inherit;font-style: inherit;font-weight: inherit;letter-spacing: inherit;line-height: inherit;padding-top: calc(0.667em + 2px);padding-right: calc(1.333em + 2px);padding-bottom: calc(0.667em + 2px);padding-left: calc(1.333em + 2px);text-decoration: none;text-transform: inherit;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+<link rel='stylesheet' id='dashicons-css' href='../../../wp-includes/css/dashicons.minfd3b.css?ver=7.0.5' media='all' />
+<link rel='stylesheet' id='activello-bootstrap-css' href='../../../wp-content/themes/activello/assets/css/bootstrap.minfd3b.css?ver=7.0.5' media='all' />
+<link rel='stylesheet' id='activello-icons-css' href='../../../wp-content/themes/activello/assets/css/font-awesome.minfd3b.css?ver=7.0.5' media='all' />
+<link rel='stylesheet' id='activello-fonts-css' href='../../../../external.html?link=http://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic|Montserrat:400,700|Maven+Pro:400,700&amp;ver=7.0.5' media='all' />
+<link rel='stylesheet' id='activello-style-css' href='../../../wp-content/themes/activello/stylefd3b.css?ver=7.0.5' media='all' />
+<script id="jquery-core-js" src="../../../wp-includes/js/jquery/jquery.minf43b.js?ver=3.7.1"></script>
+<script id="jquery-migrate-js" src="../../../wp-includes/js/jquery/jquery-migrate.min5589.js?ver=3.4.1"></script>
+<script id="rmp_menu_scripts-js-extra">
+var rmp_menu = {"ajaxURL":"https://vmallet.com/wp-admin/admin-ajax.php","wp_nonce":"7ea97451ed","menu":[]};
+//# sourceURL=rmp_menu_scripts-js-extra
+</script>
+<script id="rmp_menu_scripts-js" src="../../../wp-content/plugins/responsive-menu/v4.0.0/assets/js/rmp-menu3cbe.js?ver=4.1.8"></script>
+<script id="activello-modernizr-js" src="../../../wp-content/themes/activello/assets/js/vendor/modernizr.minfd3b.js?ver=7.0.5"></script>
+<script id="activello-bootstrapjs-js" src="../../../wp-content/themes/activello/assets/js/vendor/bootstrap.minfd3b.js?ver=7.0.5"></script>
+<script id="activello-functions-js" src="../../../wp-content/themes/activello/assets/js/functions.minfd3b.js?ver=7.0.5"></script>
+<link rel="../../../../external.html?link=https://api.w.org/" href="../../../../external.html?link=https://vmallet.com/wp-json/" /><link rel="alternate" title="JSON" type="application/json" href="../../../../external.html?link=https://vmallet.com/wp-json/wp/v2/posts/147" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="../../../../external.html?link=https://vmallet.com/xmlrpc.php?rsd" />
+<meta name="generator" content="WordPress 7.0.5" />
+<link rel="canonical" href="index.html" />
+<link rel='shortlink' href='../../../../external.html?link=https://vmallet.com/?p=147' />
+<style type="text/css"></style>	<style type="text/css">
+		#social li{
+			display: inline-block;
+		}
+		#social li,
+		#social ul {
+			border: 0!important;
+			list-style: none;
+			padding-left: 0;
+			text-align: center;
+		}
+		#social li a[href*="twitter.com"] .fa:before,
+		.fa-twitter:before {
+			content: "\f099"
+		}
+		#social li a[href*="facebook.com"] .fa:before,
+		.fa-facebook-f:before,
+		.fa-facebook:before {
+			content: "\f09a"
+		}
+		#social li a[href*="github.com"] .fa:before,
+		.fa-github:before {
+			content: "\f09b"
+		}
+		#social li a[href*="/feed"] .fa:before,
+		.fa-rss:before {
+			content: "\f09e"
+		}
+		#social li a[href*="pinterest.com"] .fa:before,
+		.fa-pinterest:before {
+			content: "\f0d2"
+		}
+		#social li a[href*="plus.google.com"] .fa:before,
+		.fa-google-plus:before {
+			content: "\f0d5"
+		}
+		#social li a[href*="linkedin.com"] .fa:before,
+		.fa-linkedin:before {
+			content: "\f0e1"
+		}
+		#social li a[href*="youtube.com"] .fa:before,
+		.fa-youtube:before {
+			content: "\f167"
+		}
+		#social li a[href*="instagram.com"] .fa:before,
+		.fa-instagram:before {
+			content: "\f16d"
+		}
+		#social li a[href*="flickr.com"] .fa:before,
+		.fa-flickr:before {
+			content: "\f16e"
+		}
+		#social li a[href*="tumblr.com"] .fa:before,
+		.fa-tumblr:before {
+			content: "\f173"
+		}
+		#social li a[href*="dribbble.com"] .fa:before,
+		.fa-dribbble:before {
+			content: "\f17d"
+		}
+		#social li a[href*="skype.com"] .fa:before,
+		.fa-skype:before {
+			content: "\f17e"
+		}
+		#social li a[href*="foursquare.com"] .fa:before,
+		.fa-foursquare:before {
+			content: "\f180"
+		}
+		#social li a[href*="vimeo.com"] .fa:before,
+		.fa-vimeo-square:before {
+			content: "\f194"
+		}
+		#social li a[href*="weheartit.com"] .fa:before,
+		.fa-heart:before {
+			content: "\f004"
+		}
+		#social li a[href*="spotify.com"] .fa:before,
+		.fa-spotify:before {
+			content: "\f1bc"
+		}
+		#social li a[href*="soundcloud.com"] .fa:before,
+		.fa-soundcloud:before {
+			content: "\f1be"
+		}
+	</style><style>.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style><style id="wp-custom-css">
+#masthead > nav { display:none !important;}
+#masthead > nav > div > div > div { display:none !important;}
+#logo {display:none !important;}  
+#line {display:none !important;} 
+/* fixing the theme */
+.single-featured {
+  transition: none !important; 
+  opacity: 1.0!important;
+}
+body, div, span, p {
+  word-break: keep-all !important;
+ 	font-family: 'Open Sans','Helvetica Neue','Helvetica','Arial','sans-serif';  
+  font-weight: 400 !important;
+	color: #696969;
+  font-size: 16px;
+  letter-spacing: .025em !important;
+  line-height: 28px !important;
+	vertical-align: baseline !important;
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: subpixel-antialiased !important;
+	-moz-osx-font-smoothing: grayscale !important;
+}
+
+
+h1.entry-title {
+	font-size: 44px;
+}
+
+/*change link color on pages */
+.nav-links a{
+  color:#AA0000; 
+  text-decoration: none;
+}
+
+/* Captions under images: smaller grey font, centered */
+.wp-block-image figcaption {
+	text-align: center;
+  font-size: 13px;
+  color: grey;
+}
+
+/* Captions under tables: smaller grey font, centered */
+.wp-block-table figcaption {
+	text-align: center;
+  font-size: 13px;
+  color: grey;
+}
+
+.entry-content h2 {
+    color: #444;
+}
+
+</style>
+
+</head>
+
+<body class="wp-singular post-template-default single single-post postid-147 single-format-standard wp-theme-activello has-full-width">
+<div id="page" class="hfeed site">
+
+	<header id="masthead" class="site-header" role="banner">
+		<nav class="navbar navbar-default" role="navigation">
+			<div class="container">
+				<div class="row">
+					<div class="site-navigation-inner col-sm-12">
+						<div class="navbar-header">
+							<button type="button" class="btn navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+								<span class="sr-only">Toggle navigation</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+						</div>
+						<div class="collapse navbar-collapse navbar-ex1-collapse"><ul id="menu-main" class="nav navbar-nav"><li id="menu-item-10" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-10"><a title="Home" href="../../../../external.html?link=https://vmallet.com/">Home</a></li>
+</ul></div>
+						<div class="nav-search"><form action="../../../../external.html?link=https://vmallet.com/" method="get"><input type="text" name="s" value="" placeholder="Search"><button type="submit" class="header-search-icon" name="submit" id="searchsubmit" value="Search"><i class="fa fa-search"></i></button></form>							
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav><!-- .site-navigation -->
+
+		
+		<div class="container">
+			<div id="logo">
+				<span class="site-name">
+																			<a class="navbar-brand" href="../../../../external.html?link=https://vmallet.com/" title="Vincent Mallet" rel="home">Vincent Mallet</a>
+									
+									</span><!-- end of .site-name -->
+
+									<div class="tagline">Bits and pieces of random thoughts</div>
+							</div><!-- end of #logo -->
+
+						<div id="line"></div>
+					</div>
+
+	</header><!-- #masthead -->
+
+
+	<div id="content" class="site-content">
+
+		<div class="top-section">
+					</div>
+
+		<div class="container main-content-area">
+
+						<div class="cat-title">
+				<ul class="post-categories">
+	<li><a href="../../../../external.html?link=https://vmallet.com/category/electronics/" rel="category tag">Electronics</a></li></ul>			</div>
+									
+			<div class="row">
+				<div class="main-content-inner col-sm-12 col-md-8 full-width">
+
+	<div id="primary" class="content-area">
+		<main id="main" class="site-main" role="main">
+
+		
+			
+<article id="post-147" class="post-147 post type-post status-publish format-standard has-post-thumbnail hentry category-electronics tag-teardown">
+	<div class="blog-item-wrap">
+		<div class="post-inner-content">
+			<header class="entry-header page-header">
+				<h1 class="entry-title">Gosund WP3 Smart Plug: teardown and schematic</h1>
+
+								<div class="entry-meta">
+					<span class="posted-on">Posted on <a href="index.html" rel="bookmark"><time class="entry-date published" datetime="2020-07-17T17:56:37-07:00">July 17, 2020</time><time class="updated" datetime="2020-07-17T17:56:39-07:00">July 17, 2020</time></a></span>by <span class="author vcard"><a class="url fn n" href="../../../../external.html?link=https://vmallet.com/author/vmallet/">Vincent Mallet</a></span>
+					
+				</div><!-- .entry-meta -->
+							</header><!-- .entry-header -->
+			
+			<a href="index.html" title="Gosund WP3 Smart Plug: teardown and schematic" >
+				<img width="1170" height="550" src="../../../wp-content/uploads/2020/07/GosundWP3-Featured-1170x550.jpg" class="single-featured wp-post-image" alt="" decoding="async" fetchpriority="high" srcset="../../../wp-content/uploads/2020/07/GosundWP3-Featured-1170x550.jpg 1170w, ../../../wp-content/uploads/2020/07/GosundWP3-Featured-710x335.jpg 710w" sizes="(max-width: 1170px) 100vw, 1170px" />			</a>
+			
+			<div class="entry-content">
+
+				
+<p class="wp-block-paragraph">Today’s teardown is about the Gosund WP3 smart plug. It is cheap, popular, and modern, and I wanted to look at the circuit and build schematics for it so here we go. It will be interesting to see the difference with the <a href="../../../../external.html?link=https://vmallet.com/2020/07/etekcity-zap-3l-remote-power-outlet-teardown-and-analysis/">ZAP 3L Remote Control outlet</a> from the last teardown.</p>
+
+
+
+<h2 class="wp-block-heading">The Device</h2>
+
+
+
+<p class="wp-block-paragraph">This is the <a href="../../../../external.html?link=https://www.gosund.com/download/smart_plug/131.html">Gosund WP3 Smart Plug</a> (gosund.com), a plug that lets you control an appliance via WiFi or your home assistant (Amazon Alexa or Google Home, no Siri). It is a very compact device and it is remarkably cheap, too: as of today you can find it on Amazon US for $6.99, or $20.39 for a pack of four. </p>
+
+
+
+<p class="wp-block-paragraph">The plug has a nice and very solid feel in hand, and there is not a hint of play in the case or the prongs. It weighs 51g (1.8oz) and measures 30.3mm (1.19&#8243;) (height without the prongs) by 50mm (1.94&#8243;) (diameter). The body has a very slight taper towards the top: 50mm diameter at the bottom vs 48.8mm (1.92&#8243;) at the top. Sadly it is not possible to put a plug on each of the two outlets of a standard American outlet because it is not narrow enough.</p>
+
+
+
+<p class="wp-block-paragraph">The specs:</p>
+
+
+
+<ul class="wp-block-list"><li>100-240V, 50/60Hz</li><li>10A max load</li><li>Rated power: 1200W/120V</li><li>WiFi Frequency: 2.4Ghz</li><li>Compatible with iOS and Android</li><li>Works with Amazon Alexa and Google Home</li></ul>
+
+
+
+<p class="wp-block-paragraph">My unit came in a tiny box barely bigger than the device itself. Inside is the plug with a cover on the prongs, and a tiny manual.</p>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" width="1024" height="768" src="../../../wp-content/uploads/2020/07/GosundWP3-Packaging-1024x768.jpg" alt="" class="wp-image-148" srcset="../../../wp-content/uploads/2020/07/GosundWP3-Packaging-1024x768.jpg 1024w, ../../../wp-content/uploads/2020/07/GosundWP3-Packaging-300x225.jpg 300w, ../../../wp-content/uploads/2020/07/GosundWP3-Packaging-768x576.jpg 768w, ../../../wp-content/uploads/2020/07/GosundWP3-Packaging-1536x1152.jpg 1536w, ../../../wp-content/uploads/2020/07/GosundWP3-Packaging-640x480.jpg 640w, ../../../wp-content/uploads/2020/07/GosundWP3-Packaging.jpg 1600w" sizes="(max-width: 1024px) 100vw, 1024px" /></figure>
+
+
+
+<p class="wp-block-paragraph">The plug has a single button on the side that can light up to indicate various states.</p>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" width="1024" height="768" src="../../../wp-content/uploads/2020/07/GosundWP3-Plug-Manual-1024x768.jpg" alt="" class="wp-image-149" srcset="../../../wp-content/uploads/2020/07/GosundWP3-Plug-Manual-1024x768.jpg 1024w, ../../../wp-content/uploads/2020/07/GosundWP3-Plug-Manual-300x225.jpg 300w, ../../../wp-content/uploads/2020/07/GosundWP3-Plug-Manual-768x576.jpg 768w, ../../../wp-content/uploads/2020/07/GosundWP3-Plug-Manual-1536x1152.jpg 1536w, ../../../wp-content/uploads/2020/07/GosundWP3-Plug-Manual-640x480.jpg 640w, ../../../wp-content/uploads/2020/07/GosundWP3-Plug-Manual.jpg 1600w" sizes="(max-width: 1024px) 100vw, 1024px" /></figure>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" decoding="async" width="1024" height="768" src="../../../wp-content/uploads/2020/07/GosundWP3-Plug-Bottom-1024x768.jpg" alt="" class="wp-image-150" srcset="../../../wp-content/uploads/2020/07/GosundWP3-Plug-Bottom-1024x768.jpg 1024w, ../../../wp-content/uploads/2020/07/GosundWP3-Plug-Bottom-300x225.jpg 300w, ../../../wp-content/uploads/2020/07/GosundWP3-Plug-Bottom-768x576.jpg 768w, ../../../wp-content/uploads/2020/07/GosundWP3-Plug-Bottom-1536x1152.jpg 1536w, ../../../wp-content/uploads/2020/07/GosundWP3-Plug-Bottom-640x480.jpg 640w, ../../../wp-content/uploads/2020/07/GosundWP3-Plug-Bottom.jpg 1600w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></figure>
+
+
+
+<h2 class="wp-block-heading">Teardown</h2>
+
+
+
+<p class="wp-block-paragraph"><span class="has-inline-color has-vivid-red-color"><em>Warning: this device uses a non-isolated power supply design which can be lethal or extremely dangerous when its internals are exposed. Gosund did a good job at making it completely enclosed and sealed (and thus very safe), but if you open it you expose yourself to the circuit and *any* part of the circuit could kill you, even those labeled &#8220;3.3V&#8221;. Do NOT connect this plug to the wall if it is open. If you want to play with it, check out the section &#8220;Testing the device safely&#8221; at the end. </em></span></p>
+
+
+
+<p class="wp-block-paragraph">Cracking this baby open without damaging the case is not trivial. There are no screws, it is a press-fit design that has been glued to prevent it from coming apart. This <a href="../../../../www.gosund.com/uploads/allimg/20190827/3f17822c761d0095adc87fb49084e24e.html">exploded view</a> on Gosund’s page gives you a clearer idea of what to expect inside.&nbsp;I had reasonable success inserting a screwdriver in the seam at the base of the plug and running it all along the edge to try to break the glued seal, and then popping off the base.&nbsp;</p>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" decoding="async" width="1024" height="768" src="../../../wp-content/uploads/2020/07/GosundWP3-BreakingAndEntering-1024x768.jpg" alt="" class="wp-image-152" srcset="../../../wp-content/uploads/2020/07/GosundWP3-BreakingAndEntering-1024x768.jpg 1024w, ../../../wp-content/uploads/2020/07/GosundWP3-BreakingAndEntering-300x225.jpg 300w, ../../../wp-content/uploads/2020/07/GosundWP3-BreakingAndEntering-768x576.jpg 768w, ../../../wp-content/uploads/2020/07/GosundWP3-BreakingAndEntering-1536x1152.jpg 1536w, ../../../wp-content/uploads/2020/07/GosundWP3-BreakingAndEntering-640x480.jpg 640w, ../../../wp-content/uploads/2020/07/GosundWP3-BreakingAndEntering.jpg 1600w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /><figcaption>It’s hard not to damage the case while prying this plug open</figcaption></figure>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" decoding="async" width="1024" height="768" src="../../../wp-content/uploads/2020/07/GosundWP3-Plug-Open-1024x768.jpg" alt="" class="wp-image-153" srcset="../../../wp-content/uploads/2020/07/GosundWP3-Plug-Open-1024x768.jpg 1024w, ../../../wp-content/uploads/2020/07/GosundWP3-Plug-Open-300x225.jpg 300w, ../../../wp-content/uploads/2020/07/GosundWP3-Plug-Open-768x576.jpg 768w, ../../../wp-content/uploads/2020/07/GosundWP3-Plug-Open-1536x1152.jpg 1536w, ../../../wp-content/uploads/2020/07/GosundWP3-Plug-Open-640x480.jpg 640w, ../../../wp-content/uploads/2020/07/GosundWP3-Plug-Open.jpg 1600w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /><figcaption>The top cover removed, taking our first peek inside</figcaption></figure>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" decoding="async" width="1024" height="768" src="../../../wp-content/uploads/2020/07/GosundWP3-TopCover-1024x768.jpg" alt="" class="wp-image-154" srcset="../../../wp-content/uploads/2020/07/GosundWP3-TopCover-1024x768.jpg 1024w, ../../../wp-content/uploads/2020/07/GosundWP3-TopCover-300x225.jpg 300w, ../../../wp-content/uploads/2020/07/GosundWP3-TopCover-768x576.jpg 768w, ../../../wp-content/uploads/2020/07/GosundWP3-TopCover-1536x1152.jpg 1536w, ../../../wp-content/uploads/2020/07/GosundWP3-TopCover-640x480.jpg 640w, ../../../wp-content/uploads/2020/07/GosundWP3-TopCover.jpg 1600w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /><figcaption>Close up on the top cover: plastic insulation goes around the terminals to prevent them from getting in contact with other parts inside the plug; the little side-mounted button has a little cross-hair plunger and a translucent light diffuser. Some of the glue used to seal the device is visible here.</figcaption></figure>
+
+
+
+<p class="wp-block-paragraph">The PCB is soldered to the prongs which are not moving away from the bottom part of the case, so we&nbsp;will have to desolder the prongs to get access to the underside of the PCB.</p>
+
+
+
+<p class="wp-block-paragraph"><br>The top of the PCB has the usual suspects: the female mains terminals, the main relay, capacitors / inductors for the power supply, the tactile switch and the status&nbsp;LED, and the&nbsp;tiny WiFi control module. No transformer here so we have another non-isolated,&nbsp;transformerless power supply!</p>
+
+
+
+<figure class="wp-block-image size-large"><a href="../../../wp-content/uploads/2020/07/GosundWP3-PCB-Top.jpg"><img loading="lazy" decoding="async" width="1024" height="768" src="../../../wp-content/uploads/2020/07/GosundWP3-PCB-Top-1024x768.jpg" alt="" class="wp-image-156" srcset="../../../wp-content/uploads/2020/07/GosundWP3-PCB-Top-1024x768.jpg 1024w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Top-300x225.jpg 300w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Top-768x576.jpg 768w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Top-1536x1152.jpg 1536w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Top-640x480.jpg 640w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Top.jpg 2000w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></a><figcaption>The top of the PCB with all components in sight. The markings on the brown fuse at the bottom tell us it is a slow-blow, 10A 250V fuse.</figcaption></figure>
+
+
+
+<figure class="wp-block-image size-large"><a href="../../../wp-content/uploads/2020/07/GosundWP3-PCB-Side-Relay.jpg"><img loading="lazy" decoding="async" width="1024" height="768" src="../../../wp-content/uploads/2020/07/GosundWP3-PCB-Side-Relay-1024x768.jpg" alt="" class="wp-image-157" srcset="../../../wp-content/uploads/2020/07/GosundWP3-PCB-Side-Relay-1024x768.jpg 1024w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Side-Relay-300x225.jpg 300w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Side-Relay-768x576.jpg 768w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Side-Relay-1536x1152.jpg 1536w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Side-Relay-640x480.jpg 640w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Side-Relay.jpg 2000w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></a><figcaption>Good view of the relay&nbsp;and the inrush current limiting resistor in&nbsp;heat shrink tubing</figcaption></figure>
+
+
+
+<figure class="wp-block-image size-large"><a href="../../../wp-content/uploads/2020/07/GosundWP3-PCB-Side-Wifi.jpg"><img loading="lazy" decoding="async" width="1024" height="768" src="../../../wp-content/uploads/2020/07/GosundWP3-PCB-Side-Wifi-1024x768.jpg" alt="" class="wp-image-158" srcset="../../../wp-content/uploads/2020/07/GosundWP3-PCB-Side-Wifi-1024x768.jpg 1024w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Side-Wifi-300x225.jpg 300w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Side-Wifi-768x576.jpg 768w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Side-Wifi-1536x1152.jpg 1536w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Side-Wifi-640x480.jpg 640w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Side-Wifi.jpg 2000w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></a><figcaption>Peeking under the PCB, there is plenty more to be explored. Good view of the WiFi PCB (with its metal shield) which is mounted at a right-angle inside a slot in the main PCB. You can distinguish the trace antenna at the top of that mini PCB. </figcaption></figure>
+
+
+
+<p class="wp-block-paragraph">A lot of&nbsp;solder wick later the PCB came loose from its prongs. I had decided to sacrifice this plug and didn’t take too&nbsp;much care while desoldering the prongs and I ripped the through-hole plating. There are better ways to do this but it got the job done..</p>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" decoding="async" width="1024" height="653" src="../../../wp-content/uploads/2020/07/GosundWP3-Prongs-Desoldered-1024x653.jpg" alt="" class="wp-image-159" srcset="../../../wp-content/uploads/2020/07/GosundWP3-Prongs-Desoldered-1024x653.jpg 1024w, ../../../wp-content/uploads/2020/07/GosundWP3-Prongs-Desoldered-300x191.jpg 300w, ../../../wp-content/uploads/2020/07/GosundWP3-Prongs-Desoldered-768x490.jpg 768w, ../../../wp-content/uploads/2020/07/GosundWP3-Prongs-Desoldered-1536x980.jpg 1536w, ../../../wp-content/uploads/2020/07/GosundWP3-Prongs-Desoldered.jpg 1600w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /><figcaption>The PCB is freed from its prongs. You can see the prongs are trapped in&nbsp;the molded case: that makes them pretty safe, there is no way of them coming loose!</figcaption></figure>
+
+
+
+<p class="wp-block-paragraph">Now we see why the prongs don&#8217;t budge at all in the plug: they are trapped in the base plastic molding. It is good from a safety standpoint too, there is no way these prongs will come out of the plug even if someone is very motivated.</p>
+
+
+
+<h2 class="wp-block-heading">PCB: a closer look</h2>
+
+
+
+<p class="wp-block-paragraph">The PCB is a 2-layer PCB with all the through-hole components on top and all the SMD components on the bottom. The&nbsp;markings on it are:</p>
+
+
+
+<ul class="wp-block-list"><li>WP3-B_V1.2</li><li>20180926</li><li>21 02</li></ul>
+
+
+
+<figure class="wp-block-image size-large"><a href="../../../wp-content/uploads/2020/07/GosundWP3-PCB-Bottom.jpg"><img loading="lazy" decoding="async" width="1024" height="768" src="../../../wp-content/uploads/2020/07/GosundWP3-PCB-Bottom-1024x768.jpg" alt="" class="wp-image-160" srcset="../../../wp-content/uploads/2020/07/GosundWP3-PCB-Bottom-1024x768.jpg 1024w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Bottom-300x225.jpg 300w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Bottom-768x576.jpg 768w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Bottom-1536x1152.jpg 1536w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Bottom-640x480.jpg 640w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Bottom.jpg 2000w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></a><figcaption>The underside of the PCB. Bottom right is power supply from&nbsp;mains to 5V around U1, upper right is 3.3V supply around U4, top is the wifi module connection, and left is the driving circuit for the relay&nbsp;around Q1.</figcaption></figure>
+
+
+
+<p class="wp-block-paragraph">In order to draw the schematic of the circuit I proceeded to remove all components so I could measure them out-of-circuit.&nbsp;</p>
+
+
+
+<figure class="wp-block-image size-large"><a href="../../../wp-content/uploads/2020/07/GosundWP3-PCB-Top-Components-Removed.jpg"><img loading="lazy" decoding="async" width="1024" height="768" src="../../../wp-content/uploads/2020/07/GosundWP3-PCB-Top-Components-Removed-1024x768.jpg" alt="" class="wp-image-161" srcset="../../../wp-content/uploads/2020/07/GosundWP3-PCB-Top-Components-Removed-1024x768.jpg 1024w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Top-Components-Removed-300x225.jpg 300w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Top-Components-Removed-768x576.jpg 768w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Top-Components-Removed-1536x1152.jpg 1536w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Top-Components-Removed-640x480.jpg 640w, ../../../wp-content/uploads/2020/07/GosundWP3-PCB-Top-Components-Removed.jpg 1600w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></a><figcaption>Top components taken out, with the terminals and the WiFi PCB still standing.</figcaption></figure>
+
+
+
+<p class="wp-block-paragraph">The brains of the smart plug is an Espressif ESP8285 WiFi SoC (<a href="../../../../external.html?link=https://www.espressif.com/sites/default/files/documentation/0a-esp8285_datasheet_en.pdf">datasheet PDF</a>) which is pretty much the same as the ever popular ESP8266 bundled with 1MB of internal flash. It&#8217;s a QFN-32 package sitting on a tiny PCB made by <a href="../../../../external.html?link=http://cdtech.cn/">Cdtech</a> and hiding behind an EMI shield. This thing is highly reprogrammable, see further down for some pointers.</p>
+
+
+
+<p class="wp-block-paragraph">The Cdtech module has pads on both sides of the bottom edge of its PCB and is mounted by inserting this edge into a slot of the main PCB and soldering directly to these pads. Here&#8217;s a close-up of the connection seen from the underside of the main PCB.</p>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" decoding="async" width="1024" height="609" src="../../../wp-content/uploads/2020/07/GosundWP3-ESP8285-Connector-1024x609.jpg" alt="" class="wp-image-167" srcset="../../../wp-content/uploads/2020/07/GosundWP3-ESP8285-Connector-1024x609.jpg 1024w, ../../../wp-content/uploads/2020/07/GosundWP3-ESP8285-Connector-300x178.jpg 300w, ../../../wp-content/uploads/2020/07/GosundWP3-ESP8285-Connector-768x456.jpg 768w, ../../../wp-content/uploads/2020/07/GosundWP3-ESP8285-Connector-1536x913.jpg 1536w, ../../../wp-content/uploads/2020/07/GosundWP3-ESP8285-Connector.jpg 1600w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /><figcaption>A close-up view of the wifi daughter PCB inserted into a slot in the main PCB and soldered directly.</figcaption></figure>
+
+
+
+<figure class="wp-block-image size-large"><a href="../../../wp-content/uploads/2020/07/GosundWP3-ESP8285-Module.jpg"><img loading="lazy" decoding="async" width="1024" height="447" src="../../../wp-content/uploads/2020/07/GosundWP3-ESP8285-Module-1024x447.jpg" alt="" class="wp-image-162" srcset="../../../wp-content/uploads/2020/07/GosundWP3-ESP8285-Module-1024x447.jpg 1024w, ../../../wp-content/uploads/2020/07/GosundWP3-ESP8285-Module-300x131.jpg 300w, ../../../wp-content/uploads/2020/07/GosundWP3-ESP8285-Module-768x335.jpg 768w, ../../../wp-content/uploads/2020/07/GosundWP3-ESP8285-Module-1536x670.jpg 1536w, ../../../wp-content/uploads/2020/07/GosundWP3-ESP8285-Module.jpg 2000w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></a><figcaption>The Cdtech WiFi module front and back; it is quite small: 15.04mm x 17.27mm (0.50” x 0.68”)</figcaption></figure>
+
+
+
+<figure class="wp-block-image size-large"><a href="../../../wp-content/uploads/2020/07/GosundWP3-ESP8285-Module-No-Shield.jpg"><img loading="lazy" decoding="async" width="1024" height="769" src="../../../wp-content/uploads/2020/07/GosundWP3-ESP8285-Module-No-Shield-1024x769.jpg" alt="" class="wp-image-163" srcset="../../../wp-content/uploads/2020/07/GosundWP3-ESP8285-Module-No-Shield-1024x769.jpg 1024w, ../../../wp-content/uploads/2020/07/GosundWP3-ESP8285-Module-No-Shield-300x225.jpg 300w, ../../../wp-content/uploads/2020/07/GosundWP3-ESP8285-Module-No-Shield-768x576.jpg 768w, ../../../wp-content/uploads/2020/07/GosundWP3-ESP8285-Module-No-Shield-1536x1153.jpg 1536w, ../../../wp-content/uploads/2020/07/GosundWP3-ESP8285-Module-No-Shield-640x480.jpg 640w, ../../../wp-content/uploads/2020/07/GosundWP3-ESP8285-Module-No-Shield.jpg 2000w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></a><figcaption>The Cdtech WiFi module with the EMI shield removed. Espressif ESP8285, 26Mhz&nbsp;crystal, a few passives.</figcaption></figure>
+
+
+
+<p class="wp-block-paragraph">And this is what the plug looks like when everything is taken apart…</p>
+
+
+
+<figure class="wp-block-image size-large"><a href="../../../wp-content/uploads/2020/07/GosundWP3-Ultimate-Teardown.jpg"><img loading="lazy" decoding="async" width="1024" height="630" src="../../../wp-content/uploads/2020/07/GosundWP3-Ultimate-Teardown-1024x630.jpg" alt="" class="wp-image-164" srcset="../../../wp-content/uploads/2020/07/GosundWP3-Ultimate-Teardown-1024x630.jpg 1024w, ../../../wp-content/uploads/2020/07/GosundWP3-Ultimate-Teardown-300x185.jpg 300w, ../../../wp-content/uploads/2020/07/GosundWP3-Ultimate-Teardown-768x472.jpg 768w, ../../../wp-content/uploads/2020/07/GosundWP3-Ultimate-Teardown-1536x945.jpg 1536w, ../../../wp-content/uploads/2020/07/GosundWP3-Ultimate-Teardown.jpg 2000w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></a><figcaption>Gosund WP3 Smart Plug Ultimate Teardown!</figcaption></figure>
+
+
+
+<h2 class="wp-block-heading">The Schematic</h2>
+
+
+
+<p class="wp-block-paragraph">After&nbsp;spending some time with my meters and some good magnifiers&nbsp;here’s the schematic I came up with:</p>
+
+
+
+<figure class="wp-block-image size-large"><a href="../../../wp-content/uploads/2020/07/GosundWP3-Schematic.png"><img loading="lazy" decoding="async" width="1024" height="709" src="../../../wp-content/uploads/2020/07/GosundWP3-Schematic-1024x709.png" alt="" class="wp-image-170" srcset="../../../wp-content/uploads/2020/07/GosundWP3-Schematic-1024x709.png 1024w, ../../../wp-content/uploads/2020/07/GosundWP3-Schematic-300x208.png 300w, ../../../wp-content/uploads/2020/07/GosundWP3-Schematic-768x531.png 768w, ../../../wp-content/uploads/2020/07/GosundWP3-Schematic-1536x1063.png 1536w, ../../../wp-content/uploads/2020/07/GosundWP3-Schematic-2048x1417.png 2048w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></a><figcaption>Gosund WP3 Schematic, reversed-engineered and drawn by me; it could be full of errors.</figcaption></figure>
+
+
+
+<p class="wp-block-paragraph">I see six sections plus a couple of protection components:</p>
+
+
+
+<ul class="wp-block-list"><li>Main 5V power supply</li><li>3.3V power supply</li><li>The main MCU board</li><li>Input: push button</li><li>UI: LED</li><li>Relay &amp; driving circuitry</li></ul>
+
+
+
+<h3 class="wp-block-heading">5V Power Supply</h3>
+
+
+
+<p class="wp-block-paragraph">The 5V power supply is a non-isolated transformerless power supply (which means: do not ever touch any part of this circuit board ever when it&#8217;s plugged into the wall, not with your hands, not with a FTDI chip, not with a programmer, just don&#8217;t!). </p>
+
+
+
+<p class="wp-block-paragraph">It is built around the <a href="../../../../external.html?link=https://www.monolithicpower.com/en/mp150.html">MPS MP150 Offline primary side regulator</a> (<a href="../../../../external.html?link=https://www.monolithicpower.com/en/documentview/productdocument/index/version/2/document_type/Datasheet/lang/en/sku/MP150/document_id/14/">datasheet PDF</a>) which does the heavy lifting. The design used here is pretty much the same as the reference design suggested by MPS in the linked datasheet save for a missing diode (&#8220;D4&#8221; in the datasheet) and a couple of different values. It takes in anything from 100V to 240V AC and produces a stable 5V DC at its output.</p>
+
+
+
+<h3 class="wp-block-heading">3.3V Power Supply</h3>
+
+
+
+<p class="wp-block-paragraph">This one is really straightfoward, using a pretty common 3.3V LDO regulator (<a href="../../../../external.html?link=http://www.advanced-monolithic.com/pdf/ds1117.pdf">AMS1117</a> pdf) to drop from 5V to 3V3</p>
+
+
+
+<h3 class="wp-block-heading">Main MCU Board</h3>
+
+
+
+<p class="wp-block-paragraph">This is the Cdtech module with the Espressif ESP8285 SoC, see the previous section for more information and the datasheet.</p>
+
+
+
+<h3 class="wp-block-heading">Input Switch</h3>
+
+
+
+<p class="wp-block-paragraph">The input switch drives the GPIO4 line of the MCU. GPIO4 is pulled up with a 10K resistor (labeled &#8220;J3&#8221; instead of &#8220;Rxx&#8221; on the PCB) and pressing the switch will tie GPIO4 to GND. C1 is here for a bit of debouncing.</p>
+
+
+
+<h3 class="wp-block-heading">Status LED</h3>
+
+
+
+<p class="wp-block-paragraph">The LED is a bi-color red/blue LED with common anode. It is driven by  lines GPIO12 and GPIO13 of the MCU.</p>
+
+
+
+<h3 class="wp-block-heading">Relay and Driver</h3>
+
+
+
+<p class="wp-block-paragraph">The heavy-lifter of the plug is the BJ-SS-105LMF Relay which can switch up to 10A at 250V. The relay&#8217;s coil nominal voltage is 5V which comes from the 5V PSU above. </p>
+
+
+
+<p class="wp-block-paragraph">One leg of the coil is tied to 5V, the other is driven by the Q1 NPN transistor which pulls it to GND when activated. Q1&#8217;s gate is pulled down to GND by R6 and is connected to GPIO14 of the MCU through a 1K limiting resistor R7.</p>
+
+
+
+<h3 class="wp-block-heading">The case of D5 &#8220;diode&#8221;</h3>
+
+
+
+<p class="wp-block-paragraph">Usually when a component is labeled &#8220;D5&#8221; you can expect it is a diode of sorts. When I started looking at it more closely I started being surprised: the component has no visible marking that would let one know the direction of the diode. The PCB silkscreen around D5 also shows no indication of direction (unlike the other 4 diodes). After measuring D5 it appeared to simply be jumper (i.e. a 0 Ohm resistor). I <a href="../../../../external.html?link=https://www.eevblog.com/forum/beginners/what-does-this-diode-do/">asked on the EEVBlog forum</a> and folks confirmed my suspicion. Someone must have initially included D5 when copying the MPS reference design, and someone else must have later axed it by replacing it with a jumper but without changing its label. Ha!</p>
+
+
+
+<h3 class="wp-block-heading">Bits of protection</h3>
+
+
+
+<ul class="wp-block-list"><li>F1 is a slow-blow, 10A 250V fuse that will cut power to the whole plug (including the control circuit) if 10A is exceeded for too long. </li><li>R9 is a 10 Ohm resistor to limit the inrush current when the plug is first connected and the capacitors start charging with a high current.</li><li>VR1 is a 07D561K varistor (<a href="../../../../external.html?link=https://www.mouser.com/datasheet/2/54/mov07d-777763.pdf">example datasheet</a>, this one is not a Bourns though) that will shunt voltage spikes to protect the circuit</li></ul>
+
+
+
+<h2 class="wp-block-heading">Other teardowns and hackability</h2>
+
+
+
+<p class="wp-block-paragraph">There is at least one other teardown out there for this plug, the <a href="../../../../external.html?link=https://youtu.be/LR5QmwJ0G_c">Gosund Smart Socket Teardown by FixitFrank</a> (youtube).</p>
+
+
+
+<p class="wp-block-paragraph">What is interesting with this plug is that it is driven by a pretty common chip as you saw above (the ESP8285) and some folks have made it easy to re-flash it with your own firmware.&nbsp;</p>
+
+
+
+<p class="wp-block-paragraph">Two projects are of interest:</p>
+
+
+
+<ul class="wp-block-list"><li><a href="../../../../external.html?link=https://tasmota.github.io/docs/">Tasmota</a> (<a href="../../../../external.html?link=https://github.com/arendst/Tasmota">tasmota on GitHub</a>): an open source firmware for ESP8266 devices. There are so many smart things out there that run on an ESP8266 (or derivative) that can get this fancy firmware, it is very cool.</li><li><a href="../../../../external.html?link=https://github.com/ct-Open-Source/tuya-convert">Tuya-Convert</a> (GitHub): &#8220;A collection of scripts to flash Tuya IoT devices to alternative firmwares”. It turns out the Gosund WP3 outlet is made by a Chinese company named Tuya (which makes all kinds of solutions for other companies to re-brand). Some folks at vtrust.de and c’t magazine put together this tool that allows tuya (and hence gosund) devices to be flashed over-the-air which is good in this case given how destructive opening the outlet is. It is also a much safer approach to hacking the device 🙂</li></ul>
+
+
+
+<h2 class="wp-block-heading">Testing the device safely</h2>
+
+
+
+<p class="wp-block-paragraph">Hopefully by now you are convinced you should not plug this device into the wall if it is open even just to &#8220;try it out&#8221;, one little mistake and you could die..</p>
+
+
+
+<p class="wp-block-paragraph">Based on the design of the power supply feeding it a DC voltage high enough to let the MP150 do its job should enable us to test the circuit and play with the app, toggle the relay, etc. </p>
+
+
+
+<p class="wp-block-paragraph">For me the plug came to life with a 20VDC between the two prongs. </p>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" decoding="async" width="1024" height="768" src="../../../wp-content/uploads/2020/07/GosundWP3-DC-Powered-1024x768.jpg" alt="" class="wp-image-176" srcset="../../../wp-content/uploads/2020/07/GosundWP3-DC-Powered-1024x768.jpg 1024w, ../../../wp-content/uploads/2020/07/GosundWP3-DC-Powered-300x225.jpg 300w, ../../../wp-content/uploads/2020/07/GosundWP3-DC-Powered-768x576.jpg 768w, ../../../wp-content/uploads/2020/07/GosundWP3-DC-Powered-1536x1152.jpg 1536w, ../../../wp-content/uploads/2020/07/GosundWP3-DC-Powered-640x480.jpg 640w, ../../../wp-content/uploads/2020/07/GosundWP3-DC-Powered.jpg 1600w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></figure>
+
+
+
+<p class="wp-block-paragraph">With a 20VDC voltage across the prongs it is now safe to play with, test and poke without risking our lives.</p>
+				
+								
+			</div><!-- .entry-content -->
+			<div class="entry-footer">
+								<span class="comments-link"><a href="index.html#comments">Comments (15)</a></span>
+					
+								<!-- tags -->
+				<div class="tagcloud">
+
+					<a href="../../../../external.html?link=https://vmallet.com/tag/teardown/">Teardown</a> 
+				</div>
+				<!-- end tags -->
+							</div><!-- .entry-footer -->
+		</div>
+	</div>
+</article><!-- #post-## -->
+
+			
+<div id="comments" class="comments-area">
+
+	
+			<h2 class="comments-title">
+		15 Replies to &ldquo;Gosund WP3 Smart Plug: teardown and schematic&rdquo;		</h2>
+
+		
+		<ol class="comment-list">
+				<li class="comment even thread-even depth-1 parent" id="comment-61">
+			<div id="div-comment-61" class="comment-body">
+	
+	<div class="comment-author vcard asdasd">
+		<img alt='' src='../../../../external.html?link=https://secure.gravatar.com/avatar/e416ae2efd41eda4fa427cbdda36c41a0b1ff3f1d2debd0f3d86552a10f8fa99?s=80&amp;d=mm&amp;r=g' srcset='../../../../external.html?link=https://secure.gravatar.com/avatar/e416ae2efd41eda4fa427cbdda36c41a0b1ff3f1d2debd0f3d86552a10f8fa99?s=160&amp;d=mm&amp;r=g 2x' class='avatar avatar-80 photo' height='80' width='80' loading='lazy' decoding='async'/>		<cite class="fn"><a href="../../../../external.html?link=http://boulderufixitclinic.org/" class="url" rel="ugc external nofollow">Wayne Seltzer</a></cite> <span class="says">says:</span>		<a rel="nofollow" class="comment-reply-link" href="index504c.html?replytocom=61#respond" data-commentid="61" data-postid="147" data-belowelement="div-comment-61" data-respondelement="respond" data-replyto="Reply to Wayne Seltzer" aria-label="Reply to Wayne Seltzer">Reply</a>		<div class="comment-meta commentmetadata"><a href="index.html#comment-61">
+			January 7, 2021 at 8:56 pm</a>		</div>
+	</div>
+
+	
+	<p>Thanks for this useful analysis!<br />
+I tried to use TuyaConvert on my Gosund WP3. I was able to update the firmware to tasmota.bin, but wasn&#8217;t able to access the<br />
+device&#8217;s Tasmota web page.<br />
+I took it apart, unsoldered the ESP8285 module, soldered pins to it, connected to an FTDI USB interface, and updated the firmware using Tasmotizer. I somehow managed to fry the transistor that controls the relay. This teardown and schematic<br />
+helped my replace it with a 3904 NPN.</p>
+
+			</div>
+	<ol class="children">
+	<li class="comment odd alt depth-2" id="comment-463">
+			<div id="div-comment-463" class="comment-body">
+	
+	<div class="comment-author vcard asdasd">
+		<img alt='' src='../../../../external.html?link=https://secure.gravatar.com/avatar/bddac868af9b3b87e08307ee4c49fb3bedfae410ecdf59e874b4eb2e7e605f5a?s=80&amp;d=mm&amp;r=g' srcset='../../../../external.html?link=https://secure.gravatar.com/avatar/bddac868af9b3b87e08307ee4c49fb3bedfae410ecdf59e874b4eb2e7e605f5a?s=160&amp;d=mm&amp;r=g 2x' class='avatar avatar-80 photo' height='80' width='80' loading='lazy' decoding='async'/>		<cite class="fn">Wolfgang Rupprecht</cite> <span class="says">says:</span>		<a rel="nofollow" class="comment-reply-link" href="index1c6b.html?replytocom=463#respond" data-commentid="463" data-postid="147" data-belowelement="div-comment-463" data-respondelement="respond" data-replyto="Reply to Wolfgang Rupprecht" aria-label="Reply to Wolfgang Rupprecht">Reply</a>		<div class="comment-meta commentmetadata"><a href="index.html#comment-463">
+			September 12, 2022 at 7:28 pm</a>		</div>
+	</div>
+
+	
+	<p>Was there any obvious hardware revision info on the circuit board or did you note the claimed revision on the Gosund app before the conversion?   I&#8217;ve got 3 rev. 1.03 and 1 rev 1.04 and trying to figure out if they can be converted without brutalizing the case.</p>
+
+			</div>
+	</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1" id="comment-216">
+			<div id="div-comment-216" class="comment-body">
+	
+	<div class="comment-author vcard asdasd">
+		<img alt='' src='../../../../external.html?link=https://secure.gravatar.com/avatar/c553a67acba5d4aa8f1043feab1de84679633ecf7c1ba2f195b956523b5c8e05?s=80&amp;d=mm&amp;r=g' srcset='../../../../external.html?link=https://secure.gravatar.com/avatar/c553a67acba5d4aa8f1043feab1de84679633ecf7c1ba2f195b956523b5c8e05?s=160&amp;d=mm&amp;r=g 2x' class='avatar avatar-80 photo' height='80' width='80' loading='lazy' decoding='async'/>		<cite class="fn">Ged</cite> <span class="says">says:</span>		<a rel="nofollow" class="comment-reply-link" href="indexc19c.html?replytocom=216#respond" data-commentid="216" data-postid="147" data-belowelement="div-comment-216" data-respondelement="respond" data-replyto="Reply to Ged" aria-label="Reply to Ged">Reply</a>		<div class="comment-meta commentmetadata"><a href="index.html#comment-216">
+			March 23, 2021 at 9:59 pm</a>		</div>
+	</div>
+
+	
+	<p>This is really a top notch review, thanks for the effort.</p>
+
+			</div>
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-even depth-1" id="comment-254">
+			<div id="div-comment-254" class="comment-body">
+	
+	<div class="comment-author vcard asdasd">
+		<img alt='' src='../../../../external.html?link=https://secure.gravatar.com/avatar/b4e418aa7351c9698a47348dc0e12d1edb8902f8e3cbb542f866203d8136bf31?s=80&amp;d=mm&amp;r=g' srcset='../../../../external.html?link=https://secure.gravatar.com/avatar/b4e418aa7351c9698a47348dc0e12d1edb8902f8e3cbb542f866203d8136bf31?s=160&amp;d=mm&amp;r=g 2x' class='avatar avatar-80 photo' height='80' width='80' loading='lazy' decoding='async'/>		<cite class="fn">Robert</cite> <span class="says">says:</span>		<a rel="nofollow" class="comment-reply-link" href="index7e81.html?replytocom=254#respond" data-commentid="254" data-postid="147" data-belowelement="div-comment-254" data-respondelement="respond" data-replyto="Reply to Robert" aria-label="Reply to Robert">Reply</a>		<div class="comment-meta commentmetadata"><a href="index.html#comment-254">
+			September 20, 2021 at 11:00 am</a>		</div>
+	</div>
+
+	
+	<p>Great teardown and analysis.  This is very useful.</p>
+
+			</div>
+	</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1 parent" id="comment-256">
+			<div id="div-comment-256" class="comment-body">
+	
+	<div class="comment-author vcard asdasd">
+		<img alt='' src='../../../../external.html?link=https://secure.gravatar.com/avatar/d7f106db84a59c6214df2c8279ff45b53bb7e47c6db15f45a1468e4b68079280?s=80&amp;d=mm&amp;r=g' srcset='../../../../external.html?link=https://secure.gravatar.com/avatar/d7f106db84a59c6214df2c8279ff45b53bb7e47c6db15f45a1468e4b68079280?s=160&amp;d=mm&amp;r=g 2x' class='avatar avatar-80 photo' height='80' width='80' loading='lazy' decoding='async'/>		<cite class="fn"><a href="../../../../external.html?link=http://none/" class="url" rel="ugc external nofollow">JohnJ</a></cite> <span class="says">says:</span>		<a rel="nofollow" class="comment-reply-link" href="index70dc.html?replytocom=256#respond" data-commentid="256" data-postid="147" data-belowelement="div-comment-256" data-respondelement="respond" data-replyto="Reply to JohnJ" aria-label="Reply to JohnJ">Reply</a>		<div class="comment-meta commentmetadata"><a href="index.html#comment-256">
+			September 29, 2021 at 8:05 pm</a>		</div>
+	</div>
+
+	
+	<p>I just had one of these go bad. Stopped outputting main power. Still connects to the net and switches on and off well but just no power. It doesn&#8217;t even click now.<br />
+Fuse or relay maybe? I have opened it and see no damage or anomalies with my eyes.</p>
+
+			</div>
+	<ol class="children">
+	<li class="comment byuser comment-author-vmallet bypostauthor odd alt depth-2" id="comment-257">
+			<div id="div-comment-257" class="comment-body">
+	
+	<div class="comment-author vcard asdasd">
+		<img alt='' src='../../../../external.html?link=https://secure.gravatar.com/avatar/6a30c9ea48dcf1c2e8638ba29f67c2d51574e6133ac545371edc736170d8e25d?s=80&amp;d=mm&amp;r=g' srcset='../../../../external.html?link=https://secure.gravatar.com/avatar/6a30c9ea48dcf1c2e8638ba29f67c2d51574e6133ac545371edc736170d8e25d?s=160&amp;d=mm&amp;r=g 2x' class='avatar avatar-80 photo' height='80' width='80' loading='lazy' decoding='async'/>		<cite class="fn"><a href="../../../../external.html?link=https://vmallet.com/" class="url" rel="ugc">Vincent Mallet</a></cite> <span class="says">says:</span>		<a rel="nofollow" class="comment-reply-link" href="index16cc.html?replytocom=257#respond" data-commentid="257" data-postid="147" data-belowelement="div-comment-257" data-respondelement="respond" data-replyto="Reply to Vincent Mallet" aria-label="Reply to Vincent Mallet">Reply</a>		<div class="comment-meta commentmetadata"><a href="index.html#comment-257">
+			September 29, 2021 at 9:35 pm</a>		</div>
+	</div>
+
+	
+	<p>If the fuse was bad nothing would get power so it would be pretty obvious. You say the MCU still gets power so that would tend to indicate the 5V/3V supply is good. I would start by probing the relay/driver block. If you ground pin 1 of the relay with a wire, does it click? If yes, then the relay is good. You could try to feed 3v3 to pin 11 of the little MCU board (aka &#8220;IO14&#8221;) to see if the relay clicks. If not, then the Q1 transistor is shot.<br />
+You could also measure the voltage at pin 11 (IO14) of the MCU board, you should get 0V when turned off and 3.3V when turned on, just to make sure. I wouldn&#8217;t imagine this being a problem unless the firmware got changed somehow, very unlikely.<br />
+Make sure you do all this only when powered via a low-voltage supply (as described at the end of this post), and NOT while plugged into the mains 🙂</p>
+
+			</div>
+	</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1" id="comment-258">
+			<div id="div-comment-258" class="comment-body">
+	
+	<div class="comment-author vcard asdasd">
+		<img alt='' src='../../../../external.html?link=https://secure.gravatar.com/avatar/d7f106db84a59c6214df2c8279ff45b53bb7e47c6db15f45a1468e4b68079280?s=80&amp;d=mm&amp;r=g' srcset='../../../../external.html?link=https://secure.gravatar.com/avatar/d7f106db84a59c6214df2c8279ff45b53bb7e47c6db15f45a1468e4b68079280?s=160&amp;d=mm&amp;r=g 2x' class='avatar avatar-80 photo' height='80' width='80' loading='lazy' decoding='async'/>		<cite class="fn"><a href="../../../../external.html?link=http://none/" class="url" rel="ugc external nofollow">JohnJ</a></cite> <span class="says">says:</span>		<a rel="nofollow" class="comment-reply-link" href="index8ba8.html?replytocom=258#respond" data-commentid="258" data-postid="147" data-belowelement="div-comment-258" data-respondelement="respond" data-replyto="Reply to JohnJ" aria-label="Reply to JohnJ">Reply</a>		<div class="comment-meta commentmetadata"><a href="index.html#comment-258">
+			September 30, 2021 at 8:11 am</a>		</div>
+	</div>
+
+	
+	<p>Thanks much for that information Vincent. I pulled and tested the relay and it is very clickless. Gonna order a few of them. Try that.</p>
+
+			</div>
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-262">
+			<div id="div-comment-262" class="comment-body">
+	
+	<div class="comment-author vcard asdasd">
+		<img alt='' src='../../../../external.html?link=https://secure.gravatar.com/avatar/0a942cd450af3e4eee60f779daa5919f8be82a683568dfc18cac53320af575b4?s=80&amp;d=mm&amp;r=g' srcset='../../../../external.html?link=https://secure.gravatar.com/avatar/0a942cd450af3e4eee60f779daa5919f8be82a683568dfc18cac53320af575b4?s=160&amp;d=mm&amp;r=g 2x' class='avatar avatar-80 photo' height='80' width='80' loading='lazy' decoding='async'/>		<cite class="fn">Walter</cite> <span class="says">says:</span>		<a rel="nofollow" class="comment-reply-link" href="index7810.html?replytocom=262#respond" data-commentid="262" data-postid="147" data-belowelement="div-comment-262" data-respondelement="respond" data-replyto="Reply to Walter" aria-label="Reply to Walter">Reply</a>		<div class="comment-meta commentmetadata"><a href="index.html#comment-262">
+			October 5, 2021 at 3:56 am</a>		</div>
+	</div>
+
+	
+	<p>Hi Vincent,<br />
+What is the purpose of the C3 capacitor that is between Drain and Source? I haven&#8217;t found it on the schematic given in the datasheet.</p>
+
+			</div>
+	</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1 parent" id="comment-265">
+			<div id="div-comment-265" class="comment-body">
+	
+	<div class="comment-author vcard asdasd">
+		<img alt='' src='../../../../external.html?link=https://secure.gravatar.com/avatar/d7f106db84a59c6214df2c8279ff45b53bb7e47c6db15f45a1468e4b68079280?s=80&amp;d=mm&amp;r=g' srcset='../../../../external.html?link=https://secure.gravatar.com/avatar/d7f106db84a59c6214df2c8279ff45b53bb7e47c6db15f45a1468e4b68079280?s=160&amp;d=mm&amp;r=g 2x' class='avatar avatar-80 photo' height='80' width='80' loading='lazy' decoding='async'/>		<cite class="fn"><a href="../../../../external.html?link=http://none/" class="url" rel="ugc external nofollow">JohnJ</a></cite> <span class="says">says:</span>		<a rel="nofollow" class="comment-reply-link" href="indexdf58.html?replytocom=265#respond" data-commentid="265" data-postid="147" data-belowelement="div-comment-265" data-respondelement="respond" data-replyto="Reply to JohnJ" aria-label="Reply to JohnJ">Reply</a>		<div class="comment-meta commentmetadata"><a href="index.html#comment-265">
+			October 7, 2021 at 12:49 pm</a>		</div>
+	</div>
+
+	
+	<p>Update on my busted one&#8230; It&#8217;s still busted. Turns out the relay was/is good. When I tested it with my bench power supply I had it wired incorrectly (the PS that is). I did end up replacing the Q1 resister though. Still broke. Still connects. Just no clicks.</p>
+
+			</div>
+	<ol class="children">
+	<li class="comment odd alt depth-2" id="comment-286">
+			<div id="div-comment-286" class="comment-body">
+	
+	<div class="comment-author vcard asdasd">
+		<img alt='' src='../../../../external.html?link=https://secure.gravatar.com/avatar/6e6c944bd7f764d3a410125aebefffa03e1179c66d1bad6d298a58567c16f564?s=80&amp;d=mm&amp;r=g' srcset='../../../../external.html?link=https://secure.gravatar.com/avatar/6e6c944bd7f764d3a410125aebefffa03e1179c66d1bad6d298a58567c16f564?s=160&amp;d=mm&amp;r=g 2x' class='avatar avatar-80 photo' height='80' width='80' loading='lazy' decoding='async'/>		<cite class="fn">mrja</cite> <span class="says">says:</span>		<a rel="nofollow" class="comment-reply-link" href="index24e9.html?replytocom=286#respond" data-commentid="286" data-postid="147" data-belowelement="div-comment-286" data-respondelement="respond" data-replyto="Reply to mrja" aria-label="Reply to mrja">Reply</a>		<div class="comment-meta commentmetadata"><a href="index.html#comment-286">
+			December 24, 2021 at 10:59 pm</a>		</div>
+	</div>
+
+	
+	<p>you&#8217;d probably fried the flash memory for the esp with bad power; it&#8217;d make for some lost hopes as things would seem to light up otherwise&#8230; even the ESP might respond over uart, or begin to do so!</p>
+
+			</div>
+	</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1" id="comment-274">
+			<div id="div-comment-274" class="comment-body">
+	
+	<div class="comment-author vcard asdasd">
+		<img alt='' src='../../../../external.html?link=https://secure.gravatar.com/avatar/fad611b1f901dc0a9cdea7ba8a65a8d002bba26e0893f84f40b930a65d2fa33d?s=80&amp;d=mm&amp;r=g' srcset='../../../../external.html?link=https://secure.gravatar.com/avatar/fad611b1f901dc0a9cdea7ba8a65a8d002bba26e0893f84f40b930a65d2fa33d?s=160&amp;d=mm&amp;r=g 2x' class='avatar avatar-80 photo' height='80' width='80' loading='lazy' decoding='async'/>		<cite class="fn">Allex*</cite> <span class="says">says:</span>		<a rel="nofollow" class="comment-reply-link" href="indexe29b.html?replytocom=274#respond" data-commentid="274" data-postid="147" data-belowelement="div-comment-274" data-respondelement="respond" data-replyto="Reply to Allex*" aria-label="Reply to Allex*">Reply</a>		<div class="comment-meta commentmetadata"><a href="index.html#comment-274">
+			November 16, 2021 at 1:31 pm</a>		</div>
+	</div>
+
+	
+	<p>Super cool!</p>
+
+			</div>
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-even depth-1" id="comment-292">
+			<div id="div-comment-292" class="comment-body">
+	
+	<div class="comment-author vcard asdasd">
+		<img alt='' src='../../../../external.html?link=https://secure.gravatar.com/avatar/476323d09d71e9d13c474ef2c6b8e339330b5a89423e2fd484e6bdc036a0541b?s=80&amp;d=mm&amp;r=g' srcset='../../../../external.html?link=https://secure.gravatar.com/avatar/476323d09d71e9d13c474ef2c6b8e339330b5a89423e2fd484e6bdc036a0541b?s=160&amp;d=mm&amp;r=g 2x' class='avatar avatar-80 photo' height='80' width='80' loading='lazy' decoding='async'/>		<cite class="fn">Chris</cite> <span class="says">says:</span>		<a rel="nofollow" class="comment-reply-link" href="index9975.html?replytocom=292#respond" data-commentid="292" data-postid="147" data-belowelement="div-comment-292" data-respondelement="respond" data-replyto="Reply to Chris" aria-label="Reply to Chris">Reply</a>		<div class="comment-meta commentmetadata"><a href="index.html#comment-292">
+			January 19, 2022 at 5:02 pm</a>		</div>
+	</div>
+
+	
+	<p>Is it possible to flash the ESP without desoldering?</p>
+
+			</div>
+	</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1" id="comment-414">
+			<div id="div-comment-414" class="comment-body">
+	
+	<div class="comment-author vcard asdasd">
+		<img alt='' src='../../../../external.html?link=https://secure.gravatar.com/avatar/404609010ee7491e9d7e054b0bff930880ba0213e1b5d0fe4a60b7410bc9ec09?s=80&amp;d=mm&amp;r=g' srcset='../../../../external.html?link=https://secure.gravatar.com/avatar/404609010ee7491e9d7e054b0bff930880ba0213e1b5d0fe4a60b7410bc9ec09?s=160&amp;d=mm&amp;r=g 2x' class='avatar avatar-80 photo' height='80' width='80' loading='lazy' decoding='async'/>		<cite class="fn">Stuckey</cite> <span class="says">says:</span>		<a rel="nofollow" class="comment-reply-link" href="indexdb40.html?replytocom=414#respond" data-commentid="414" data-postid="147" data-belowelement="div-comment-414" data-respondelement="respond" data-replyto="Reply to Stuckey" aria-label="Reply to Stuckey">Reply</a>		<div class="comment-meta commentmetadata"><a href="index.html#comment-414">
+			May 16, 2022 at 8:28 pm</a>		</div>
+	</div>
+
+	
+	<p>This is the most thorough teardown of any product that I&#8217;ve ever seen. Excellent work, Vincent!</p>
+
+			</div>
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-even depth-1" id="comment-483">
+			<div id="div-comment-483" class="comment-body">
+	
+	<div class="comment-author vcard asdasd">
+		<img alt='' src='../../../../external.html?link=https://secure.gravatar.com/avatar/c4dddcfb47a2f22774e1b154e896c13cffe452436ff0efde3bc0c3c9597f32c1?s=80&amp;d=mm&amp;r=g' srcset='../../../../external.html?link=https://secure.gravatar.com/avatar/c4dddcfb47a2f22774e1b154e896c13cffe452436ff0efde3bc0c3c9597f32c1?s=160&amp;d=mm&amp;r=g 2x' class='avatar avatar-80 photo' height='80' width='80' loading='lazy' decoding='async'/>		<cite class="fn">Mjp</cite> <span class="says">says:</span>		<a rel="nofollow" class="comment-reply-link" href="indexc155.html?replytocom=483#respond" data-commentid="483" data-postid="147" data-belowelement="div-comment-483" data-respondelement="respond" data-replyto="Reply to Mjp" aria-label="Reply to Mjp">Reply</a>		<div class="comment-meta commentmetadata"><a href="index.html#comment-483">
+			September 30, 2022 at 4:38 am</a>		</div>
+	</div>
+
+	
+	<p>Can I plug this on 220v? The box says 100-240v but the actual device says input:120v 😅</p>
+
+			</div>
+	</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1" id="comment-569">
+			<div id="div-comment-569" class="comment-body">
+	
+	<div class="comment-author vcard asdasd">
+		<img alt='' src='../../../../external.html?link=https://secure.gravatar.com/avatar/bb4d080aec8d133d00633349058266976699932315d453628db4ab74fe0bd3e6?s=80&amp;d=mm&amp;r=g' srcset='../../../../external.html?link=https://secure.gravatar.com/avatar/bb4d080aec8d133d00633349058266976699932315d453628db4ab74fe0bd3e6?s=160&amp;d=mm&amp;r=g 2x' class='avatar avatar-80 photo' height='80' width='80' loading='lazy' decoding='async'/>		<cite class="fn">MG</cite> <span class="says">says:</span>		<a rel="nofollow" class="comment-reply-link" href="index8683.html?replytocom=569#respond" data-commentid="569" data-postid="147" data-belowelement="div-comment-569" data-respondelement="respond" data-replyto="Reply to MG" aria-label="Reply to MG">Reply</a>		<div class="comment-meta commentmetadata"><a href="index.html#comment-569">
+			May 22, 2023 at 4:48 pm</a>		</div>
+	</div>
+
+	
+	<p>Thank you so much for the information. I had a couple of questions though, how is the MP150, powering up the ESP8285, when they state in the hardware design guidelines, a minimum of 500mA is needed. I have read that the ESP in general needs a burst of current at the beginning to turn on, so how MP150 is able to turn it on with only 200mA according to the datasheet.</p>
+
+			</div>
+	</li><!-- #comment-## -->
+		</ol><!-- .comment-list -->
+
+		
+	
+	
+	
+		<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title">Leave a Reply to <a href="#comment-274">Allex*</a> <small><a rel="nofollow" id="cancel-comment-reply-link" href="index.html#respond">Cancel reply</a></small></h3><form action="../../../../external.html?link=https://vmallet.com/wp-comments-post.php" method="post" id="commentform" class="comment-form"><textarea id="comment" name="comment" cols="45" rows="8" aria-required="true" placeholder="Comment"></textarea><div class="row"><div class="col-sm-4"><input id="author" name="author" type="text" value="" size="30" aria-required='true' placeholder="Name" /></div>
+<div class="col-sm-4"><input id="email" name="email" type="text" value="" size="30" aria-required='true' placeholder="Email" /></div>
+<div class="col-sm-4"><input id="url" name="url" type="text" value="" size="30" placeholder="Website" /></div></div>
+<p class="comment-form-cookies-consent"><input id="wp-comment-cookies-consent" name="wp-comment-cookies-consent" type="checkbox" value="yes" /> <label for="wp-comment-cookies-consent">Save my name, email, and website in this browser for the next time I comment.</label></p>
+<p class="form-submit"><input name="submit" type="submit" id="submit" class="submit" value="Post Reply" /> <input type='hidden' name='comment_post_ID' value='147' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='274' />
+</p><p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="c02ab416c1" /></p><p style="display: none !important;"><label>&#916;<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js" name="ak_js" value="139"/><script>document.getElementById( "ak_js" ).setAttribute( "value", ( new Date() ).getTime() );</script></p></form>	</div><!-- #respond -->
+	
+</div><!-- #comments -->
+
+					<nav class="navigation post-navigation" role="navigation">
+		<h1 class="screen-reader-text">Post navigation</h1>
+		<div class="nav-links">
+			<div class="nav-previous"><a href="../../../../external.html?link=https://vmallet.com/2020/07/etekcity-zap-3l-remote-power-outlet-teardown-and-analysis/" rel="prev"><i class="fa fa-chevron-left"></i> Etekcity ZAP 3L remote power outlet: teardown and analysis</a></div><div class="nav-next"><a href="../../../../external.html?link=https://vmallet.com/2021/09/hacking-a-swann-nvr8-7300-surveillance-nvr-part-1-teardown/" rel="next">Hacking a Swann NVR8-7300 surveillance NVR, Part 1: Teardown <i class="fa fa-chevron-right"></i></a></div>			</div><!-- .nav-links -->
+			</nav><!-- .navigation -->
+			
+		
+		</main><!-- #main -->
+	</div><!-- #primary -->
+
+</div>
+
+						</div><!-- close .*-inner (main-content or sidebar, depending if sidebar is used) -->
+			</div><!-- close .row -->
+		</div><!-- close .container -->
+	</div><!-- close .site-content -->
+
+	<div id="footer-area">
+		<footer id="colophon" class="site-footer" role="contentinfo">
+			<div class="site-info container">
+				<div class="row">
+										<div class="copyright col-md-12">
+						&copy; Vincent Mallet 2020						<!-- ?php activello_footer_info(); ? -->
+					</div>
+				</div>
+			</div><!-- .site-info -->
+			<button class="scroll-to-top"><i class="fa fa-angle-up"></i></button><!-- .scroll-to-top -->
+		</footer><!-- #colophon -->
+	</div>
+</div><!-- #page -->
+
+		<script type="text/javascript">
+			jQuery( document ).ready( function( $ ){
+				if ( $( window ).width() >= 767 ){
+					$( '.navbar-nav > li.menu-item > a' ).click( function(){
+						if( $( this ).attr('target') !== '_blank' ){
+							window.location = $( this ).attr( 'href' );
+						}else{
+							var win = window.open($( this ).attr( 'href' ), '_blank');
+							win.focus();
+						}
+					});
+				}
+			});
+		</script>
+	<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/activello/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script id="activello-skip-link-focus-fix-js" src="../../../wp-content/themes/activello/assets/js/skip-link-focus-fixed4c.js?ver=20140222"></script>
+<script async data-wp-strategy="async" fetchpriority="low" id="comment-reply-js" src="../../../wp-includes/js/comment-reply.minfd3b.js?ver=7.0.5"></script>
+<script id="wp-emoji-settings" type="application/json">
+{"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"https://vmallet.com/wp-includes/js/wp-emoji-release.min.js?ver=7.0.5"}}
+</script>
+<script type="module">
+/*! This file is auto-generated */
+var e="script#wp-emoji-settings",t=document.querySelector(e);if(!(t instanceof HTMLScriptElement))throw new Error("Element missing: "+e);const r=JSON.parse(t.text),s=(window._wpemojiSettings=r,"wpEmojiSettingsSupports"),o=["flag","emoji"];function i(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(s,JSON.stringify(t))}catch(e){}}function c(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0);const r=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);return t.every((e,t)=>e===r[t])}function p(e,t){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var n=e.getImageData(16,16,1,1);for(let e=0;e<n.data.length;e++)if(0!==n.data[e])return!1;return!0}function u(e,t,n,r){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\udde8\ud83c\uddf6","\ud83c\udde8\u200b\ud83c\uddf6")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!r(e,"\ud83e\u1fac8")}return!1}function f(e,t,n,r){let a;const s=(a="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):document.createElement("canvas")).getContext("2d",{willReadFrequently:!0}),o=(s.textBaseline="top",s.font="600 32px Arial",{});return e.forEach(e=>{o[e]=t(s,e,n,r)}),o}function a(e){var t=document.createElement("script");t.src=e,t.defer=!0,document.head.appendChild(t)}r.supports={everything:!0,everythingExceptFlag:!0},new Promise(t=>{let n=function(){try{var e=JSON.parse(sessionStorage.getItem(s));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(o),u.toString(),c.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"});const a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=e=>{i(n=e.data),a.terminate(),t(n)})}catch(e){}i(n=f(o,u,c,p))}t(n)}).then(e=>{for(const n in e)r.supports[n]=e[n],r.supports.everything=r.supports.everything&&r.supports[n],"flag"!==n&&(r.supports.everythingExceptFlag=r.supports.everythingExceptFlag&&r.supports[n]);var t;r.supports.everythingExceptFlag=r.supports.everythingExceptFlag&&!r.supports.flag,r.supports.everything||((t=r.source||{}).concatemoji?a(t.concatemoji):t.wpemoji&&t.twemoji&&(a(t.twemoji),a(t.wpemoji)))});
+//# sourceURL=https://vmallet.com/wp-includes/js/wp-emoji-loader.min.js
+</script>
+
+</body>
+
+<!-- Mirrored from https://vmallet.com/2020/07/gosund-wp3-smart-plug-teardown-and-schematic/?replytocom=274 by HTTrack Website Copier/3.x [XR&CO], Sun, 20 Sep 2026 19:29:18 GMT -->
+</html>
