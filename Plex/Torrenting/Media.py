@@ -36,7 +36,7 @@ class MediaItem:
     dir: Path
     """Parent Folder"""
 
-    weights: Weights
+    weights: 'Weights' # pyright: ignore[reportInvalidTypeForm]
     torrent: None|Torrent = None
 
     @property
@@ -152,7 +152,7 @@ class Show:
         return f'<Show "{self.Title}" @{loc(self)}>'
 
     @cached_property
-    def episodes(self) -> tuple[Episode, ...]:
+    def episodes(self) -> tuple['Episode', ...]:
         episodes = []
         for s in self.seasons:
             episodes += s.episodes

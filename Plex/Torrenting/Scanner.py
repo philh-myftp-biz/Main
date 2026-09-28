@@ -34,11 +34,11 @@ def children[T](dir, clazz:Type[T]):
         except IndexError:
             Log.WARN(exc_info=True)
 
-def notexists[T](items:list[T]) -> filter[T]:
+def notexists[T](items:list[T]) -> 'filter[T]':
     return filter(lambda e: not e.exists, items)
 
 @singleton
-def Missing() -> Generator[Media.Movie | Media.Episode]:
+def Missing() -> Generator[Media.Movie|Media.Episode, None, None]:
 
     #==========================================================
 

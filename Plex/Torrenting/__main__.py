@@ -22,7 +22,7 @@ while len(queue) < Args['limit']:
             queue += [d]
             Log.INFO(f'Downloading File: {d=}')
 
-    except StopIteration, ConnectionAbortedError:
+    except (StopIteration, ConnectionAbortedError):
         Log.WARN(exc_info=True)
         break
 
@@ -74,7 +74,7 @@ while len(queue) > 0:
 
                 queue.remove(d)
 
-            except FileNotFoundError, OSError, TypeError:
+            except (FileNotFoundError, OSError, TypeError):
                 Log.WARN(exc_info=True)
                 d.torrent and d.torrent.start()
 

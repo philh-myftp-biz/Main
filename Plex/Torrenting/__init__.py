@@ -1,4 +1,3 @@
-
 from philh_myftp_biz.web.torrent import thePirateBay, qBitTorrent
 from philh_myftp_biz.terminal import Args, Log
 from philh_myftp_biz.web.driver import Driver
@@ -52,7 +51,7 @@ while True:
             timeout = Args['timeout']
         )
         break
-    except JSONDecodeError, ConnectionError: 
+    except (JSONDecodeError, ConnectionError): 
         pass
 
 #==============================================

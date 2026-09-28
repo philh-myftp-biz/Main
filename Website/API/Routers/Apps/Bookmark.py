@@ -16,7 +16,7 @@ class BookmarkData(Dict[str]):
         super().__init__(_json)
 
 @router.get("/read")
-async def read_item(
+async def _(
     username: str,
     token: str,
     x: str
