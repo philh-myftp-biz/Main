@@ -5,7 +5,7 @@ function Repair-VirtualMachine {
         [string] $Name
     )
 
-    $Dir = "E:/Virtual Machines/Hyper-V/$Name"
+    $Dir = "E:\Virtual Machines\Hyper-V\$Name"
 
     # Get the username from the vm name
     if ($Name.StartsWith('User-')) {
@@ -21,7 +21,7 @@ function Repair-VirtualMachine {
     
     # Remove Filesystem compression for VM directory
     Invoke-WmiMethod `
-        -Path "Win32_Directory.Name='$Dir'" `
+        -Path "Win32_Directory.Name='$($Dir.Replace('\', '\\'))'" `
         -Name uncompress
 
     #=====================================================================================================
