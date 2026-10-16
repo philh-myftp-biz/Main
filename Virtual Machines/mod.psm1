@@ -34,7 +34,7 @@ function Repair-VirtualMachine {
     if ($null -eq $VM) {
 
         # Create the VM in Hyper-V
-        New-VM `
+        $VM = New-VM `
             -Name $Name `
             -MemoryStartupBytes 4GB `
             -Path "E:\Virtual Machines\Hyper-V\" `
@@ -84,6 +84,10 @@ function Repair-VirtualMachine {
     Enable-VMIntegrationService `
         -VMName $Name `
         -Name "Guest Service Interface"
+
+    # Grant Permissions to Hyper-V
+    icacls.exe $Dir /T `
+        /grant "NT VIRTUAL MACHINE\$($VM.VMId.Guid)`:(OI)(CI)(F)"
 
 }
 
