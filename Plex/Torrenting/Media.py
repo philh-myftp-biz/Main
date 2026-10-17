@@ -1,6 +1,6 @@
 from philh_myftp_biz.web.torrent import Torrent, TorrentFile, thePirateBay
-from philh_myftp_biz.functools import loc, attr, cached_property
 from philh_myftp_biz.web.torrent import qBitTorrent as qbit
+from philh_myftp_biz.functools import loc, cached_property
 from philh_myftp_biz.web.torrent.models import EpisodeData
 from philh_myftp_biz.web import Omdb
 from philh_myftp_biz.pc import Path
@@ -167,10 +167,9 @@ class Season(MediaItem):
     ) -> None:
         
         self.show: Show = show
+        self.num = int(season)
 
-        attr(self, '__int__').set(lambda s: int(season))
-
-        self.dir = show.dir.child(f"/Season {self:02d}/")
+        self.dir = show.dir.child(f"/Season {self.num:02d}/")
         """E:/Plex/Media/Shows/{Show}/Season {Season}/"""
 
         self.dir.mkdir()
@@ -178,31 +177,28 @@ class Season(MediaItem):
         self.queries = [
             self.show.Title,
             f'{self.show.Title} {self.show.Year}',
-            f'{self.show.Title} Season {self}',
-            f'{self.show.Title} s{self:02d}',
-            f'{self.show.Title} s{self}',
-            f'{self.show.Title} {self}',
+            f'{self.show.Title} Season {self.num}',
+            f'{self.show.Title} s{self.num:02d}',
+            f'{self.show.Title} s{self.num}',
+            f'{self.show.Title} {self.num}',
         ]
 
         self.episodes = [Episode(self, i[1]) for i in episodes.items()]
 
         self.weights = Weights(
             TITLE = [self.show.Title],
-            SEASON = int(self),
+            SEASON = self.num,
             EPISODE = None,
             YEAR = self.show.Year,
-            UPLOADED = show.omdb.Released
+            UPLOADED = show.omdb.Released,
         )
 
     @property
     def exists(self) -> bool:
         return all(e.exists for e in self.episodes)
     
-    def __format__(self, format_spec:str) -> str:
-        return f'{int(self):{format_spec}}'
-    
     def __repr__(self) -> str:
-        return f'<Season "{self}" - "{self.show.Title}" @{loc(self)}>'
+        return f'<Season "{self.num}" - "{self.show.Title}" @{loc(self)}>'
 
 class Episode(MediaItem):
 
@@ -210,32 +206,30 @@ class Episode(MediaItem):
         season: 'Season',
         episode: EpisodeData
     ) -> None:
-        
         super().__init__()
-
+        
         self.show: Show = season.show
         self.season: Season = season
         self.Title: str = episode.Title
+        self.num = episode.Number
 
         self.dir = season.dir
         """E:/Plex/Media/Shows/{Show}/Season {Season}/"""
 
-        attr(self, '__int__').set(lambda s: episode.Number)
-
         self.queries = [
             self.show.Title,
-            f'{self.show.Title} s{season:02d}e{self:02d}',
-            f'{self.show.Title} {season:02d}x{self:02d}',
-            f'{self.show.Title} {season}{self:02d}',
-            f'{self.show.Title} {season} {self:02d}'
+            f'{self.show.Title} s{season.num:02d}e{self.num:02d}',
+            f'{self.show.Title} {season.num:02d}x{self.num:02d}',
+            f'{self.show.Title} {season.num}{self.num:02d}',
+            f'{self.show.Title} {season.num} {self.num:02d}'
         ]
 
         self.weights = Weights(
             TITLE = [self.show.Title, self.Title, None],
             YEAR = self.show.Year,
-            SEASON = int(self.season),
-            EPISODE = int(self),
-            UPLOADED = self.show.omdb.Released
+            SEASON = season.num,
+            EPISODE = self.num,
+            UPLOADED = self.show.omdb.Released,
         )
 
     def start(self) -> None:
@@ -246,11 +240,8 @@ class Episode(MediaItem):
     def paths(self) -> tuple[Path, Path]:
         return (
             self.file.path,
-            self.dir.child(f'/Season {self.season:02d} Episode {self:02d}.{self.file.path.ext}')
+            self.dir.child(f'/Season {self.season:02d} Episode {self.num:02d}.{self.file.path.ext}')
         )
     
-    def __format__(self, format_spec:str) -> str:
-        return f'{int(self):{format_spec}}'
-    
     def __repr__(self) -> str:
-        return f'<Episode "{self.season}x{self}" - "{self.show.Title}" @{loc(self)}>'
+        return f'<Episode "{self.season}x{self.num}" - "{self.show.Title}" @{loc(self)}>'
