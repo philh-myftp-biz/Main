@@ -1,7 +1,6 @@
 {
     "files.exclude": {
         "__temp__": true,
-        ".vscode": true,
         "**/__pycache__": true,
         "$RECYCLE.BIN": true,
         "AI/.venv": true,
@@ -12,6 +11,8 @@
         "Plex/Media": true,
         "Plex/Plex Media Server": true,
         "System Volume Information": true,
-        "Users/philh": true
+        "Users/philh/": true,
+        "Website/Root/Apps/Goofy Stuff/**/files": true,
+        "_recovery": true,
     }
 }
