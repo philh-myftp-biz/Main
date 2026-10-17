@@ -2,7 +2,6 @@ from philh_myftp_biz.json import Weights as _Weights
 from philh_myftp_biz.web.torrent import NameParser
 from typing import Protocol, runtime_checkable
 from philh_myftp_biz.text import similarity
-from philh_myftp_biz.time import from_stamp
 
 @runtime_checkable
 class HasName(Protocol):
@@ -19,7 +18,6 @@ class Weights(_Weights):
             SEASON = np.season,
             YEAR = np.year,
             EPISODE = np.episode,
-            UPLOADED = getattr(t, 'uploaded', None)
         )
 
     def TITLE(self,
@@ -48,13 +46,4 @@ class Weights(_Weights):
             return control == sample[0]
         else:
             return control is None
-
-    def UPLOADED(self,
-        sample: from_stamp|None, 
-        control: from_stamp|None
-    ) -> bool:
-        if None in [sample, control]:
-            return True
-        else:
-            return sample > control
 

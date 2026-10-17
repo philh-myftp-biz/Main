@@ -104,12 +104,9 @@ class Movie(MediaItem):
             f'{title} {year}'
         ]
 
-        self.omdb = Omdb.movie(title, year)
-
         self.weights = Weights(
             TITLE = [self.Title],
             YEAR = self.Year,
-            UPLOADED = self.omdb.Released
         )
 
     @cached_property
@@ -190,7 +187,6 @@ class Season(MediaItem):
             SEASON = self.num,
             EPISODE = None,
             YEAR = self.show.Year,
-            UPLOADED = show.omdb.Released,
         )
 
     @property
@@ -229,7 +225,6 @@ class Episode(MediaItem):
             YEAR = self.show.Year,
             SEASON = season.num,
             EPISODE = self.num,
-            UPLOADED = self.show.omdb.Released,
         )
 
     def start(self) -> None:
