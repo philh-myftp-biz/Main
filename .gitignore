@@ -3,9 +3,81 @@ $RECYCLE.BIN
 System Volume Information
 
 **/__pycache__
-**/__pylogs__
+**/__lock__.ig
 /_**
+
+/found.0**/
 
 /Backup/E
 **/sync.ffs_lock
 **/sync.ffs_db
+
+#==============================================================
+# Users
+
+Users/philh
+Users/Backup/config.yaml
+Users/FTP/IIS/schema
+
+#==============================================================
+# Plex
+
+# Media Files
+/Plex/Media/*
+!/Plex/Media/Shows/
+/Plex/Media/Shows/*
+!/Plex/Media/Shows/*/
+/Plex/Media/Shows/*/*
+!/Plex/Media/Shows/*/.plexmatch
+!/Plex/Media/purge.py
+
+# PMS Files
+/Plex/Plex Media Server/
+
+# WinTV Activation Code
+/Plex/WinTV/Activation Code.txt
+
+# HTTPS Certificate
+/Plex/cert.pfx
+
+#==============================================================
+# Website
+
+# HTTPS Certificates
+/Website/Certificates/
+
+# User Web Shares
+/Website/Root/Servers/FTP/User Web Shares/
+
+# Generated Index Files
+/Website/Root/**/index.json
+/Website/Root/_/Search/search.json
+
+/Website/Root/*.iso
+/Website/Root/*.zip
+/Website/Root/*.exe
+/Website/Root/*.psd
+
+#==============================================================
+# AI
+
+# Ollama Data
+/AI/Ollama/Data
+
+# Stable Diffusion Data
+/AI/StableDiffusion/Data
+
+#==============================================================
+# Virtual Machines
+
+/Virtual Machines/Hyper-V/
+/Virtual Machines/VHDXs/
+
+/Virtual Machines/*.vhdx
+/Virtual Machines/*.vmcs
+/Virtual Machines/*.vmgs
+/Virtual Machines/*.vmrs
+/Virtual Machines/*.vmcx
+
+#==============================================================
+
