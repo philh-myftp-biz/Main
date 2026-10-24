@@ -1,7 +1,7 @@
 from philh_myftp_biz.web.torrent import Torrent, TorrentFile, thePirateBay
 from philh_myftp_biz.web.torrent import qBitTorrent as qbit
-from philh_myftp_biz.functools import loc, cached_property
 from philh_myftp_biz.web.torrent.models import EpisodeData
+from philh_myftp_biz.functools import cached_property
 from philh_myftp_biz.web import Omdb
 from philh_myftp_biz.pc import Path
 from typing import Callable
@@ -116,8 +116,6 @@ class Movie(MediaItem):
             self.dir.child(f"{self.Title} ({self.Year}).{self.file.path.ext}")
         )
     
-    def __repr__(self) -> str:
-        return f'<Movie "{self.Title} ({self.Year})" @{loc(self)}>'
 
 class Show:
 
@@ -144,9 +142,6 @@ class Show:
     @property
     def exists(self) -> bool:
         return all(s.exists for s in self.seasons)
-
-    def __repr__(self) -> str:
-        return f'<Show "{self.Title}" @{loc(self)}>'
 
     @cached_property
     def episodes(self) -> tuple['Episode', ...]:
@@ -193,9 +188,6 @@ class Season(MediaItem):
     def exists(self) -> bool:
         return all(e.exists for e in self.episodes)
     
-    def __repr__(self) -> str:
-        return f'<Season "{self.num}" - "{self.show.Title}" @{loc(self)}>'
-
 class Episode(MediaItem):
 
     def __init__(self,
@@ -238,5 +230,3 @@ class Episode(MediaItem):
             self.dir.child(f'/Season {self.season:02d} Episode {self.num:02d}.{self.file.path.ext}')
         )
     
-    def __repr__(self) -> str:
-        return f'<Episode "{self.season}x{self.num}" - "{self.show.Title}" @{loc(self)}>'
