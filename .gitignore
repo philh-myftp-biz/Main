@@ -53,10 +53,10 @@ Users/FTP/IIS/schema
 /Website/Root/**/index.json
 /Website/Root/_/Search/search.json
 
-/Website/Root/*.iso
-/Website/Root/*.zip
-/Website/Root/*.exe
-/Website/Root/*.psd
+/Website/Root/**/*.iso
+/Website/Root/**/*.zip
+/Website/Root/**/*.exe
+/Website/Root/**/*.psd
 
 #==============================================================
 # AI
@@ -73,11 +73,11 @@ Users/FTP/IIS/schema
 /Virtual Machines/Hyper-V/
 /Virtual Machines/VHDXs/
 
-/Virtual Machines/*.vhdx
-/Virtual Machines/*.vmcs
-/Virtual Machines/*.vmgs
-/Virtual Machines/*.vmrs
-/Virtual Machines/*.vmcx
+/Virtual Machines/**/*.vhdx
+/Virtual Machines/**/*.vmcs
+/Virtual Machines/**/*.vmgs
+/Virtual Machines/**/*.vmrs
+/Virtual Machines/**/*.vmcx
 
 #==============================================================
 
