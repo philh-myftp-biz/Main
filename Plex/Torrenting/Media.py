@@ -37,6 +37,9 @@ class MediaItem:
     """Parent Folder"""
 
     weights: 'Weights' # pyright: ignore[reportInvalidTypeForm]
+
+    file: None|TorrentFile = None
+
     torrent: None|Torrent = None
 
     @property
@@ -46,27 +49,7 @@ class MediaItem:
             (self.weights(p) and p.size>0) for p in self.dir.children
         )
 
-    @cached_property
-    def file(self) -> None | TorrentFile:
-        if self.torrent is None: return
-        
-        files: list[TorrentFile] = filter(
-            lambda f: self.weights(f) and f.path.type=='video',
-            self.torrent.files
-        )
-
-        return max(
-            files,
-            key = lambda f: f.size,
-            default = None
-        )
-
     def start(self, i:int=0) -> None:
-
-        del self.file
-        if self.file: 
-            self.file.start()
-            return
         
         torrents: list[Torrent]
         match i:
@@ -80,12 +63,24 @@ class MediaItem:
             key = lambda m: -m.seeders
         )
 
-        for self.torrent in torrents:
-            self.torrent.start(stop_files=True)
-            del self.file
-            if self.file: break
+        while torrents and (self.file is None):
 
-        MediaItem.start(self, i=i+1)
+            self.torrent = torrents.pop(0)
+            self.torrent.start(stop_files=True)
+
+            self.file = max(
+                filter(
+                    lambda f: self.weights(f) and f.path.type=='video',
+                    self.torrent.files
+                ),
+                key = lambda f: f.size,
+                default = None,
+            )
+
+        if self.file:
+            self.file.start()
+        else:
+            MediaItem.start(self, i=i+1)
 
 class Movie(MediaItem):
 
