@@ -3,24 +3,24 @@
 	path = Minecraft/.java
 	url = https://github.com/MineFartS/JDK
 	branch = 25
-    ignore = all
+    ignore = dirty
 
 [submodule "Plex/DBRepair"]
 	path = Plex/DBRepair
 	url = https://github.com/ChuckPa/DBRepair
-    ignore = all
+    ignore = dirty
     
 [submodule "AI/Ollama/.app"]
 	path = AI/Ollama/.app
 	url = https://github.com/MineFartS/Ollama-Embed
 	branch = embed
-    ignore = all
+    ignore = dirty
 
 [submodule "AI/.venv"]
 	path = AI/.venv
 	url = https://github.com/MineFartS/Python-Embed
 	branch = 3.12.10
-    ignore = all
+    ignore = dirty
 
 [submodule "Minecraft/Worlds"]
 	path = Minecraft/Worlds
