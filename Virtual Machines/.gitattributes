@@ -1,4 +1,0 @@
-*.vhdx filter=lfs diff=lfs merge=lfs -text
-*.vmcx filter=lfs diff=lfs merge=lfs -text
-*.vmgs filter=lfs diff=lfs merge=lfs -text
-*.vmrs filter=lfs diff=lfs merge=lfs -text

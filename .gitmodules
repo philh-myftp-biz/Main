@@ -27,3 +27,7 @@
 	url = https://github.com/philh-myftp-biz/Minecraft-Worlds
     ignore = all
 
+[submodule "Virtual Machines"]
+	path = Virtual Machines
+	url = https://huggingface.co/datasets/minefarts/server-main-virtual_machines
+    ignore = dirty
