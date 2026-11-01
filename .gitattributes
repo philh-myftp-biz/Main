@@ -5,6 +5,7 @@
 "Virtual Machines/**/*.vmcx" filter=lfs diff=lfs merge=lfs -text
 "Virtual Machines/**/*.vmgs" filter=lfs diff=lfs merge=lfs -text
 "Virtual Machines/**/*.vmrs" filter=lfs diff=lfs merge=lfs -text
+"Virtual Machines/**/*.iso" filter=lfs diff=lfs merge=lfs -text
 
 #==============================================================
 # Website
