@@ -11,7 +11,7 @@ Remove-VM `
 
 # Delete Dir
 Remove-Item `
-    -Path "E:\Virtual Machines\Hyper-V\$Name" `
+    -Path "$HyperV\$Name" `
     -Recurse `
     -Force `
     > $null

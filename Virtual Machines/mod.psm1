@@ -1,11 +1,7 @@
 
-function Repair-VirtualMachine {
+$HyperV = "E:\Virtual Machines\Hyper-V\"
 
-    param(
-        [string] $Name
-    )
-
-    $Dir = "E:\Virtual Machines\Hyper-V\$Name"
+function Repair-VirtualMachine([string] $Name) {
 
     # Get the username from the vm name
     if ($Name.StartsWith('User-')) {
@@ -21,7 +17,7 @@ function Repair-VirtualMachine {
     
     # Remove Filesystem compression for VM directory
     Invoke-WmiMethod `
-        -Path "Win32_Directory.Name='$($Dir.Replace('\', '\\'))'" `
+        -Path "Win32_Directory.Name='$($HyperV.Replace('\', '\\'))\\$Name'" `
         -Name uncompress
 
     #=====================================================================================================
@@ -37,14 +33,14 @@ function Repair-VirtualMachine {
         $VM = New-VM `
             -Name $Name `
             -MemoryStartupBytes 4GB `
-            -Path "E:\Virtual Machines\Hyper-V\" `
+            -Path $HyperV `
             -Generation 1 `
             -SwitchName "Main Switch"
 
         # Attach Virtual Hard Drive
         Add-VMHardDiskDrive `
             -VMName $Name `
-            -Path "$Dir\Hard Drive.vhdx" `
+            -Path "$HyperV\$Name\Hard Drive.vhdx" `
             -Verbose
 
     }
@@ -77,8 +73,8 @@ function Repair-VirtualMachine {
     # Set Paths for Snapshots and PageFiles
     Set-VM `
         -VMName $Name `
-        -SnapshotFileLocation $Dir `
-        -SmartPagingFilePath $Dir
+        -SnapshotFileLocation "$HyperV\$Name" `
+        -SmartPagingFilePath "$HyperV\$Name"
 
     # Enable Guest Services
     Enable-VMIntegrationService `
@@ -86,7 +82,7 @@ function Repair-VirtualMachine {
         -Name "Guest Service Interface"
 
     # Grant Permissions to Hyper-V
-    icacls.exe $Dir /T `
+    icacls.exe "$HyperV\$Name" /T `
         /grant "NT VIRTUAL MACHINE\$($VM.VMId.Guid)`:(OI)(CI)(F)"
 
 }
