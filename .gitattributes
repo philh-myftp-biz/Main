@@ -1,0 +1,30 @@
+#==============================================================
+# Virtual Machines
+
+"Virtual Machines/**/*.vhdx" filter=lfs diff=lfs merge=lfs -text
+"Virtual Machines/**/*.vmcx" filter=lfs diff=lfs merge=lfs -text
+"Virtual Machines/**/*.vmgs" filter=lfs diff=lfs merge=lfs -text
+"Virtual Machines/**/*.vmrs" filter=lfs diff=lfs merge=lfs -text
+
+#==============================================================
+# Website
+
+Website/**/*.iso filter=lfs diff=lfs merge=lfs -text
+Website/**/*.zip filter=lfs diff=lfs merge=lfs -text
+Website/**/*.exe filter=lfs diff=lfs merge=lfs -text
+Website/**/*.mp4 filter=lfs diff=lfs merge=lfs -text
+Website/**/*.mov filter=lfs diff=lfs merge=lfs -text
+
+Website/**/*.webp filter=lfs diff=lfs merge=lfs -text
+Website/**/*.png filter=lfs diff=lfs merge=lfs -text
+Website/**/*.heic filter=lfs diff=lfs merge=lfs -text
+Website/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
+Website/**/*.jpg filter=lfs diff=lfs merge=lfs -text
+
+Website/**/*.psd filter=lfs diff=lfs merge=lfs -text
+
+Website/**/*.ico filter=lfs diff=lfs merge=lfs -text
+Website/**/*.gif filter=lfs diff=lfs merge=lfs -text
+Website/**/*.ttf filter=lfs diff=lfs merge=lfs -text
+
+#==============================================================
