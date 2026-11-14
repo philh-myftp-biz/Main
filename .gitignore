@@ -68,16 +68,4 @@ Users/FTP/IIS/schema
 /AI/StableDiffusion/Data
 
 #==============================================================
-# Virtual Machines
-
-/Virtual Machines/Hyper-V/
-/Virtual Machines/VHDXs/
-
-/Virtual Machines/**/*.vhdx
-/Virtual Machines/**/*.vmcs
-/Virtual Machines/**/*.vmgs
-/Virtual Machines/**/*.vmrs
-/Virtual Machines/**/*.vmcx
-
-#==============================================================
 
